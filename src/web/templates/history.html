@@ -148,8 +148,8 @@
                     valueB = b.start_time ? new Date(b.start_time).getTime() : 0;
                     break;
                 case "duration":
-                    valueA = a.duration_seconds || 0; // Ensure using duration_seconds from workout_info
-                    valueB = b.duration_seconds || 0;
+                    valueA = a.duration || 0; // Use a.duration
+                    valueB = b.duration || 0; // Use b.duration
                     break;
                 case "distance":
                     valueA = (a.summary && a.summary.total_distance) ? parseFloat(a.summary.total_distance) : 0;
@@ -316,7 +316,7 @@
 
         summaryHtml += `<p><strong>Type:</strong> ${workoutTypeDetail}<br>
                           <strong>Start Time:</strong> ${workoutInfo.start_time ? new Date(workoutInfo.start_time).toLocaleString() : '-'}<br>
-                          <strong>Duration:</strong> ${formatDuration(workoutInfo.duration_seconds)}<br>
+                          <strong>Duration:</strong> ${formatDuration(workoutInfo.duration)}<br>
                           <strong>Total Distance:</strong> ${displayDistance}<br>
                           <strong>Avg Speed:</strong> ${displayAvgSpeed}<br>
                           <strong>Max Speed:</strong> ${displayMaxSpeed}<br>

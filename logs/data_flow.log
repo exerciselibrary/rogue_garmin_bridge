@@ -3492,3 +3492,9 @@ AttributeError: type object 'ActivityType' has no attribute 'MANUAL'
 2025-05-25 09:55:14,181 - database - INFO - Retrieved 4 workouts from database
 2025-05-25 09:55:20,533 - database - INFO - Retrieved 4 workouts from database
 2025-05-25 09:55:30,631 - database - INFO - Retrieved 609 data points for workout 7
+2025-05-25 10:06:46,314 - database - INFO - Database tables created
+2025-05-25 10:06:46,316 - database - INFO - Database tables created
+2025-05-25 10:06:47,217 - database - INFO - Database tables created
+2025-05-25 10:06:47,219 - database - INFO - Database tables created
+2025-05-25 10:06:50,300 - database - INFO - Retrieved 4 workouts from database
+2025-05-25 10:06:52,530 - database - INFO - Retrieved 609 data points for workout 7
