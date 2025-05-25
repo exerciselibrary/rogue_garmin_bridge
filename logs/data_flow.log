@@ -3485,3 +3485,10 @@ AttributeError: type object 'ActivityType' has no attribute 'MANUAL'
 2025-05-17 19:28:55,822 - fit_converter - INFO - Set ActivityType to CYCLING for bike workout.
 2025-05-17 19:28:55,916 - fit_converter - INFO - FIT file successfully created: C:\Users\dougl\rogue_garmin_bridge\fit_files\bike_20250517_184822.fit
 2025-05-17 19:28:55,930 - database - INFO - Updated FIT file path for workout 7: C:\Users\dougl\rogue_garmin_bridge\fit_files\bike_20250517_184822.fit
+2025-05-25 09:55:06,045 - database - INFO - Database tables created
+2025-05-25 09:55:06,048 - database - INFO - Database tables created
+2025-05-25 09:55:06,908 - database - INFO - Database tables created
+2025-05-25 09:55:06,911 - database - INFO - Database tables created
+2025-05-25 09:55:14,181 - database - INFO - Retrieved 4 workouts from database
+2025-05-25 09:55:20,533 - database - INFO - Retrieved 4 workouts from database
+2025-05-25 09:55:30,631 - database - INFO - Retrieved 609 data points for workout 7
