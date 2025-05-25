@@ -6,7 +6,7 @@ A Python application that bridges Rogue fitness equipment (Echo Bike and Rower) 
 
 Rogue Garmin Bridge connects to Rogue Echo Bike and Rower equipment (Rower support enhanced with `pyftms`) via Bluetooth Low Energy (BLE) using the Fitness Machine Service (FTMS) standard. It collects workout metrics, processes the data, and converts it to the Garmin FIT file format for manual upload to Garmin Connect. The application includes a web-based user interface for configuration, monitoring, and managing workout data.
 
-![Rogue Garmin Bridge UI](https://private-us-east-1.manuscdn.com/sessionFile/V9jWlI9Latcf2GVTTp7FDJ/sandbox/2fvioG0Sd15fI25fgqHBqB-images_1746789771103_na1fn_L2hvbWUvdWJ1bnR1L3JvZ3VlX2dhcm1pbl9icmlkZ2VfcHlmdG1zX2ltcGwvZG9jcy9pbWFnZXMvdWlfc2NyZWVuc2hvdA.png?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvVjlqV2xJOUxhdGNmMkdWVFRwN0ZESi9zYW5kYm94LzJmdmlvRzBTZDE1ZkkyNWZncUhCcUItaW1hZ2VzXzE3NDY3ODk3NzExMDNfbmExZm5fTDJodmJXVXZkV0oxYm5SMUwzSnZaM1ZsWDJkaGNtMXBibDlpY21sa1oyVmZjSGxtZEcxelgybHRjR3d2Wkc5amN5OXBiV0ZuWlhNdmRXbGZjMk55WldWdWMyaHZkQS5wbmciLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3NjcyMjU2MDB9fX1dfQ__&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=tLxrBnjd9eIl8zNm6YVdY2QkrtCLuDtYwwQ15XS5DgDEJ6q6tu5O8-4q~M88uWGyREp6JPlnyU-~07C6yPOuAwREGTnGuProHYToKl7tkUtrfwzhtv26MSTVpj4vcEdzK~sMERgs-eVN1cC7poQllmxPJzKT0TLrfxodqtsZPnZdhwZjEIZwzcFDzMgOTOfI~m-ko6N2jN3rJcUdF-goEIcUcDaGwLvFiUgAotBVSdKfBU1K89SgdqT2UFXWnSXg5bDdQ8G4gEWQ8mfJbvjxb6hzA5TCvucHwv0j1Db6ngD0lXFQypOpTtMwcV3D2UCsbdeEume2KCUnolwze7LB~Q__)
+![Rogue Garmin Bridge UI](docs\images\ui_screenshot.png)
 
 ## Features
 
