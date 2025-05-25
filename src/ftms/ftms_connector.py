@@ -450,13 +450,8 @@ class FTMSConnector:
                             from pyftms.client.properties import MachineType as PyftmsMachineType
                             logger.info("Using MachineType from pyftms.client.properties")
                         except ImportError:
-                            try:
-                                # Fall back to the old location
-                                from pyftms.properties import MachineType as PyftmsMachineType
-                                logger.info("Using MachineType from pyftms.properties")
-                            except ImportError:
-                                logger.error("Could not import MachineType from pyftms")
-                                raise RuntimeError("Could not import MachineType from pyftms")
+                            logger.error("Could not import MachineType from pyftms.client.properties")
+                            raise RuntimeError("Could not import MachineType from pyftms.client.properties")
                         
                         # Convert our machine type to the pyftms machine type
                         pyftms_machine_type = None

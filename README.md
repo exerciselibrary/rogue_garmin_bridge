@@ -4,89 +4,82 @@ A Python application that bridges Rogue fitness equipment (Echo Bike and Rower) 
 
 ## Overview
 
-Rogue Garmin Bridge connects to Rogue Echo Bike and Rower equipment(in development) via Bluetooth Low Energy (BLE) using the Fitness Machine Service (FTMS) standard. It collects workout metrics, processes the data, and converts it to the Garmin FIT file format for upload to Garmin Connect. The application includes a web-based user interface for configuration, monitoring, and managing workout data.
-
-![Rogue Garmin Bridge UI](docs/images/ui_screenshot.png)
+Rogue Garmin Bridge connects to Rogue Echo Bike and Rower equipment via Bluetooth Low Energy (BLE) using the Fitness Machine Service (FTMS) standard through the `pyftms` library. It collects workout metrics, processes the data, and converts it to the Garmin FIT file format for manual upload to Garmin Connect. The application includes a web-based user interface for configuration, monitoring, and managing workout data.
 
 ## Features
 
-- **FTMS Bluetooth Connectivity**: Connect to Rogue Echo Bike and Rower equipment via BLE
-- **Real-time Workout Tracking**: Monitor power, heart rate, cadence, speed, distance, and calories in real-time
-- **Workout History**: View past workout details with performance metrics and charts
-- **FIT File Generation**: Convert workout data to Garmin FIT format with proper device identification
-- **Training Load Calculation**: Generated FIT files correctly report training load in Garmin Connect
-- **Speed Data Analysis**: Improved speed calculations and display in workout history
-- **Web Interface**: User-friendly interface for monitoring, configuring, and managing workouts
-- **FTMS Device Simulator**: Test functionality without physical hardware (development mode)
+* **FTMS Bluetooth Connectivity**: Connect to Rogue Echo Bike and Rower equipment via BLE using `pyftms` for robust FTMS communication.
+* **Real-time Workout Tracking**: Monitor power, heart rate, cadence/stroke rate, speed, distance, and calories in real-time.
+* **Workout History**: View past workout details with performance metrics and charts.
+* **FIT File Generation**: Convert workout data to Garmin FIT format with proper device identification for manual upload.
+* **Training Load Calculation**: Generated FIT files correctly report training load in Garmin Connect.
+* **Speed Data Analysis**: Improved speed calculations and display in workout history.
+* **Web Interface**: User-friendly interface for monitoring, configuring, and managing workouts.
+* **FTMS Device Simulator**: Test functionality without physical hardware (development mode).
 
 ## System Requirements
 
-- Python 3.9+
-- Bluetooth adapter with BLE support
-- Operating System: Windows, macOS, or Linux (Raspberry Pi compatible)
-- Web browser for accessing the user interface
+* Python 3.12+ (due to `pyftms` dependency)
+* Bluetooth adapter with BLE support
+* Operating System: Windows, macOS, or Linux (Raspberry Pi compatible)
+* Web browser for accessing the user interface
+
+## Prerequisites
+
+* Python 3.12 or higher
+* pip (Python package installer)
+* Git (optional, for cloning the repository)
 
 ## Installation
 
-### Prerequisites
-
-- Python 3.9 or higher
-- pip (Python package installer)
-- Git (optional, for cloning the repository)
-
-### Installation Steps
-
 1. Clone the repository (or download and extract the ZIP file):
-   ```
-   git clone https://github.com/yourusername/rogue_garmin_bridge.git
-   cd rogue_garmin_bridge
-   ```
+    ```
+    git clone https://github.com/Douglas-Christian/rogue_garmin_bridge.git
+    cd rogue_garmin_bridge
+    ```
 
 2. Create and activate a virtual environment (optional but recommended):
-   ```
-   python -m venv .venv
-   # On Windows:
-   .venv\Scripts\activate
-   # On macOS/Linux:
-   source .venv/bin/activate
-   ```
+    ```
+    python3.12 -m venv venv
+    # On Windows:
+    venv\Scripts\activate
+    # On macOS/Linux:
+    source venv/bin/activate
+    ```
 
 3. Install the required dependencies:
-   ```
-   pip install -r requirements.txt
-   ```
+    ```
+    pip install -r requirements.txt
+    ```
 
 ## Usage
 
-### Starting the Application
-
 1. Navigate to the project directory:
-   ```
-   cd rogue_garmin_bridge
-   ```
+    ```
+    cd rogue_garmin_bridge
+    ```
 
 2. Start the web application:
-   ```
-   python src/web/app.py
-   ```
+    ```
+    python3.12 src/web/app.py
+    ```
 
 3. Open a web browser and navigate to:
-   ```
-   http://localhost:5000
-   ```
+    ```
+    http://localhost:5000
+    ```
 
 ### Connecting to Rogue Equipment
 
 1. Put your Rogue device in connection mode:
-   - **For Echo Bike**: Press and hold the "Connect" button for 2 seconds until you hear two beeps. The Bluetooth and ANT+ icons should flash on the console to indicate it's ready to pair.
-   - **For Echo Rower**: From the home screen, select the "Connect" option, then choose "Connect to App". The console will search for an application to pair with over BLE.
-
+   * **For Echo Bike**: Press and hold the "Connect" button for 2 seconds until you hear two beeps. The Bluetooth and ANT+ icons should flash on the console to indicate it's ready to pair.
+   * **For Echo Rower**: From the home screen, select the "Connect" option, then choose "Connect to App". The console will search for an application to pair with over BLE.
 2. Navigate to the "Devices" page in the web interface
 3. Click "Scan for Devices" to discover available Rogue equipment
 4. Select your device from the list and click "Connect"
 5. Once connected, the device status will show as "Connected" and the Bluetooth icon on your device's console should stop flashing and remain solid
 
-### Starting a Workout
+### Tracking a Workout
 
 1. Navigate to the "Workout" page
 2. Click "Start Workout" to begin tracking
@@ -105,61 +98,57 @@ Rogue Garmin Bridge connects to Rogue Echo Bike and Rower equipment(in developme
 1. Navigate to the "History" page
 2. Select a workout from the list
 3. Click the "FIT" button to generate and download the FIT file
-4. Manually upload the FIT file to Garmin Connect, or
-5. Click "Upload to Garmin" to send the workout directly to Garmin Connect
-6. Enter your Garmin Connect credentials if prompted
+4. Manually upload the downloaded FIT file to Garmin Connect via their website or desktop application.
 
-## Recent Improvements
+## Recent Updates
 
-### May 2025 Updates
-
-- **Proper Training Load Calculation**: FIT files now properly report training load in Garmin Connect by using appropriate device identification
-- **Improved Speed Metrics**: Fixed issues with average speed calculation and reporting in FIT files
-- **Enhanced Workout Visualization**: Added speed charts in workout history for better performance analysis
-- **FIT File Analysis Tools**: Added tools for analyzing and comparing FIT files to ensure compatibility with Garmin Connect
+* **Migration to `pyftms`**: Replaced `pycycling` with `pyftms` for more robust and specialized FTMS communication, particularly improving rower support.
+* **Python 3.12 Requirement**: Updated project to require Python 3.12 due to `pyftms` dependencies.
+* **Removal of Direct Garmin Connect Upload**: The feature for direct automated upload to Garmin Connect has been removed due to complexities with 2FA and API changes. Users now download FIT files for manual upload.
+* **Proper Training Load Calculation**: FIT files now properly report training load in Garmin Connect by using appropriate device identification
+* **Improved Speed Metrics**: Fixed issues with average speed calculation and reporting in FIT files
+* **Enhanced Workout Visualization**: Added speed charts in workout history for better performance analysis
+* **FIT File Analysis Tools**: Added tools for analyzing and comparing FIT files to ensure compatibility with Garmin Connect
 
 ## Project Structure
 
-- `src/ftms/`: Bluetooth connectivity and FTMS protocol implementation
-- `src/data/`: Data collection, processing, and storage
-- `src/fit/`: FIT file conversion and Garmin Connect upload
-- `src/web/`: Web interface (Flask application)
-- `docs/`: Project documentation
-- `fit_files/`: Generated FIT files from workouts
-- `tools/`: Utility scripts for analysis and troubleshooting
+* `src/ftms/`: Bluetooth connectivity and FTMS protocol implementation (using `pyftms`).
+* `src/data/`: Data collection, processing, and storage
+* `src/fit/`: FIT file conversion logic.
+* `src/web/`: Web interface (Flask application)
+* `docs/`: Project documentation
+* `fit_files/`: Generated FIT files from workouts (if configured to save locally, though typically downloaded by user)
+* Analysis scripts in root directory: Tools for analyzing and troubleshooting FIT files
 
 ## Configuration
 
 Configuration options are available in the web interface under "Settings" or can be set via environment variables:
 
-- `PORT`: The port to run the application on (default: 5000)
-- `DEBUG`: Set to "True" to enable debug mode (default: False)
-- `DATABASE_URL`: URL for the database (default: SQLite database in the data directory)
-- `SECRET_KEY`: Secret key for session encryption (required for production)
+* `PORT`: The port to run the application on (default: 5000)
+* `DEBUG`: Set to "True" to enable debug mode (default: False)
+* `DATABASE_URL`: URL for the database (default: SQLite database in the data directory)
+* `SECRET_KEY`: Secret key for session encryption (required for production)
 
-## Development
-
-### FTMS Device Simulator
+## Development with the Simulator
 
 For development without physical hardware, the application includes an FTMS device simulator:
 
-1. Start the application with the simulator flag:
-   ```
-   python src/web/app.py --use-simulator
-   ```
+1. Start the application with the simulator flag (using Python 3.12):
+    ```
+    python3.12 src/web/app.py --use-simulator
+    ```
 
 2. The simulator will appear as a device that can be connected to from the web interface
 
 3. For detailed instructions on using the simulator to test workouts, please see the [Testing with the FTMS Simulator](docs/testing_with_simulator.md) documentation.
 
-### FIT File Analysis
+## Analysis Tools
 
 The project includes tools for analyzing FIT files:
 
-- `compare_fit_files.py`: Compare device identification and other metadata between FIT files
-- `compare_speed_fields.py`: Analyze speed data in FIT files for troubleshooting
+* `compare_fit_files.py`: Compare device identification and other metadata between FIT files
 
-### Running Tests
+## Testing
 
 ```
 pytest
@@ -167,12 +156,9 @@ pytest
 
 ## Troubleshooting
 
-### Common Issues
-
-- **Bluetooth Connection Problems**: Ensure your Bluetooth adapter supports BLE and is enabled
-- **Device Not Found**: Make sure your Rogue equipment is powered on and in Bluetooth pairing mode
-- **Upload to Garmin Fails**: Check your internet connection and Garmin Connect credentials
-- **Incorrect Speed Data**: If speed is not showing in Garmin Connect, check your FIT files using the analysis tools
+* **Bluetooth Connection Problems**: Ensure your Bluetooth adapter supports BLE and is enabled. Ensure `bluez` (Linux) or appropriate BLE drivers are installed and working.
+* **Device Not Found**: Make sure your Rogue equipment is powered on and in Bluetooth pairing mode
+* **Incorrect Speed Data**: If speed is not showing in Garmin Connect, check your FIT files using the analysis tools
 
 ## Contributing
 
@@ -184,6 +170,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Acknowledgments
 
-- Rogue Fitness for their FTMS-compatible equipment
-- The Garmin Connect team for their fitness platform
-- All contributors to the Python libraries used in this project
+* Rogue Fitness for their FTMS-compatible equipment
+* The Garmin Connect team for their fitness platform
+* All contributors to the Python libraries used in this project, especially the `pyftms` and `bleak` libraries.
