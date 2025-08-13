@@ -3512,3 +3512,353 @@ AttributeError: type object 'ActivityType' has no attribute 'MANUAL'
 2025-08-12 20:12:52,081 - fit_converter - WARNING - ActivityType.INDOOR_CYCLING not found. Trying ActivityType.CYCLING.
 2025-08-12 20:12:52,081 - fit_converter - INFO - Set ActivityType to CYCLING for bike workout.
 2025-08-12 20:12:52,090 - fit_converter - INFO - FIT file successfully created: C:\Users\dougl\AppData\Local\Temp\tmp6doenebx\bike_20250813_001252.fit
+2025-08-12 20:15:36,724 - fit_converter - INFO - Processing bike workout with 180 data points.
+2025-08-12 20:15:36,725 - fit_converter - INFO - Activity start time (UTC): 2025-08-13 00:15:36.724899+00:00
+2025-08-12 20:15:36,756 - fit_converter - INFO - Set LapMessage SubSport to INDOOR_CYCLING.
+2025-08-12 20:15:36,757 - fit_converter - INFO - Set SessionMessage SubSport to INDOOR_CYCLING.
+2025-08-12 20:15:36,758 - fit_converter - WARNING - ActivityType.INDOOR_CYCLING not found. Trying ActivityType.CYCLING.
+2025-08-12 20:15:36,758 - fit_converter - INFO - Set ActivityType to CYCLING for bike workout.
+2025-08-12 20:15:36,767 - fit_converter - INFO - FIT file successfully created: C:\Users\dougl\AppData\Local\Temp\tmp0mjwtj3l\bike_20250813_001536.fit
+2025-08-12 20:15:36,772 - fit_converter - INFO - Processing bike workout with 180 data points.
+2025-08-12 20:15:36,772 - fit_converter - INFO - Activity start time (UTC): 2025-08-13 00:15:36.771898+00:00
+2025-08-12 20:15:36,808 - fit_converter - INFO - Set LapMessage SubSport to INDOOR_CYCLING.
+2025-08-12 20:15:36,809 - fit_converter - INFO - Set SessionMessage SubSport to INDOOR_CYCLING.
+2025-08-12 20:15:36,809 - fit_converter - WARNING - ActivityType.INDOOR_CYCLING not found. Trying ActivityType.CYCLING.
+2025-08-12 20:15:36,809 - fit_converter - INFO - Set ActivityType to CYCLING for bike workout.
+2025-08-12 20:15:36,810 - fit_converter - INFO - FIT file successfully created: C:\Users\dougl\AppData\Local\Temp\tmp02jm_jlo\bike_20250813_001536.fit
+2025-08-12 20:15:36,812 - fit_converter - INFO - Processing bike workout with 180 data points.
+2025-08-12 20:15:36,812 - fit_converter - INFO - Activity start time (UTC): 2025-08-13 00:15:36.811897+00:00
+2025-08-12 20:15:36,838 - fit_converter - INFO - Set LapMessage SubSport to INDOOR_CYCLING.
+2025-08-12 20:15:36,839 - fit_converter - INFO - Set SessionMessage SubSport to INDOOR_CYCLING.
+2025-08-12 20:15:36,839 - fit_converter - WARNING - ActivityType.INDOOR_CYCLING not found. Trying ActivityType.CYCLING.
+2025-08-12 20:15:36,839 - fit_converter - INFO - Set ActivityType to CYCLING for bike workout.
+2025-08-12 20:15:36,840 - fit_converter - INFO - FIT file successfully created: C:\Users\dougl\AppData\Local\Temp\tmp1bl1d2n9\bike_20250813_001536.fit
+2025-08-12 20:15:36,842 - fit_converter - INFO - Processing bike workout with 180 data points.
+2025-08-12 20:15:36,842 - fit_converter - INFO - Activity start time (UTC): 2025-08-13 00:15:36.841897+00:00
+2025-08-12 20:15:36,889 - fit_converter - INFO - Set LapMessage SubSport to INDOOR_CYCLING.
+2025-08-12 20:15:36,889 - fit_converter - INFO - Set SessionMessage SubSport to INDOOR_CYCLING.
+2025-08-12 20:15:36,890 - fit_converter - WARNING - ActivityType.INDOOR_CYCLING not found. Trying ActivityType.CYCLING.
+2025-08-12 20:15:36,890 - fit_converter - INFO - Set ActivityType to CYCLING for bike workout.
+2025-08-12 20:15:36,890 - fit_converter - INFO - FIT file successfully created: C:\Users\dougl\AppData\Local\Temp\tmpsgwr1ryp\bike_20250813_001536.fit
+2025-08-12 20:15:36,893 - fit_converter - INFO - Processing bike workout with 180 data points.
+2025-08-12 20:15:36,893 - fit_converter - INFO - Activity start time (UTC): 2025-08-13 00:15:36.892897+00:00
+2025-08-12 20:15:36,937 - fit_converter - INFO - Set LapMessage SubSport to INDOOR_CYCLING.
+2025-08-12 20:15:36,938 - fit_converter - INFO - Set SessionMessage SubSport to INDOOR_CYCLING.
+2025-08-12 20:15:36,938 - fit_converter - WARNING - ActivityType.INDOOR_CYCLING not found. Trying ActivityType.CYCLING.
+2025-08-12 20:15:36,939 - fit_converter - INFO - Set ActivityType to CYCLING for bike workout.
+2025-08-12 20:15:36,939 - fit_converter - INFO - FIT file successfully created: C:\Users\dougl\AppData\Local\Temp\tmpprxcosjr\bike_20250813_001536.fit
+2025-08-12 20:15:36,941 - fit_converter - INFO - Processing bike workout with 180 data points.
+2025-08-12 20:15:36,942 - fit_converter - INFO - Activity start time (UTC): 2025-08-13 00:15:36.941895+00:00
+2025-08-12 20:15:36,971 - fit_converter - INFO - Set LapMessage SubSport to INDOOR_CYCLING.
+2025-08-12 20:15:36,972 - fit_converter - INFO - Set SessionMessage SubSport to INDOOR_CYCLING.
+2025-08-12 20:15:36,972 - fit_converter - WARNING - ActivityType.INDOOR_CYCLING not found. Trying ActivityType.CYCLING.
+2025-08-12 20:15:36,972 - fit_converter - INFO - Set ActivityType to CYCLING for bike workout.
+2025-08-12 20:15:36,982 - fit_converter - INFO - FIT file successfully created: C:\Users\dougl\AppData\Local\Temp\tmpdbpco2s8\bike_20250813_001536.fit
+2025-08-12 20:15:36,983 - fit_converter - ERROR - No timestamps found. Cannot create FIT file.
+2025-08-12 20:15:36,986 - fit_converter - INFO - Processing bike workout with 180 data points.
+2025-08-12 20:15:36,986 - fit_converter - INFO - Activity start time (UTC): 2025-08-13 00:15:36.985894+00:00
+2025-08-12 20:15:37,031 - fit_converter - INFO - Set LapMessage SubSport to INDOOR_CYCLING.
+2025-08-12 20:15:37,032 - fit_converter - INFO - Set SessionMessage SubSport to INDOOR_CYCLING.
+2025-08-12 20:15:37,032 - fit_converter - WARNING - ActivityType.INDOOR_CYCLING not found. Trying ActivityType.CYCLING.
+2025-08-12 20:15:37,032 - fit_converter - INFO - Set ActivityType to CYCLING for bike workout.
+2025-08-12 20:15:37,040 - fit_converter - INFO - FIT file successfully created: C:\Users\dougl\AppData\Local\Temp\tmp9wll86ky\bike_20250813_001536.fit
+2025-08-12 20:15:37,043 - fit_converter - INFO - Processing bike workout with 180 data points.
+2025-08-12 20:15:37,043 - fit_converter - INFO - Activity start time (UTC): 2025-08-13 00:15:37.043896+00:00
+2025-08-12 20:15:37,073 - fit_converter - INFO - Set LapMessage SubSport to INDOOR_CYCLING.
+2025-08-12 20:15:37,073 - fit_converter - INFO - Set SessionMessage SubSport to INDOOR_CYCLING.
+2025-08-12 20:15:37,074 - fit_converter - WARNING - ActivityType.INDOOR_CYCLING not found. Trying ActivityType.CYCLING.
+2025-08-12 20:15:37,074 - fit_converter - INFO - Set ActivityType to CYCLING for bike workout.
+2025-08-12 20:15:37,084 - fit_converter - INFO - FIT file successfully created: C:\Users\dougl\AppData\Local\Temp\tmpn8y19dcx\bike_20250813_001537.fit
+2025-08-12 20:15:37,087 - fit_converter - ERROR - No timestamps found. Cannot create FIT file.
+2025-08-12 20:15:37,091 - fit_converter - INFO - Processing bike workout with 180 data points.
+2025-08-12 20:15:37,091 - fit_converter - INFO - Activity start time (UTC): 2025-08-13 00:15:37.090893+00:00
+2025-08-12 20:15:37,092 - fit_converter - ERROR - FIT Conversion Exception: FIT builder error
+2025-08-12 20:15:37,104 - fit_converter - ERROR - Full Traceback Below:
+Traceback (most recent call last):
+  File "C:\Users\dougl\kiro-grb\rogue_garmin_bridge\src\fit\fit_converter.py", line 208, in convert_workout
+    builder = FitFileBuilder(auto_define=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dougl\AppData\Local\Programs\Python\Python312\Lib\unittest\mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dougl\AppData\Local\Programs\Python\Python312\Lib\unittest\mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dougl\AppData\Local\Programs\Python\Python312\Lib\unittest\mock.py", line 1193, in _execute_mock_call
+    raise effect
+Exception: FIT builder error
+
+2025-08-12 20:18:39,347 - database - INFO - Database tables created
+2025-08-12 20:18:46,419 - database - INFO - Database tables created
+2025-08-12 20:18:46,444 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:19:40,766 - database - INFO - Database tables created
+2025-08-12 20:19:40,813 - database - INFO - Database tables created
+2025-08-12 20:19:40,858 - database - INFO - Database tables created
+2025-08-12 20:19:40,891 - database - INFO - Database tables created
+2025-08-12 20:19:40,898 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:19:40,942 - database - INFO - Database tables created
+2025-08-12 20:19:40,953 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:19:40,972 - database - INFO - Device Updated Device Name (00:11:22:33:44:55) updated with ID 1
+2025-08-12 20:19:41,002 - database - INFO - Database tables created
+2025-08-12 20:19:41,008 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:19:41,046 - database - INFO - Database tables created
+2025-08-12 20:19:41,120 - database - INFO - Database tables created
+2025-08-12 20:19:41,165 - database - INFO - Database tables created
+2025-08-12 20:19:41,172 - database - INFO - Device Test Device 0 (00:11:22:33:44:00) added with ID 1
+2025-08-12 20:19:41,180 - database - INFO - Device Test Device 1 (00:11:22:33:44:01) added with ID 2
+2025-08-12 20:19:41,187 - database - INFO - Device Test Device 2 (00:11:22:33:44:02) added with ID 3
+2025-08-12 20:19:41,221 - database - INFO - Database tables created
+2025-08-12 20:19:41,227 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:19:41,233 - database - INFO - Started workout 1 with device 1
+2025-08-12 20:19:41,273 - database - INFO - Database tables created
+2025-08-12 20:19:41,284 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:19:41,288 - database - INFO - Started workout 1 with device 1
+2025-08-12 20:19:41,394 - database - INFO - Ended workout 1, duration: 0s
+2025-08-12 20:19:41,492 - database - INFO - Database tables created
+2025-08-12 20:19:41,492 - database - ERROR - Workout 999 not found
+2025-08-12 20:19:41,533 - database - INFO - Database tables created
+2025-08-12 20:19:41,540 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:19:41,545 - database - INFO - Started workout 1 with device 1
+2025-08-12 20:19:41,578 - database - INFO - Database tables created
+2025-08-12 20:19:41,622 - database - INFO - Database tables created
+2025-08-12 20:19:41,634 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:19:41,641 - database - INFO - Started workout 1 with device 1
+2025-08-12 20:19:41,641 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:41.641565+00:00
+2025-08-12 20:19:41,646 - database - INFO - Successfully added data point with ID 1
+2025-08-12 20:19:41,646 - database - INFO - Retrieved 1 data points for workout 1
+2025-08-12 20:19:41,681 - database - INFO - Database tables created
+2025-08-12 20:19:41,690 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:19:41,697 - database - INFO - Started workout 1 with device 1
+2025-08-12 20:19:41,698 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:41.698499+00:00
+2025-08-12 20:19:41,706 - database - INFO - Successfully added data point with ID 1
+2025-08-12 20:19:41,706 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.698499+00:00
+2025-08-12 20:19:41,718 - database - INFO - Successfully added data point with ID 2
+2025-08-12 20:19:41,719 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:43.698499+00:00
+2025-08-12 20:19:41,725 - database - INFO - Successfully added data point with ID 3
+2025-08-12 20:19:41,726 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:44.698499+00:00
+2025-08-12 20:19:41,731 - database - INFO - Successfully added data point with ID 4
+2025-08-12 20:19:41,731 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:45.698499+00:00
+2025-08-12 20:19:41,736 - database - INFO - Successfully added data point with ID 5
+2025-08-12 20:19:41,736 - database - INFO - Retrieved 5 data points for workout 1
+2025-08-12 20:19:41,774 - database - INFO - Database tables created
+2025-08-12 20:19:41,786 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:19:41,794 - database - INFO - Started workout 1 with device 1
+2025-08-12 20:19:41,794 - database - INFO - Retrieved 0 data points for workout 1
+2025-08-12 20:19:41,834 - database - INFO - Database tables created
+2025-08-12 20:19:41,835 - database - INFO - Retrieved 0 data points for workout 999
+2025-08-12 20:19:41,875 - database - INFO - Database tables created
+2025-08-12 20:19:41,953 - database - INFO - Database tables created
+2025-08-12 20:19:41,985 - database - INFO - Database tables created
+2025-08-12 20:19:42,052 - database - INFO - Database tables created
+2025-08-12 20:19:42,053 - database - INFO - Adding data point to workout 999 at timestamp 2025-08-13T00:19:42.053533+00:00
+2025-08-12 20:19:42,059 - database - INFO - Successfully added data point with ID 1
+2025-08-12 20:19:42,091 - database - INFO - Database tables created
+2025-08-12 20:19:42,100 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:19:42,109 - database - INFO - Started workout 1 with device 1
+2025-08-12 20:19:42,109 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.109532+00:00
+2025-08-12 20:19:42,118 - database - INFO - Successfully added data point with ID 1
+2025-08-12 20:19:42,118 - database - INFO - Retrieved 1 data points for workout 1
+2025-08-12 20:19:42,181 - database - INFO - Database tables created
+2025-08-12 20:19:42,193 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:19:42,208 - database - INFO - Started workout 1 with device 1
+2025-08-12 20:19:42,208 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.208908+00:00
+2025-08-12 20:19:42,214 - database - INFO - Successfully added data point with ID 1
+2025-08-12 20:19:42,214 - database - INFO - Retrieved 1 data points for workout 1
+2025-08-12 20:19:42,244 - database - INFO - Database tables created
+2025-08-12 20:19:42,258 - database - INFO - Device Worker Device 0 (00:11:22:33:44:00) added with ID 1
+2025-08-12 20:19:42,273 - database - INFO - Device Worker Device 2 (00:11:22:33:44:02) added with ID 2
+2025-08-12 20:19:42,288 - database - INFO - Device Worker Device 1 (00:11:22:33:44:01) added with ID 3
+2025-08-12 20:19:42,304 - database - INFO - Device Worker Device 3 (00:11:22:33:44:03) added with ID 4
+2025-08-12 20:19:42,323 - database - INFO - Device Worker Device 4 (00:11:22:33:44:04) added with ID 5
+2025-08-12 20:19:42,457 - database - INFO - Database tables created
+2025-08-12 20:19:42,488 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:19:42,510 - database - INFO - Started workout 1 with device 1
+2025-08-12 20:19:42,511 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.511904+00:00
+2025-08-12 20:19:42,512 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.512904+00:00
+2025-08-12 20:19:42,512 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.513904+00:00
+2025-08-12 20:19:42,535 - database - INFO - Successfully added data point with ID 1
+2025-08-12 20:19:42,535 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.535904+00:00
+2025-08-12 20:19:42,543 - database - INFO - Successfully added data point with ID 2
+2025-08-12 20:19:42,544 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.544905+00:00
+2025-08-12 20:19:42,554 - database - INFO - Successfully added data point with ID 3
+2025-08-12 20:19:42,554 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.554905+00:00
+2025-08-12 20:19:42,564 - database - INFO - Successfully added data point with ID 4
+2025-08-12 20:19:42,565 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.564906+00:00
+2025-08-12 20:19:42,579 - database - INFO - Successfully added data point with ID 5
+2025-08-12 20:19:42,579 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.579907+00:00
+2025-08-12 20:19:42,590 - database - INFO - Successfully added data point with ID 6
+2025-08-12 20:19:42,590 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.590908+00:00
+2025-08-12 20:19:42,601 - database - INFO - Successfully added data point with ID 7
+2025-08-12 20:19:42,601 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.601909+00:00
+2025-08-12 20:19:42,612 - database - INFO - Successfully added data point with ID 8
+2025-08-12 20:19:42,612 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.612909+00:00
+2025-08-12 20:19:42,625 - database - INFO - Successfully added data point with ID 9
+2025-08-12 20:19:42,625 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.625909+00:00
+2025-08-12 20:19:42,637 - database - INFO - Successfully added data point with ID 10
+2025-08-12 20:19:42,660 - database - INFO - Successfully added data point with ID 11
+2025-08-12 20:19:42,660 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.662901+00:00
+2025-08-12 20:19:42,673 - database - INFO - Successfully added data point with ID 12
+2025-08-12 20:19:42,673 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.675902+00:00
+2025-08-12 20:19:42,686 - database - INFO - Successfully added data point with ID 13
+2025-08-12 20:19:42,686 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.688903+00:00
+2025-08-12 20:19:42,710 - database - INFO - Successfully added data point with ID 14
+2025-08-12 20:19:42,711 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.713904+00:00
+2025-08-12 20:19:42,721 - database - INFO - Successfully added data point with ID 15
+2025-08-12 20:19:42,721 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.723904+00:00
+2025-08-12 20:19:42,726 - database - INFO - Successfully added data point with ID 16
+2025-08-12 20:19:42,726 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.728905+00:00
+2025-08-12 20:19:42,731 - database - INFO - Successfully added data point with ID 17
+2025-08-12 20:19:42,731 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.733907+00:00
+2025-08-12 20:19:42,736 - database - INFO - Successfully added data point with ID 18
+2025-08-12 20:19:42,736 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.738907+00:00
+2025-08-12 20:19:42,741 - database - INFO - Successfully added data point with ID 19
+2025-08-12 20:19:42,741 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.743909+00:00
+2025-08-12 20:19:42,746 - database - INFO - Successfully added data point with ID 20
+2025-08-12 20:19:42,761 - database - INFO - Successfully added data point with ID 21
+2025-08-12 20:19:42,761 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.762900+00:00
+2025-08-12 20:19:42,768 - database - INFO - Successfully added data point with ID 22
+2025-08-12 20:19:42,768 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.769901+00:00
+2025-08-12 20:19:42,775 - database - INFO - Successfully added data point with ID 23
+2025-08-12 20:19:42,776 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.777902+00:00
+2025-08-12 20:19:42,785 - database - INFO - Successfully added data point with ID 24
+2025-08-12 20:19:42,785 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.786903+00:00
+2025-08-12 20:19:42,792 - database - INFO - Successfully added data point with ID 25
+2025-08-12 20:19:42,792 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.793903+00:00
+2025-08-12 20:19:42,800 - database - INFO - Successfully added data point with ID 26
+2025-08-12 20:19:42,800 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.801904+00:00
+2025-08-12 20:19:42,809 - database - INFO - Successfully added data point with ID 27
+2025-08-12 20:19:42,809 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.810905+00:00
+2025-08-12 20:19:42,819 - database - INFO - Successfully added data point with ID 28
+2025-08-12 20:19:42,819 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.820906+00:00
+2025-08-12 20:19:42,828 - database - INFO - Successfully added data point with ID 29
+2025-08-12 20:19:42,829 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.830907+00:00
+2025-08-12 20:19:42,839 - database - INFO - Successfully added data point with ID 30
+2025-08-12 20:19:42,839 - database - INFO - Retrieved 30 data points for workout 1
+2025-08-12 20:19:42,926 - database - INFO - Database tables created
+2025-08-12 20:19:42,938 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:19:42,951 - database - INFO - Started workout 1 with device 1
+2025-08-12 20:19:42,951 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:42.951623+00:00
+2025-08-12 20:19:42,963 - database - INFO - Successfully added data point with ID 1
+2025-08-12 20:19:42,963 - database - INFO - Retrieved 1 data points for workout 1
+2025-08-12 20:19:43,023 - database - INFO - Database tables created
+2025-08-12 20:19:43,058 - database - INFO - Database tables created
+2025-08-12 20:19:43,135 - database - INFO - Database tables created
+2025-08-12 20:19:43,137 - database - INFO - Database tables created
+2025-08-12 20:19:43,194 - database - INFO - Database tables created
+2025-08-12 20:19:43,328 - database - INFO - Database tables created
+2025-08-12 20:19:43,330 - database - ERROR - Error creating database connection: database is locked
+2025-08-12 20:19:43,330 - database - ERROR - Error creating tables: database is locked
+2025-08-12 20:19:43,436 - database - INFO - Database tables created
+2025-08-12 20:19:43,443 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:19:43,451 - database - INFO - Started workout 1 with device 1
+2025-08-12 20:19:43,527 - database - INFO - Database tables created
+2025-08-12 20:19:43,532 - database - ERROR - Error creating tables: file is not a database
+2025-08-12 20:19:43,610 - database - INFO - Database tables created
+2025-08-12 20:19:43,621 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:19:43,632 - database - INFO - Started workout 1 with device 1
+2025-08-12 20:19:43,632 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:19:43.632668+00:00
+2025-08-12 20:19:43,644 - database - INFO - Successfully added data point with ID 1
+2025-08-12 20:19:43,645 - database - INFO - Retrieved 1 data points for workout 1
+2025-08-12 20:20:33,618 - database - INFO - Database tables created
+2025-08-12 20:20:33,626 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:20:33,631 - database - INFO - Started workout 1 with device 1
+2025-08-12 20:20:34,639 - database - INFO - Ended workout 1, duration: 1s
+2025-08-12 20:20:42,833 - database - INFO - Database tables created
+2025-08-12 20:20:42,843 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:20:42,854 - database - INFO - Started workout 1 with device 1
+2025-08-12 20:20:52,837 - database - INFO - Database tables created
+2025-08-12 20:21:19,378 - database - INFO - Database tables created
+2025-08-12 20:21:19,551 - database - INFO - Database tables created
+2025-08-12 20:21:19,577 - database - INFO - Database tables created
+2025-08-12 20:21:19,720 - database - INFO - Database tables created
+2025-08-12 20:21:19,729 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:21:19,881 - database - INFO - Database tables created
+2025-08-12 20:21:19,893 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:21:19,904 - database - INFO - Device Updated Device Name (00:11:22:33:44:55) updated with ID 1
+2025-08-12 20:21:20,086 - database - INFO - Database tables created
+2025-08-12 20:21:20,091 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:21:20,224 - database - INFO - Database tables created
+2025-08-12 20:21:20,367 - database - INFO - Database tables created
+2025-08-12 20:21:20,520 - database - INFO - Database tables created
+2025-08-12 20:21:20,532 - database - INFO - Device Test Device 0 (00:11:22:33:44:00) added with ID 1
+2025-08-12 20:21:20,542 - database - INFO - Device Test Device 1 (00:11:22:33:44:01) added with ID 2
+2025-08-12 20:21:20,555 - database - INFO - Device Test Device 2 (00:11:22:33:44:02) added with ID 3
+2025-08-12 20:21:20,876 - database - INFO - Database tables created
+2025-08-12 20:21:20,888 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:21:20,893 - database - INFO - Started workout 1 with device 1
+2025-08-12 20:21:21,022 - database - INFO - Database tables created
+2025-08-12 20:21:21,029 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:21:21,037 - database - INFO - Started workout 1 with device 1
+2025-08-12 20:21:22,045 - database - INFO - Ended workout 1, duration: 1s
+2025-08-12 20:21:22,201 - database - INFO - Database tables created
+2025-08-12 20:21:22,201 - database - ERROR - Workout 999 not found
+2025-08-12 20:21:22,361 - database - INFO - Database tables created
+2025-08-12 20:21:22,374 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:21:22,386 - database - INFO - Started workout 1 with device 1
+2025-08-12 20:21:22,543 - database - INFO - Database tables created
+2025-08-12 20:21:22,676 - database - INFO - Database tables created
+2025-08-12 20:21:22,684 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:21:22,692 - database - INFO - Started workout 1 with device 1
+2025-08-12 20:21:22,692 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:21:22.692899+00:00
+2025-08-12 20:21:22,700 - database - INFO - Successfully added data point with ID 1
+2025-08-12 20:21:22,701 - database - INFO - Retrieved 1 data points for workout 1
+2025-08-12 20:21:22,853 - database - INFO - Database tables created
+2025-08-12 20:21:22,864 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:21:22,874 - database - INFO - Started workout 1 with device 1
+2025-08-12 20:21:22,874 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:21:22.874407+00:00
+2025-08-12 20:21:22,885 - database - INFO - Successfully added data point with ID 1
+2025-08-12 20:21:22,885 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:21:23.874407+00:00
+2025-08-12 20:21:22,897 - database - INFO - Successfully added data point with ID 2
+2025-08-12 20:21:22,897 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:21:24.874407+00:00
+2025-08-12 20:21:22,913 - database - INFO - Successfully added data point with ID 3
+2025-08-12 20:21:22,913 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:21:25.874407+00:00
+2025-08-12 20:21:22,925 - database - INFO - Successfully added data point with ID 4
+2025-08-12 20:21:22,925 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:21:26.874407+00:00
+2025-08-12 20:21:22,937 - database - INFO - Successfully added data point with ID 5
+2025-08-12 20:21:22,937 - database - INFO - Retrieved 5 data points for workout 1
+2025-08-12 20:21:23,104 - database - INFO - Database tables created
+2025-08-12 20:21:23,109 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:21:23,114 - database - INFO - Started workout 1 with device 1
+2025-08-12 20:21:23,115 - database - INFO - Retrieved 0 data points for workout 1
+2025-08-12 20:21:23,255 - database - INFO - Database tables created
+2025-08-12 20:21:23,256 - database - INFO - Retrieved 0 data points for workout 999
+2025-08-12 20:21:23,407 - database - INFO - Database tables created
+2025-08-12 20:21:23,580 - database - INFO - Database tables created
+2025-08-12 20:21:23,748 - database - INFO - Database tables created
+2025-08-12 20:21:23,897 - database - INFO - Database tables created
+2025-08-12 20:21:23,898 - database - INFO - Adding data point to workout 999 at timestamp 2025-08-13T00:21:23.898275+00:00
+2025-08-12 20:21:23,905 - database - INFO - Successfully added data point with ID 1
+2025-08-12 20:21:24,058 - database - INFO - Database tables created
+2025-08-12 20:21:24,069 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:21:24,080 - database - INFO - Started workout 1 with device 1
+2025-08-12 20:21:24,080 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:21:24.080094+00:00
+2025-08-12 20:21:24,095 - database - INFO - Successfully added data point with ID 1
+2025-08-12 20:21:24,096 - database - INFO - Retrieved 1 data points for workout 1
+2025-08-12 20:21:24,354 - database - INFO - Database tables created
+2025-08-12 20:21:24,417 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:21:24,422 - database - INFO - Started workout 1 with device 1
+2025-08-12 20:21:24,422 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:21:24.422596+00:00
+2025-08-12 20:21:24,427 - database - INFO - Successfully added data point with ID 1
+2025-08-12 20:21:24,428 - database - INFO - Retrieved 1 data points for workout 1
+2025-08-12 20:21:24,561 - database - INFO - Database tables created
+2025-08-12 20:21:24,569 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:21:24,576 - database - INFO - Started workout 1 with device 1
+2025-08-12 20:21:24,576 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:21:24.576109+00:00
+2025-08-12 20:21:24,584 - database - INFO - Successfully added data point with ID 1
+2025-08-12 20:21:24,584 - database - INFO - Retrieved 1 data points for workout 1
+2025-08-12 20:21:24,763 - database - INFO - Database tables created
+2025-08-12 20:21:24,893 - database - INFO - Database tables created
+2025-08-12 20:21:25,031 - database - INFO - Database tables created
+2025-08-12 20:21:25,032 - database - INFO - Database tables created
+2025-08-12 20:21:25,180 - database - INFO - Database tables created
+2025-08-12 20:21:25,181 - database - ERROR - Error creating database connection: database is locked
+2025-08-12 20:21:25,182 - database - ERROR - Error creating tables: database is locked
+2025-08-12 20:21:25,339 - database - INFO - Database tables created
+2025-08-12 20:21:25,351 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:21:25,366 - database - INFO - Started workout 1 with device 1
+2025-08-12 20:21:25,539 - database - INFO - Database tables created
+2025-08-12 20:21:25,543 - database - INFO - Device Test Rogue Bike (00:11:22:33:44:55) added with ID 1
+2025-08-12 20:21:25,548 - database - INFO - Started workout 1 with device 1
+2025-08-12 20:21:25,549 - database - INFO - Adding data point to workout 1 at timestamp 2025-08-13T00:21:25.549607+00:00
+2025-08-12 20:21:25,554 - database - INFO - Successfully added data point with ID 1
+2025-08-12 20:21:25,554 - database - INFO - Retrieved 1 data points for workout 1
