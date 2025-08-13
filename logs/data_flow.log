@@ -3498,3 +3498,17 @@ AttributeError: type object 'ActivityType' has no attribute 'MANUAL'
 2025-05-25 10:06:47,219 - database - INFO - Database tables created
 2025-05-25 10:06:50,300 - database - INFO - Retrieved 4 workouts from database
 2025-05-25 10:06:52,530 - database - INFO - Retrieved 609 data points for workout 7
+2025-08-12 20:12:02,728 - fit_converter - INFO - Processing bike workout with 180 data points.
+2025-08-12 20:12:02,728 - fit_converter - INFO - Activity start time (UTC): 2025-08-13 00:12:02.728272+00:00
+2025-08-12 20:12:02,767 - fit_converter - INFO - Set LapMessage SubSport to INDOOR_CYCLING.
+2025-08-12 20:12:02,768 - fit_converter - INFO - Set SessionMessage SubSport to INDOOR_CYCLING.
+2025-08-12 20:12:02,768 - fit_converter - WARNING - ActivityType.INDOOR_CYCLING not found. Trying ActivityType.CYCLING.
+2025-08-12 20:12:02,769 - fit_converter - INFO - Set ActivityType to CYCLING for bike workout.
+2025-08-12 20:12:02,778 - fit_converter - INFO - FIT file successfully created: C:\Users\dougl\AppData\Local\Temp\tmp0rrmp3tf\bike_20250813_001202.fit
+2025-08-12 20:12:52,035 - fit_converter - INFO - Processing bike workout with 180 data points.
+2025-08-12 20:12:52,036 - fit_converter - INFO - Activity start time (UTC): 2025-08-13 00:12:52.035049+00:00
+2025-08-12 20:12:52,079 - fit_converter - INFO - Set LapMessage SubSport to INDOOR_CYCLING.
+2025-08-12 20:12:52,080 - fit_converter - INFO - Set SessionMessage SubSport to INDOOR_CYCLING.
+2025-08-12 20:12:52,081 - fit_converter - WARNING - ActivityType.INDOOR_CYCLING not found. Trying ActivityType.CYCLING.
+2025-08-12 20:12:52,081 - fit_converter - INFO - Set ActivityType to CYCLING for bike workout.
+2025-08-12 20:12:52,090 - fit_converter - INFO - FIT file successfully created: C:\Users\dougl\AppData\Local\Temp\tmp6doenebx\bike_20250813_001252.fit

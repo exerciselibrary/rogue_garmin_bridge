@@ -1,0 +1,138 @@
+{
+  "bike_workouts": {
+    "short_workout": {
+      "name": "Short Bike Test",
+      "device_type": "bike",
+      "duration": 300,
+      "expected_metrics": {
+        "avg_power": 150,
+        "max_power": 200,
+        "avg_cadence": 80,
+        "max_cadence": 90,
+        "total_distance": 2.5,
+        "total_calories": 75
+      },
+      "data_pattern": {
+        "power_range": [100, 200],
+        "cadence_range": [70, 90],
+        "speed_range": [20, 30],
+        "heart_rate_range": [130, 160]
+      }
+    },
+    "medium_workout": {
+      "name": "Medium Bike Test",
+      "device_type": "bike", 
+      "duration": 1200,
+      "expected_metrics": {
+        "avg_power": 175,
+        "max_power": 250,
+        "avg_cadence": 85,
+        "max_cadence": 95,
+        "total_distance": 10.0,
+        "total_calories": 300
+      },
+      "data_pattern": {
+        "power_range": [120, 250],
+        "cadence_range": [75, 95],
+        "speed_range": [22, 32],
+        "heart_rate_range": [135, 170]
+      }
+    },
+    "interval_workout": {
+      "name": "Interval Bike Test",
+      "device_type": "bike",
+      "duration": 1800,
+      "expected_metrics": {
+        "avg_power": 200,
+        "max_power": 300,
+        "avg_cadence": 88,
+        "max_cadence": 105,
+        "total_distance": 15.0,
+        "total_calories": 500
+      },
+      "data_pattern": {
+        "power_range": [100, 300],
+        "cadence_range": [70, 105],
+        "speed_range": [18, 35],
+        "heart_rate_range": [130, 180]
+      },
+      "intervals": [
+        {"duration": 300, "intensity": 0.6},
+        {"duration": 120, "intensity": 0.9},
+        {"duration": 180, "intensity": 0.7},
+        {"duration": 120, "intensity": 0.9},
+        {"duration": 180, "intensity": 0.7},
+        {"duration": 120, "intensity": 0.9},
+        {"duration": 180, "intensity": 0.7},
+        {"duration": 495, "intensity": 0.5}
+      ]
+    }
+  },
+  "rower_workouts": {
+    "standard_workout": {
+      "name": "Standard Rower Test",
+      "device_type": "rower",
+      "duration": 1200,
+      "expected_metrics": {
+        "avg_power": 200,
+        "max_power": 280,
+        "avg_stroke_rate": 24,
+        "max_stroke_rate": 30,
+        "total_distance": 3000,
+        "total_calories": 350
+      },
+      "data_pattern": {
+        "power_range": [150, 280],
+        "stroke_rate_range": [18, 30],
+        "heart_rate_range": [140, 175]
+      }
+    },
+    "endurance_workout": {
+      "name": "Endurance Rower Test",
+      "device_type": "rower",
+      "duration": 3600,
+      "expected_metrics": {
+        "avg_power": 180,
+        "max_power": 220,
+        "avg_stroke_rate": 22,
+        "max_stroke_rate": 26,
+        "total_distance": 9000,
+        "total_calories": 800
+      },
+      "data_pattern": {
+        "power_range": [160, 220],
+        "stroke_rate_range": [20, 26],
+        "heart_rate_range": [145, 165]
+      }
+    }
+  },
+  "error_scenarios": {
+    "connection_drop": {
+      "name": "Connection Drop Test",
+      "device_type": "bike",
+      "duration": 600,
+      "error_points": [300, 450],
+      "error_duration": 30,
+      "recovery_behavior": "reconnect"
+    },
+    "invalid_data": {
+      "name": "Invalid Data Test", 
+      "device_type": "rower",
+      "duration": 300,
+      "invalid_data_points": [
+        {"timestamp": 120, "field": "power", "value": -50},
+        {"timestamp": 180, "field": "stroke_rate", "value": 200},
+        {"timestamp": 240, "field": "heart_rate", "value": 300}
+      ]
+    },
+    "missing_data": {
+      "name": "Missing Data Test",
+      "device_type": "bike", 
+      "duration": 600,
+      "missing_intervals": [
+        {"start": 200, "end": 220},
+        {"start": 400, "end": 430}
+      ]
+    }
+  }
+}
