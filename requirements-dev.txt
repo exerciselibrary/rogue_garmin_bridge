@@ -1,0 +1,32 @@
+# Development and testing dependencies
+pytest==7.4.3
+pytest-cov==4.1.0
+pytest-mock==3.12.0
+pytest-asyncio==0.21.1
+pytest-timeout==2.2.0
+pytest-html==4.1.1
+pytest-xdist==3.5.0
+coverage==7.3.2
+
+# Code quality tools
+black==23.12.1
+isort==5.13.2
+flake8==7.0.0
+mypy==1.8.0
+pre-commit==3.6.0
+
+# Development tools
+ipython==8.18.1
+jupyter==1.0.0
+notebook==7.0.6
+
+# Optional data analysis tools
+pandas==2.1.4
+matplotlib==3.8.2
+seaborn==0.13.0
+
+# System monitoring
+psutil==5.9.6
+
+# Development server
+watchdog==3.0.0

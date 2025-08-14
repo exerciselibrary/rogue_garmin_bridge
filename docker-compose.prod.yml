@@ -1,0 +1,172 @@
+# Production Docker Compose configuration with enhanced security and monitoring
+version: '3.8'
+
+services:
+  rogue-garmin-bridge:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: rogue-garmin-bridge-prod
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-5000}:5000"
+    volumes:
+      - app_data:/app/data
+      - app_logs:/app/logs
+      - fit_files:/app/fit_files
+      - ./config:/app/config:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=${SECRET_KEY}
+      - DATABASE_URL=sqlite:///data/workouts.db
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - CONNECTION_TIMEOUT=${CONNECTION_TIMEOUT:-30}
+      - RECONNECTION_ATTEMPTS=${RECONNECTION_ATTEMPTS:-3}
+      - METRICS_ENABLED=${METRICS_ENABLED:-true}
+      - HEALTH_CHECK_ENABLED=true
+      - API_RATE_LIMIT=${API_RATE_LIMIT:-100 per minute}
+      - DATA_RETENTION_DAYS=${DATA_RETENTION_DAYS:-365}
+      - MAX_FIT_FILE_AGE_DAYS=${MAX_FIT_FILE_AGE_DAYS:-30}
+    privileged: true  # Required for Bluetooth access
+    network_mode: host  # Required for Bluetooth on Linux
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '1.0'
+        reservations:
+          memory: 256M
+          cpus: '0.5'
+
+  # Nginx reverse proxy with SSL termination
+  nginx:
+    image: nginx:alpine
+    container_name: rogue-garmin-bridge-nginx
+    restart: unless-stopped
+    ports:
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - nginx_logs:/var/log/nginx
+    depends_on:
+      - rogue-garmin-bridge
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    profiles:
+      - nginx
+
+  # Log aggregation service
+  logrotate:
+    image: alpine:latest
+    container_name: rogue-garmin-bridge-logrotate
+    restart: unless-stopped
+    volumes:
+      - app_logs:/logs
+      - nginx_logs:/nginx_logs
+      - ./scripts/logrotate.conf:/etc/logrotate.conf:ro
+    command: >
+      sh -c "
+        apk add --no-cache logrotate &&
+        while true; do
+          logrotate -f /etc/logrotate.conf
+          sleep 86400
+        done
+      "
+    profiles:
+      - logging
+
+  # Monitoring and metrics collection
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: rogue-garmin-bridge-prometheus
+    restart: unless-stopped
+    ports:
+      - "${PROMETHEUS_PORT:-9090}:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.enable-lifecycle'
+    profiles:
+      - monitoring
+
+  # Grafana for metrics visualization
+  grafana:
+    image: grafana/grafana:latest
+    container_name: rogue-garmin-bridge-grafana
+    restart: unless-stopped
+    ports:
+      - "${GRAFANA_PORT:-3000}:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+    depends_on:
+      - prometheus
+    profiles:
+      - monitoring
+
+volumes:
+  app_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH:-./data}
+  app_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${LOGS_PATH:-./logs}
+  fit_files:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${FIT_FILES_PATH:-./fit_files}
+  nginx_logs:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

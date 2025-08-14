@@ -1,0 +1,78 @@
+# Development Docker Compose configuration
+version: '3.8'
+
+services:
+  rogue-garmin-bridge-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: rogue-garmin-bridge-dev
+    ports:
+      - "5000:5000"
+      - "5678:5678"  # Debug port
+    volumes:
+      - .:/app
+      - /app/venv  # Exclude venv from volume mount
+      - dev_data:/app/data
+      - dev_logs:/app/logs
+      - dev_fit_files:/app/fit_files
+    environment:
+      - FLASK_ENV=development
+      - DEBUG=True
+      - SECRET_KEY=dev-secret-key
+      - DATABASE_URL=sqlite:///data/workouts_dev.db
+      - LOG_LEVEL=DEBUG
+      - USE_SIMULATOR=True
+      - SIMULATOR_DEVICE_TYPE=bike
+      - PYTHONDONTWRITEBYTECODE=1
+    privileged: true  # Required for Bluetooth access
+    network_mode: host  # Required for Bluetooth on Linux
+    stdin_open: true
+    tty: true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Development database viewer (optional)
+  adminer:
+    image: adminer
+    container_name: rogue-garmin-bridge-adminer
+    ports:
+      - "8080:8080"
+    environment:
+      - ADMINER_DEFAULT_SERVER=sqlite
+    profiles:
+      - tools
+
+  # Development testing service
+  test-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: rogue-garmin-bridge-test
+    volumes:
+      - .:/app
+      - /app/venv
+    environment:
+      - TESTING=True
+      - DATABASE_URL=sqlite:///:memory:
+      - LOG_LEVEL=WARNING
+    command: ["pytest", "--cov=src", "--cov-report=html", "--cov-report=term"]
+    profiles:
+      - test
+
+volumes:
+  dev_data:
+    driver: local
+  dev_logs:
+    driver: local
+  dev_fit_files:
+    driver: local

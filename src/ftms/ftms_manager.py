@@ -16,9 +16,11 @@ from typing import Dict, Any
 
 # Add the project root to the path so we can use absolute imports
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
-from src.utils.logging_config import get_component_logger
+from src.utils.logging_config import get_component_logger, log_performance_metric, create_alert, AlertSeverity
 from src.ftms.ftms_connector import FTMSConnector
 from src.ftms.ftms_simulator import FTMSDeviceSimulator
+from src.ftms.connection_manager import BluetoothConnectionManager, ConnectionState, ConnectionError
+from src.utils.data_validator import DataValidator
 
 # Get component logger
 logger = get_component_logger('ftms')
@@ -51,6 +53,14 @@ class FTMSDeviceManager:
         self.data_callbacks = []
         self.status_callbacks = []
         
+        # Initialize enhanced connection manager
+        self.connection_manager = BluetoothConnectionManager()
+        self.connection_manager.register_state_callback(self._handle_connection_state)
+        self.connection_manager.register_error_callback(self._handle_connection_error)
+        
+        # Initialize data validator
+        self.data_validator = DataValidator()
+        
         # Initialize the connector or simulator
         if use_simulator:
             self.connector = FTMSDeviceSimulator(device_type=device_type)
@@ -62,6 +72,11 @@ class FTMSDeviceManager:
         # Register callbacks
         self.connector.register_data_callback(self._handle_data)
         self.connector.register_status_callback(self._handle_status)
+        
+        # Performance tracking
+        self.connection_start_time = None
+        self.data_points_received = 0
+        self.last_data_time = None
     
     def register_data_callback(self, callback):
         """Register a callback for data events."""
@@ -72,15 +87,65 @@ class FTMSDeviceManager:
         self.status_callbacks.append(callback)
     
     def _handle_data(self, data):
-        """Handle data from the device and forward to callbacks."""
-        # Store the latest data for status queries
-        self.latest_data = data.copy() if data else None
-        
-        # Log the received data for debugging
-        logger.debug(f"Received data from device: {data}")
-        
-        # Forward data to all registered callbacks
-        self._notify_data_callbacks(data)
+        """Handle data from the device with enhanced validation and error handling."""
+        try:
+            # Track data reception for performance monitoring
+            self.data_points_received += 1
+            self.last_data_time = time.time()
+            
+            # Update connection quality metrics
+            if hasattr(self.connection_manager, '_update_connection_quality'):
+                self.connection_manager._update_connection_quality(data_received=True)
+            
+            # Log performance metrics periodically
+            if self.data_points_received % 100 == 0:
+                if self.connection_start_time:
+                    session_duration = time.time() - self.connection_start_time
+                    data_rate = self.data_points_received / session_duration
+                    log_performance_metric('ftms_manager', 'data_rate', data_rate, 'points_per_second')
+            
+            # Validate data using enhanced validator
+            if data:
+                validated_point = self.data_validator.validate_data_point(data)
+                
+                # Log data quality issues
+                if validated_point.warnings:
+                    logger.warning(f"Data quality warnings: {validated_point.warnings}")
+                
+                if validated_point.corrections_applied:
+                    logger.info(f"Data corrections applied: {validated_point.corrections_applied}")
+                    log_performance_metric('ftms_manager', 'data_corrections', 
+                                         len(validated_point.corrections_applied), 'count')
+                
+                # Use validated data
+                validated_data = validated_point.validated_data
+                
+                # Store the latest validated data for status queries
+                self.latest_data = validated_data.copy()
+                
+                # Log the received data for debugging
+                logger.debug(f"Received and validated data: quality={validated_point.quality.value}, "
+                           f"corrections={len(validated_point.corrections_applied)}")
+                
+                # Forward validated data to all registered callbacks
+                self._notify_data_callbacks(validated_data)
+                
+                # Create alerts for poor data quality
+                if validated_point.quality.value in ['poor', 'invalid']:
+                    create_alert(AlertSeverity.MEDIUM, 'ftms_manager', 
+                               f"Poor data quality detected: {validated_point.quality.value}")
+            else:
+                logger.warning("Received empty data from device")
+                self.latest_data = None
+                
+        except Exception as e:
+            logger.error(f"Error handling device data: {str(e)}", exc_info=True)
+            create_alert(AlertSeverity.HIGH, 'ftms_manager', 
+                        f"Data handling error: {str(e)}")
+            # Still try to forward original data to prevent complete failure
+            if data:
+                self.latest_data = data.copy()
+                self._notify_data_callbacks(data)
 
     def _notify_data_callbacks(self, data: Dict[str, Any]):
         """Notify all registered data callbacks with new FTMS data."""
@@ -214,7 +279,7 @@ class FTMSDeviceManager:
     
     async def connect(self, device_address: str, device_type: str = "auto") -> bool:
         """
-        Connect to a specific FTMS device (asynchronous).
+        Connect to a specific FTMS device with enhanced error handling and retry logic.
         
         Args:
             device_address: BLE address of the device to connect to
@@ -223,38 +288,57 @@ class FTMSDeviceManager:
         Returns:
             True if connection successful, False otherwise
         """
+        self.connection_start_time = time.time()
+        
         try:
-            logger.debug(f"Attempting to connect to {device_address} (device_type: {device_type}) using connector: {type(self.connector).__name__}")
-            if not hasattr(self.connector, 'connect') or not asyncio.iscoroutinefunction(self.connector.connect):
-                 logger.error(f"Connector {type(self.connector).__name__} does not have an async connect method.")
-                 return False
-
-            # Attempt connection with timeout
-            connect_timeout = 30  # seconds
-            try:
-                # If the connector accepts a device_type parameter, use it
-                if hasattr(self.connector, 'set_device_type'):
-                    try:
-                        self.connector.set_device_type(device_type)
-                        logger.info(f"Set device type to {device_type} before connecting")
-                    except Exception as e:
-                        logger.error(f"Error setting device type: {str(e)}")
-                
-                # Directly await the connector's async method
-                result = await asyncio.wait_for(self.connector.connect(device_address), timeout=connect_timeout)
-                if not result:
-                    logger.error(f"Connector failed to connect to device {device_address}")
-                    return False
-                return True # Connection successful
-            except asyncio.TimeoutError:
-                logger.error(f"Connection attempt to {device_address} timed out after {connect_timeout} seconds")
-                return False
-            except Exception as connect_exc:
-                 logger.error(f"Error during connector.connect: {connect_exc}", exc_info=True)
-                 return False
+            logger.info(f"Starting enhanced connection to {device_address} (device_type: {device_type})")
             
+            # Validate connector
+            if not hasattr(self.connector, 'connect') or not asyncio.iscoroutinefunction(self.connector.connect):
+                error_msg = f"Connector {type(self.connector).__name__} does not have an async connect method."
+                logger.error(error_msg)
+                create_alert(AlertSeverity.HIGH, 'ftms_manager', error_msg)
+                return False
+
+            # Set device type if supported
+            if hasattr(self.connector, 'set_device_type'):
+                try:
+                    self.connector.set_device_type(device_type)
+                    logger.info(f"Set device type to {device_type} before connecting")
+                except Exception as e:
+                    logger.warning(f"Error setting device type: {str(e)}")
+
+            # Use enhanced connection manager for retry logic
+            async def connector_connect_func(address):
+                return await self.connector.connect(address)
+            
+            # Get device name for better logging
+            device_name = device_address  # Default to address
+            if hasattr(self, 'discovered_devices') and device_address in self.discovered_devices:
+                device_name = self.discovered_devices[device_address].name or device_address
+            
+            # Attempt connection with retry
+            success = await self.connection_manager.connect_with_retry(
+                device_address=device_address,
+                device_name=device_name,
+                connector_connect_func=connector_connect_func
+            )
+            
+            if success:
+                connection_time = time.time() - self.connection_start_time
+                log_performance_metric('ftms_manager', 'connection_time', connection_time, 'seconds')
+                logger.info(f"Successfully connected to {device_name} in {connection_time:.2f}s")
+                return True
+            else:
+                logger.error(f"Failed to connect to {device_name} after all retry attempts")
+                create_alert(AlertSeverity.MEDIUM, 'ftms_manager', 
+                           f"Failed to connect to device {device_name}")
+                return False
+                
         except Exception as e:
-            logger.error(f"Error in FTMSDeviceManager.connect: {str(e)}", exc_info=True)
+            logger.error(f"Error in enhanced connect method: {str(e)}", exc_info=True)
+            create_alert(AlertSeverity.HIGH, 'ftms_manager', 
+                        f"Connection error: {str(e)}")
             return False
     
     async def disconnect(self):
@@ -416,3 +500,143 @@ class FTMSDeviceManager:
         except Exception as e:
             logger.error(f"[FTMSManager] Error loading user unit preference: {str(e)}")
             return 'metric'  # Default to metric on error
+    
+    def _handle_connection_state(self, state: ConnectionState, data: Dict[str, Any]):
+        """Handle connection state changes from the enhanced connection manager"""
+        try:
+            logger.info(f"Connection state changed to: {state.value}")
+            
+            # Update internal device status
+            if state == ConnectionState.CONNECTED:
+                self.device_status = "connected"
+                # Log successful connection
+                if 'connection_time' in data:
+                    log_performance_metric('ftms_manager', 'successful_connection_time', 
+                                         data['connection_time'], 'seconds')
+                
+            elif state == ConnectionState.DISCONNECTED:
+                self.device_status = "disconnected"
+                self.connected_device = None
+                self.latest_data = None
+                
+                # Log session statistics if we had a connection
+                if self.connection_start_time and self.data_points_received > 0:
+                    session_duration = time.time() - self.connection_start_time
+                    log_performance_metric('ftms_manager', 'session_duration', 
+                                         session_duration, 'seconds')
+                    log_performance_metric('ftms_manager', 'total_data_points', 
+                                         self.data_points_received, 'count')
+                
+                # Reset counters
+                self.connection_start_time = None
+                self.data_points_received = 0
+                
+            elif state == ConnectionState.FAILED:
+                self.device_status = "failed"
+                create_alert(AlertSeverity.HIGH, 'ftms_manager', 
+                           f"Connection failed after {data.get('total_attempts', 'unknown')} attempts")
+            
+            elif state in [ConnectionState.CONNECTING, ConnectionState.RECONNECTING]:
+                self.device_status = "connecting"
+            
+            # Notify status callbacks with enhanced information
+            enhanced_data = data.copy()
+            enhanced_data['connection_state'] = state.value
+            enhanced_data['data_points_received'] = self.data_points_received
+            
+            for callback in self.status_callbacks:
+                try:
+                    callback(state.value, enhanced_data)
+                except Exception as e:
+                    logger.error(f"Error in status callback: {str(e)}")
+                    
+        except Exception as e:
+            logger.error(f"Error handling connection state change: {str(e)}", exc_info=True)
+    
+    def _handle_connection_error(self, error: ConnectionError):
+        """Handle connection errors from the enhanced connection manager"""
+        try:
+            logger.error(f"Connection error: {error.user_message}")
+            
+            # Log performance metric for error tracking
+            log_performance_metric('ftms_manager', 'connection_errors', 1, 'count', 
+                                 {'error_type': error.error_type})
+            
+            # Create appropriate alert based on error severity
+            if not error.is_recoverable:
+                severity = AlertSeverity.CRITICAL
+            elif error.retry_count > 3:
+                severity = AlertSeverity.HIGH
+            else:
+                severity = AlertSeverity.MEDIUM
+            
+            create_alert(severity, 'ftms_manager', error.user_message, {
+                'error_type': error.error_type,
+                'device_address': error.device_address,
+                'retry_count': error.retry_count,
+                'recovery_suggestions': error.recovery_suggestions
+            })
+            
+            # Notify status callbacks about the error
+            error_data = {
+                'error_type': error.error_type,
+                'error_message': error.user_message,
+                'device_address': error.device_address,
+                'retry_count': error.retry_count,
+                'is_recoverable': error.is_recoverable,
+                'recovery_suggestions': error.recovery_suggestions
+            }
+            
+            for callback in self.status_callbacks:
+                try:
+                    callback('connection_error', error_data)
+                except Exception as e:
+                    logger.error(f"Error in status callback for connection error: {str(e)}")
+                    
+        except Exception as e:
+            logger.error(f"Error handling connection error: {str(e)}", exc_info=True)
+    
+    def get_enhanced_status(self) -> Dict[str, Any]:
+        """
+        Get enhanced device status including connection quality and performance metrics.
+        
+        Returns:
+            Dictionary with comprehensive status information
+        """
+        try:
+            # Get basic status
+            status = {
+                'device_status': self.device_status,
+                'connected_device': self.connected_device,
+                'latest_data': self.latest_data,
+                'use_simulator': self.use_simulator
+            }
+            
+            # Add connection manager status
+            if hasattr(self.connection_manager, 'get_connection_status'):
+                status['connection_details'] = self.connection_manager.get_connection_status()
+            
+            # Add data validation statistics
+            if hasattr(self.data_validator, 'get_validation_report'):
+                status['data_quality'] = self.data_validator.get_validation_report()
+            
+            # Add performance metrics
+            status['performance'] = {
+                'data_points_received': self.data_points_received,
+                'session_start_time': self.connection_start_time,
+                'last_data_time': self.last_data_time
+            }
+            
+            if self.connection_start_time and self.data_points_received > 0:
+                session_duration = time.time() - self.connection_start_time
+                status['performance']['session_duration'] = session_duration
+                status['performance']['data_rate'] = self.data_points_received / session_duration
+            
+            return status
+            
+        except Exception as e:
+            logger.error(f"Error getting enhanced status: {str(e)}", exc_info=True)
+            return {
+                'device_status': self.device_status,
+                'error': f"Status retrieval error: {str(e)}"
+            }

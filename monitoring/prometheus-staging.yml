@@ -1,0 +1,21 @@
+# Prometheus configuration for staging monitoring
+global:
+  scrape_interval: 30s
+  evaluation_interval: 30s
+
+scrape_configs:
+  # Rogue Garmin Bridge staging application
+  - job_name: 'rogue-garmin-bridge-staging'
+    static_configs:
+      - targets: ['localhost:5001']
+    metrics_path: '/metrics'
+    scrape_interval: 60s
+    scrape_timeout: 10s
+
+  # Health check monitoring for staging
+  - job_name: 'rogue-garmin-bridge-staging-health'
+    static_configs:
+      - targets: ['localhost:5001']
+    metrics_path: '/health/detailed'
+    scrape_interval: 60s
+    scrape_timeout: 10s

@@ -1,0 +1,112 @@
+{
+  "performance_thresholds": {
+    "memory": {
+      "max_growth_mb_2hr": 100,
+      "max_peak_mb": 300,
+      "gc_efficiency_min_percent": 80
+    },
+    "database": {
+      "min_insert_rate_per_sec": 50,
+      "max_query_time_ms": 100,
+      "max_summary_calc_ms": 2000
+    },
+    "web_interface": {
+      "max_response_time_ms": 1000,
+      "min_success_rate_percent": 95,
+      "max_concurrent_response_ms": 2000
+    },
+    "connection": {
+      "max_recovery_time_sec": 30,
+      "min_data_retention_percent": 70,
+      "max_error_rate_percent": 5
+    },
+    "cpu": {
+      "max_avg_percent_extended": 50,
+      "max_peak_percent": 90,
+      "max_processing_time_ms": 10
+    }
+  },
+  "test_scenarios": {
+    "extended_workout": {
+      "duration_hours": 2.0,
+      "data_frequency_hz": 1.0,
+      "device_types": ["bike", "rower"]
+    },
+    "stress_testing": {
+      "connection_dropout_patterns": [
+        {"name": "brief_dropout", "duration": 2, "frequency": 30},
+        {"name": "extended_dropout", "duration": 10, "frequency": 120},
+        {"name": "intermittent", "duration": 1, "frequency": 5}
+      ],
+      "resource_constraints": {
+        "memory_pressure_mb": 500,
+        "cpu_load_percent": 80,
+        "disk_usage_mb": 100
+      },
+      "chaos_scenarios": {
+        "database_error_rate": 0.1,
+        "network_delay_range_ms": [100, 2000],
+        "device_disconnect_rate": 0.05,
+        "data_corruption_rate": 0.02
+      }
+    },
+    "concurrent_testing": {
+      "max_devices": 8,
+      "max_web_clients": 10,
+      "test_duration_minutes": 5
+    }
+  },
+  "monitoring": {
+    "collection_interval_sec": 1.0,
+    "metrics_retention_count": 10000,
+    "performance_regression_threshold_percent": 20.0,
+    "alert_thresholds": {
+      "memory_growth_rate_mb_per_min": 10,
+      "cpu_sustained_percent": 80,
+      "error_rate_percent": 10,
+      "response_time_ms": 5000
+    }
+  },
+  "reporting": {
+    "include_detailed_metrics": true,
+    "include_system_info": true,
+    "include_recommendations": true,
+    "export_formats": ["json", "markdown", "csv"],
+    "retention_days": 30
+  },
+  "optimization": {
+    "database_indexes": [
+      {
+        "table": "workouts",
+        "columns": ["device_type"],
+        "reason": "Frequent filtering by device type"
+      },
+      {
+        "table": "workouts", 
+        "columns": ["start_time"],
+        "reason": "Date range queries"
+      },
+      {
+        "table": "workout_data",
+        "columns": ["workout_id"],
+        "reason": "Foreign key lookups"
+      },
+      {
+        "table": "workout_data",
+        "columns": ["workout_id", "timestamp"],
+        "reason": "Sorting by timestamp within workout"
+      }
+    ],
+    "query_optimization": {
+      "enable_query_plan_analysis": true,
+      "benchmark_iterations": 100,
+      "cache_query_results": true
+    },
+    "web_optimization": {
+      "enable_response_caching": true,
+      "compress_responses": true,
+      "optimize_static_assets": true,
+      "client_side_caching": true
+    }
+  }
+}

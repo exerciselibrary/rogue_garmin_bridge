@@ -1235,3 +1235,52 @@ TypeError: float() argument must be a string or a real number, not 'datetime.dat
 2025-08-13 19:56:38,978 - web - INFO - Background thread started. Creating new event loop.
 2025-08-13 19:56:38,979 - web - INFO - Background asyncio loop thread start initiated.
 2025-08-13 19:56:38,982 - web - INFO - Starting background asyncio event loop run_forever.
+2025-08-13 21:22:31,473 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-13 21:22:31,474 - web - INFO - Using real FTMS devices
+2025-08-13 21:22:31,475 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-13 21:22:31,475 - web - INFO - Starting background asyncio loop thread...
+2025-08-13 21:22:31,476 - web - INFO - Background thread started. Creating new event loop.
+2025-08-13 21:22:31,476 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-13 21:22:31,480 - web - INFO - Starting background asyncio event loop run_forever.
+2025-08-13 21:22:32,099 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-13 21:22:32,100 - web - INFO - Using real FTMS devices
+2025-08-13 21:22:32,100 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-13 21:22:32,100 - web - INFO - Starting background asyncio loop thread...
+2025-08-13 21:22:32,101 - web - INFO - Background thread started. Creating new event loop.
+2025-08-13 21:22:32,101 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-13 21:22:32,105 - web - INFO - Starting background asyncio event loop run_forever.
+2025-08-14 06:31:43,322 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-14 06:31:43,325 - web - INFO - Using real FTMS devices
+2025-08-14 06:31:43,325 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-14 06:31:43,326 - web - INFO - Starting background asyncio loop thread...
+2025-08-14 06:31:43,326 - web - INFO - Background thread started. Creating new event loop.
+2025-08-14 06:31:43,326 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-14 06:31:43,331 - web - INFO - Starting background asyncio event loop run_forever.
+2025-08-14 06:31:43,897 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-14 06:31:43,899 - web - INFO - Using real FTMS devices
+2025-08-14 06:31:43,899 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-14 06:31:43,899 - web - INFO - Starting background asyncio loop thread...
+2025-08-14 06:31:43,900 - web - INFO - Background thread started. Creating new event loop.
+2025-08-14 06:31:43,900 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-14 06:31:43,904 - web - INFO - Starting background asyncio event loop run_forever.
+2025-08-14 06:32:20,779 - web - INFO - Getting workouts with limit=10, offset=0
+2025-08-14 06:32:20,781 - web - INFO - Retrieved 4 workouts from database
+2025-08-14 06:32:37,814 - web - INFO - Getting workouts with limit=1000, offset=0
+2025-08-14 06:32:37,814 - web - INFO - Getting workouts with limit=100, offset=0
+2025-08-14 06:32:37,816 - web - INFO - Retrieved 4 workouts from database
+2025-08-14 06:32:37,816 - web - INFO - Retrieved 4 workouts from database
+2025-08-14 06:32:46,743 - web - INFO - Sending workout 7 with 609 data points, type: bike
+2025-08-14 06:32:47,077 - web - INFO - Sending workout 7 with 609 data points, type: bike
+2025-08-14 06:34:49,985 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-14 06:34:49,986 - web - INFO - Using real FTMS devices
+2025-08-14 06:34:49,986 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-14 06:34:49,987 - web - INFO - Starting background asyncio loop thread...
+2025-08-14 06:34:49,987 - web - INFO - Background thread started. Creating new event loop.
+2025-08-14 06:34:49,987 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-14 06:34:49,991 - web - INFO - Starting background asyncio event loop run_forever.
+2025-08-14 06:35:05,966 - web - INFO - Getting workouts with limit=1000, offset=0
+2025-08-14 06:35:05,966 - web - INFO - Getting workouts with limit=100, offset=0
+2025-08-14 06:35:05,968 - web - INFO - Retrieved 4 workouts from database
+2025-08-14 06:35:05,968 - web - INFO - Retrieved 4 workouts from database
+2025-08-14 06:35:10,102 - web - INFO - Getting workouts with limit=10, offset=0
+2025-08-14 06:35:10,110 - web - INFO - Retrieved 4 workouts from database

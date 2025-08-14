@@ -1,0 +1,89 @@
+# Staging Docker Compose configuration
+version: '3.8'
+
+services:
+  rogue-garmin-bridge:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: rogue-garmin-bridge-staging
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-5001}:5000"
+    volumes:
+      - staging_data:/app/data
+      - staging_logs:/app/logs
+      - staging_fit_files:/app/fit_files
+      - ./config:/app/config:ro
+    environment:
+      - FLASK_ENV=staging
+      - SECRET_KEY=${SECRET_KEY:-staging-secret-key}
+      - DATABASE_URL=sqlite:///data/workouts_staging.db
+      - LOG_LEVEL=${LOG_LEVEL:-DEBUG}
+      - CONNECTION_TIMEOUT=${CONNECTION_TIMEOUT:-30}
+      - RECONNECTION_ATTEMPTS=${RECONNECTION_ATTEMPTS:-3}
+      - USE_SIMULATOR=${USE_SIMULATOR:-true}
+      - SIMULATOR_DEVICE_TYPE=${SIMULATOR_DEVICE_TYPE:-bike}
+      - METRICS_ENABLED=true
+      - HEALTH_CHECK_ENABLED=true
+      - DATA_RETENTION_DAYS=30
+      - MAX_FIT_FILE_AGE_DAYS=7
+    privileged: true
+    network_mode: host
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Test data generator for staging
+  test-data-generator:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: rogue-garmin-bridge-test-data
+    volumes:
+      - .:/app
+      - staging_data:/app/data
+    environment:
+      - TESTING=True
+      - DATABASE_URL=sqlite:///data/workouts_staging.db
+      - USE_SIMULATOR=true
+    command: ["python", "scripts/generate_test_data.py", "--staging"]
+    profiles:
+      - test-data
+
+  # Staging monitoring
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: rogue-garmin-bridge-prometheus-staging
+    restart: unless-stopped
+    ports:
+      - "${PROMETHEUS_PORT:-9091}:9090"
+    volumes:
+      - ./monitoring/prometheus-staging.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_staging_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=7d'
+      - '--web.enable-lifecycle'
+    profiles:
+      - monitoring
+
+volumes:
+  staging_data:
+    driver: local
+  staging_logs:
+    driver: local
+  staging_fit_files:
+    driver: local
+  prometheus_staging_data:
+    driver: local

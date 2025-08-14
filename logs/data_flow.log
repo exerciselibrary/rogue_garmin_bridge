@@ -4066,3 +4066,26 @@ Exception: FIT builder error
 2025-08-13 19:35:35,663 - database - INFO - Retrieved 1 data points for workout 1
 2025-08-13 19:56:38,975 - database - INFO - Database tables created
 2025-08-13 19:56:38,976 - database - INFO - Database tables created
+2025-08-13 21:22:31,472 - database - INFO - Database tables created
+2025-08-13 21:22:31,473 - database - INFO - Database tables created
+2025-08-13 21:22:32,097 - database - INFO - Database tables created
+2025-08-13 21:22:32,098 - database - INFO - Database tables created
+2025-08-14 06:31:43,321 - database - INFO - Database tables created
+2025-08-14 06:31:43,322 - database - INFO - Database tables created
+2025-08-14 06:31:43,324 - data_validator - INFO - Data validator initialized
+2025-08-14 06:31:43,895 - database - INFO - Database tables created
+2025-08-14 06:31:43,897 - database - INFO - Database tables created
+2025-08-14 06:31:43,898 - data_validator - INFO - Data validator initialized
+2025-08-14 06:32:20,780 - database - INFO - Retrieved 4 workouts from database
+2025-08-14 06:32:37,815 - database - INFO - Retrieved 4 workouts from database
+2025-08-14 06:32:37,816 - database - INFO - Retrieved 4 workouts from database
+2025-08-14 06:32:46,742 - database - INFO - Retrieved 609 data points for workout 7
+2025-08-14 06:32:47,076 - database - INFO - Retrieved 609 data points for workout 7
+2025-08-14 06:32:57,337 - database - INFO - Retrieved 4 workouts from database
+2025-08-14 06:34:05,054 - database - INFO - Retrieved 4 workouts from database
+2025-08-14 06:34:49,983 - database - INFO - Database tables created
+2025-08-14 06:34:49,984 - database - INFO - Database tables created
+2025-08-14 06:34:49,985 - data_validator - INFO - Data validator initialized
+2025-08-14 06:35:05,967 - database - INFO - Retrieved 4 workouts from database
+2025-08-14 06:35:05,967 - database - INFO - Retrieved 4 workouts from database
+2025-08-14 06:35:10,109 - database - INFO - Retrieved 4 workouts from database
