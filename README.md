@@ -1,21 +1,46 @@
 # Rogue Garmin Bridge
 
-A Python application that bridges Rogue fitness equipment (Echo Bike and Rower) to Garmin Connect, allowing seamless tracking and analysis of your workouts.
+A comprehensive Python application that bridges Rogue fitness equipment (Echo Bike and Rower) to Garmin Connect, providing seamless workout tracking, real-time monitoring, and advanced data management capabilities.
 
 ## Overview
 
-Rogue Garmin Bridge connects to Rogue Echo Bike and Rower equipment via Bluetooth Low Energy (BLE) using the Fitness Machine Service (FTMS) standard through the `pyftms` library. It collects workout metrics, processes the data, and converts it to the Garmin FIT file format for manual upload to Garmin Connect. The application includes a web-based user interface for configuration, monitoring, and managing workout data.
+Rogue Garmin Bridge connects to Rogue Echo Bike and Rower equipment via Bluetooth Low Energy (BLE) using the Fitness Machine Service (FTMS) standard through the `pyftms` library. It collects workout metrics, processes the data in real-time, and converts it to the Garmin FIT file format for upload to Garmin Connect. The application features a modern web-based interface with comprehensive device management, workout monitoring, and data analysis tools.
 
-## Features
+## Key Features
 
-* **FTMS Bluetooth Connectivity**: Connect to Rogue Echo Bike and Rower equipment via BLE using `pyftms` for robust FTMS communication.
-* **Real-time Workout Tracking**: Monitor power, heart rate, cadence/stroke rate, speed, distance, and calories in real-time.
-* **Workout History**: View past workout details with performance metrics and charts.
-* **FIT File Generation**: Convert workout data to Garmin FIT format with proper device identification for manual upload.
-* **Training Load Calculation**: Generated FIT files correctly report training load in Garmin Connect.
-* **Speed Data Analysis**: Improved speed calculations and display in workout history.
-* **Web Interface**: User-friendly interface for monitoring, configuring, and managing workouts.
-* **FTMS Device Simulator**: Test functionality without physical hardware (development mode).
+### 🔗 **Advanced Device Connectivity**
+* **FTMS Bluetooth Support**: Robust BLE connectivity using `pyftms` library
+* **Device Pairing Wizard**: Step-by-step guidance for connecting equipment
+* **Auto-reconnection**: Automatic reconnection with exponential backoff
+* **Connection Quality Monitoring**: Real-time signal strength and data rate indicators
+* **Comprehensive Diagnostics**: Built-in troubleshooting and system health checks
+
+### 📊 **Real-time Workout Monitoring**
+* **Live Metrics Display**: Power, heart rate, cadence/stroke rate, speed, distance, and calories
+* **Interactive Charts**: Real-time data visualization with responsive design
+* **Workout Phase Tracking**: Automatic detection of warm-up, main workout, and cool-down phases
+* **Performance Indicators**: Power zones, training load, and intensity metrics
+* **Data Decimation**: Optimized chart rendering for smooth performance
+
+### 📈 **Advanced Workout History & Analytics**
+* **Comprehensive History**: Detailed workout records with filtering and search
+* **Performance Analysis**: Charts, trends, and statistical analysis
+* **Workout Comparison**: Side-by-side comparison of multiple sessions
+* **Export Capabilities**: Multiple format support (JSON, CSV, FIT)
+* **Data Visualization**: Interactive charts with zoom, pan, and metric selection
+
+### ⚙️ **Enhanced Settings & Configuration**
+* **User Profile Management**: Complete profile with unit preferences and biometric data
+* **Workout Preferences**: Customizable auto-start, data recording intervals, and power smoothing
+* **System Configuration**: Connection timeouts, logging levels, and device type preferences
+* **Backup & Restore**: Complete data backup and restore functionality
+* **Data Management**: Storage monitoring, cleanup tools, and export options
+
+### 🔧 **Development & Testing Tools**
+* **FTMS Device Simulator**: Realistic simulation for testing without physical hardware
+* **Comprehensive Test Suite**: Unit, integration, and end-to-end testing
+* **FIT File Analysis**: Tools for validating and analyzing generated FIT files
+* **Performance Monitoring**: Built-in performance metrics and optimization
 
 ## System Requirements
 
@@ -69,96 +94,237 @@ Rogue Garmin Bridge connects to Rogue Echo Bike and Rower equipment via Bluetoot
     http://localhost:5000
     ```
 
-### Connecting to Rogue Equipment
+### Quick Start Guide
 
-1. Put your Rogue device in connection mode:
-   * **For Echo Bike**: Press and hold the "Connect" button for 2 seconds until you hear two beeps. The Bluetooth and ANT+ icons should flash on the console to indicate it's ready to pair.
-   * **For Echo Rower**: From the home screen, select the "Connect" option, then choose "Connect to App". The console will search for an application to pair with over BLE.
-2. Navigate to the "Devices" page in the web interface
-3. Click "Scan for Devices" to discover available Rogue equipment
-4. Select your device from the list and click "Connect"
-5. Once connected, the device status will show as "Connected" and the Bluetooth icon on your device's console should stop flashing and remain solid
+#### 1. Device Connection
+* **New Users**: Use the Device Pairing Wizard for step-by-step guidance
+* **Echo Bike**: Press and hold "Connect" button for 2 seconds until you hear beeps
+* **Echo Rower**: Select "Connect" → "Connect to App" from the menu
+* Navigate to "Devices" page, click "Discover Devices", and connect to your equipment
 
-### Tracking a Workout
+#### 2. Workout Tracking
+* Navigate to the "Workout" page
+* Click "Start Workout" to begin real-time tracking
+* Monitor live metrics: power, heart rate, cadence/stroke rate, speed, distance, calories
+* View real-time charts and performance indicators
+* Click "End Workout" when finished
 
-1. Navigate to the "Workout" page
-2. Click "Start Workout" to begin tracking
-3. Your workout metrics will be displayed in real-time
-4. Click "End Workout" when finished
+#### 3. Workout Analysis
+* Navigate to "History" page to view all past workouts
+* Use filters and search to find specific sessions
+* Click on any workout for detailed analysis with interactive charts
+* Compare multiple workouts side-by-side
+* Export data in various formats (JSON, CSV, FIT)
 
-### Viewing Workout History
+#### 4. Garmin Connect Integration
+* Select a workout from the History page
+* Click "Generate FIT" to create a Garmin-compatible file
+* Download and manually upload to Garmin Connect
+* FIT files include proper training load calculation for accurate Garmin metrics
 
-1. Navigate to the "History" page
-2. Browse through your past workouts
-3. Click on a workout to view detailed metrics and charts
-4. View speed data visualizations instead of distance for more useful analysis
+#### 5. Settings & Configuration
+* Navigate to "Settings" to configure user profile and preferences
+* Set up workout preferences (auto-start, data recording intervals, power smoothing)
+* Configure system settings (connection timeouts, logging, unit preferences)
+* Use backup/restore functionality to protect your data
 
-### Uploading to Garmin Connect
+## Recent Major Updates (2025)
 
-1. Navigate to the "History" page
-2. Select a workout from the list
-3. Click the "FIT" button to generate and download the FIT file
-4. Manually upload the downloaded FIT file to Garmin Connect via their website or desktop application.
+### 🚀 **Complete Web Interface Overhaul**
+* **Enhanced Device Management**: Advanced connection management with pairing wizard, diagnostics, and troubleshooting guides
+* **Real-time Monitoring Improvements**: Optimized data polling, client-side caching, and responsive charts with proper data decimation
+* **Advanced Workout History**: Comprehensive filtering, search, detailed analysis, and comparison capabilities
+* **Settings & Configuration Management**: Complete user profile system, workout preferences, and data management tools
 
-## Recent Updates
+### 🔧 **Technical Improvements**
+* **Migration to `pyftms`**: Replaced `pycycling` with `pyftms` for more robust FTMS communication and improved rower support
+* **Python 3.12 Requirement**: Updated to Python 3.12 for latest `pyftms` compatibility
+* **Enhanced FIT File Generation**: Proper training load calculation and improved speed metrics for Garmin Connect compatibility
+* **Comprehensive Testing**: Added extensive unit, integration, and simulator-based testing
+* **Performance Optimization**: Improved data processing, memory usage, and UI responsiveness
 
-* **Migration to `pyftms`**: Replaced `pycycling` with `pyftms` for more robust and specialized FTMS communication, particularly improving rower support.
-* **Python 3.12 Requirement**: Updated project to require Python 3.12 due to `pyftms` dependencies.
-* **Removal of Direct Garmin Connect Upload**: The feature for direct automated upload to Garmin Connect has been removed due to complexities with 2FA and API changes. Users now download FIT files for manual upload.
-* **Proper Training Load Calculation**: FIT files now properly report training load in Garmin Connect by using appropriate device identification
-* **Improved Speed Metrics**: Fixed issues with average speed calculation and reporting in FIT files
-* **Enhanced Workout Visualization**: Added speed charts in workout history for better performance analysis
-* **FIT File Analysis Tools**: Added tools for analyzing and comparing FIT files to ensure compatibility with Garmin Connect
+### 📊 **Data & Analytics Enhancements**
+* **Advanced Workout Analysis**: Power zones, training phases, and performance metrics
+* **Export & Backup System**: Multiple export formats with complete backup and restore functionality
+* **Storage Management**: Built-in storage monitoring and cleanup tools
+* **FIT File Analysis Tools**: Validation and comparison tools for ensuring Garmin Connect compatibility
 
 ## Project Structure
 
-* `src/ftms/`: Bluetooth connectivity and FTMS protocol implementation (using `pyftms`).
-* `src/data/`: Data collection, processing, and storage
-* `src/fit/`: FIT file conversion logic.
-* `src/web/`: Web interface (Flask application)
-* `docs/`: Project documentation
-* `fit_files/`: Generated FIT files from workouts (if configured to save locally, though typically downloaded by user)
-* Analysis scripts in root directory: Tools for analyzing and troubleshooting FIT files
+```
+rogue_garmin_bridge/
+├── src/                           # Source code
+│   ├── ftms/                      # FTMS connectivity and device management
+│   │   ├── ftms_manager.py        # Unified device management interface
+│   │   ├── ftms_connector.py      # Real device BLE connectivity
+│   │   └── ftms_simulator.py      # Device simulator for testing
+│   ├── data/                      # Data processing and storage
+│   │   ├── database.py            # SQLite database operations
+│   │   ├── workout_manager.py     # Workout session management
+│   │   └── data_processor.py      # Data analysis and processing
+│   ├── fit/                       # FIT file generation and analysis
+│   │   ├── fit_converter.py       # Garmin FIT format conversion
+│   │   ├── fit_analyzer.py        # FIT file analysis tools
+│   │   ├── fit_processor.py       # Advanced FIT processing
+│   │   └── speed_calculator.py    # Speed calculation utilities
+│   ├── web/                       # Web interface (Flask application)
+│   │   ├── app.py                 # Main Flask application
+│   │   ├── templates/             # HTML templates
+│   │   │   ├── devices.html       # Enhanced device management
+│   │   │   ├── workout.html       # Real-time workout monitoring
+│   │   │   ├── history.html       # Advanced workout history
+│   │   │   └── settings.html      # Comprehensive settings management
+│   │   └── static/                # Static assets
+│   │       ├── css/style.css      # Enhanced styling
+│   │       └── js/                # JavaScript modules
+│   │           ├── device-management.js    # Device connection management
+│   │           ├── workout-monitoring.js   # Real-time workout display
+│   │           └── workout-history.js      # History and analytics
+│   └── utils/                     # Utility modules
+│       └── logging_config.py      # Centralized logging configuration
+├── tests/                         # Comprehensive test suite
+│   ├── unit/                      # Unit tests
+│   ├── integration/               # Integration tests
+│   └── fixtures/                  # Test data and fixtures
+├── docs/                          # Documentation
+│   └── testing_with_simulator.md  # Simulator usage guide
+├── fit_files/                     # Generated FIT files (runtime)
+├── logs/                          # Application logs (runtime)
+└── requirements.txt               # Python dependencies
+```
+
+## Web Interface Features
+
+### Device Management
+* **Enhanced Connection Interface**: Real-time status indicators, signal strength monitoring
+* **Device Pairing Wizard**: Step-by-step guidance for new users
+* **Auto-reconnection**: Automatic reconnection with user feedback
+* **Diagnostic Tools**: Built-in system health checks and troubleshooting guides
+
+### Workout Monitoring
+* **Real-time Charts**: Interactive, responsive charts with data decimation
+* **Performance Metrics**: Power zones, training load, and intensity indicators
+* **Workout Phases**: Automatic detection of warm-up, main workout, and cool-down
+* **Connection Quality**: Live monitoring of data rate and signal strength
+
+### Workout History & Analytics
+* **Advanced Filtering**: Search and filter by date, duration, type, and metrics
+* **Detailed Analysis**: Interactive charts with zoom, pan, and metric selection
+* **Workout Comparison**: Side-by-side comparison of multiple sessions
+* **Export Options**: JSON, CSV, and FIT format exports with date range selection
+
+### Settings & Configuration
+* **User Profile**: Complete biometric data with unit preference management
+* **Workout Preferences**: Auto-start, data recording intervals, power smoothing
+* **System Settings**: Connection timeouts, logging levels, device preferences
+* **Data Management**: Backup/restore, storage monitoring, and cleanup tools
 
 ## Configuration
 
-Configuration options are available in the web interface under "Settings" or can be set via environment variables:
+### Web Interface Configuration
+All configuration is available through the comprehensive Settings page in the web interface:
 
-* `PORT`: The port to run the application on (default: 5000)
-* `DEBUG`: Set to "True" to enable debug mode (default: False)
-* `DATABASE_URL`: URL for the database (default: SQLite database in the data directory)
-* `SECRET_KEY`: Secret key for session encryption (required for production)
+* **User Profile**: Personal information, biometric data, unit preferences
+* **Workout Preferences**: Default settings, auto-start options, data recording
+* **System Configuration**: Connection settings, logging, device preferences
+* **Data Management**: Backup/restore, export options, storage cleanup
 
-## Development with the Simulator
+### Environment Variables
+Advanced users can also configure via environment variables:
 
-For development without physical hardware, the application includes an FTMS device simulator:
+* `PORT`: Web server port (default: 5000)
+* `DEBUG`: Enable debug mode (default: False)
+* `DATABASE_URL`: Database location (default: SQLite in data directory)
+* `SECRET_KEY`: Session encryption key (required for production)
 
-1. Start the application with the simulator flag (using Python 3.12):
-    ```
-    python3.12 src/web/app.py --use-simulator
-    ```
+## Development & Testing
 
-2. The simulator will appear as a device that can be connected to from the web interface
+### FTMS Device Simulator
 
-3. For detailed instructions on using the simulator to test workouts, please see the [Testing with the FTMS Simulator](docs/testing_with_simulator.md) documentation.
+For development and testing without physical hardware:
 
-## Analysis Tools
+```bash
+# Start with simulator enabled
+python3.12 src/web/app.py --use-simulator --device-type bike
+python3.12 src/web/app.py --use-simulator --device-type rower
 
-The project includes tools for analyzing FIT files:
-
-* `compare_fit_files.py`: Compare device identification and other metadata between FIT files
-
-## Testing
-
+# Or enable via web interface Settings page
 ```
+
+The simulator provides realistic workout data and supports all application features. See [Testing with the FTMS Simulator](docs/testing_with_simulator.md) for detailed usage instructions.
+
+### Running Tests
+
+```bash
+# Run all tests
 pytest
+
+# Run specific test categories
+pytest tests/unit/                    # Unit tests
+pytest tests/integration/             # Integration tests
+pytest -m simulator                  # Simulator tests
+
+# Run with coverage
+pytest --cov=src --cov-report=html
+
+# Run performance tests
+pytest -m slow
+```
+
+### FIT File Analysis Tools
+
+Built-in tools for analyzing and validating FIT files:
+
+* **FIT Analyzer**: `src/fit/fit_analyzer.py` - Comprehensive FIT file analysis
+* **FIT Processor**: `src/fit/fit_processor.py` - Advanced processing and validation
+* **Speed Calculator**: `src/fit/speed_calculator.py` - Speed calculation utilities
+
+### Code Quality
+
+```bash
+# Format code
+black src/ tests/
+
+# Lint code
+flake8 src/ tests/
+
+# Type checking
+mypy src/
 ```
 
 ## Troubleshooting
 
-* **Bluetooth Connection Problems**: Ensure your Bluetooth adapter supports BLE and is enabled. Ensure `bluez` (Linux) or appropriate BLE drivers are installed and working.
-* **Device Not Found**: Make sure your Rogue equipment is powered on and in Bluetooth pairing mode
-* **Incorrect Speed Data**: If speed is not showing in Garmin Connect, check your FIT files using the analysis tools
+### Built-in Diagnostics
+
+The application includes comprehensive diagnostic tools accessible via the web interface:
+
+* **Device Diagnostics**: Navigate to Devices page → "Run Diagnostics" for system health checks
+* **Connection Quality Monitoring**: Real-time signal strength, data rate, and connection stability metrics
+* **Troubleshooting Guides**: Built-in guides for common connection and data issues
+
+### Common Issues
+
+* **Bluetooth Connection Problems**: 
+  - Use the Device Pairing Wizard for step-by-step guidance
+  - Check Bluetooth adapter BLE support and drivers
+  - Ensure `bluez` (Linux) or appropriate BLE drivers are installed
+  
+* **Device Not Found**: 
+  - Verify equipment is powered on and in pairing mode
+  - Use the connection quality indicators to check signal strength
+  - Try the auto-reconnection feature if connection drops
+  
+* **Data Issues**: 
+  - Check connection quality metrics in the Devices page
+  - Use the built-in FIT file analysis tools for validation
+  - Review workout data in the History page for completeness
+
+### Advanced Troubleshooting
+
+* **Log Analysis**: Check application logs in the `logs/` directory
+* **Database Issues**: Use the backup/restore functionality in Settings
+* **Performance Problems**: Monitor system resources via the diagnostic tools
+* **FIT File Validation**: Use the built-in FIT analysis tools for Garmin Connect compatibility
 
 ## Contributing
 

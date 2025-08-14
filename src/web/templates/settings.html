@@ -60,6 +60,65 @@
             <div class="col-md-6">
                 <div class="card mb-4">
                     <div class="card-header">
+                        <h5>Workout Preferences</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="workout-preferences-form">
+                            <div class="mb-3">
+                                <label for="default_workout_type" class="form-label">Default Workout Type</label>
+                                <select class="form-select" id="default_workout_type" name="default_workout_type">
+                                    <option value="auto">Auto-detect from device</option>
+                                    <option value="bike">Indoor Bike</option>
+                                    <option value="rower">Rower</option>
+                                </select>
+                                <div class="form-text">Choose the default workout type for new sessions.</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="auto_start_workout" class="form-label">Auto-start Workout</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="auto_start_workout" name="auto_start_workout">
+                                    <label class="form-check-label" for="auto_start_workout">
+                                        Automatically start workout when device data is detected
+                                    </label>
+                                </div>
+                                <div class="form-text">When enabled, workouts will start automatically when you begin exercising.</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="auto_pause_threshold" class="form-label">Auto-pause Threshold (seconds)</label>
+                                <input type="number" class="form-control" id="auto_pause_threshold" name="auto_pause_threshold" min="5" max="300" value="30">
+                                <div class="form-text">Automatically pause workout after this many seconds of inactivity.</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="data_recording_interval" class="form-label">Data Recording Interval</label>
+                                <select class="form-select" id="data_recording_interval" name="data_recording_interval">
+                                    <option value="1">Every second (1s) - High detail</option>
+                                    <option value="5">Every 5 seconds - Balanced</option>
+                                    <option value="10">Every 10 seconds - Low storage</option>
+                                </select>
+                                <div class="form-text">How frequently to record workout data points.</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="power_smoothing" class="form-label">Power Data Smoothing</label>
+                                <select class="form-select" id="power_smoothing" name="power_smoothing">
+                                    <option value="none">No smoothing - Raw data</option>
+                                    <option value="3s">3-second average</option>
+                                    <option value="10s">10-second average</option>
+                                    <option value="30s">30-second average</option>
+                                </select>
+                                <div class="form-text">Apply smoothing to power data to reduce noise.</div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">Save Workout Preferences</button>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="card mb-4">
+                    <div class="card-header">
                         <h5>Garmin Connect Settings</h5>
                     </div>
                     <div class="card-body">
@@ -73,6 +132,16 @@
                                 <input type="password" class="form-control" id="garmin_password" name="garmin_password">
                                 <div class="form-text">Your password is stored securely and only used for Garmin Connect uploads.</div>
                             </div>
+                            <div class="mb-3">
+                                <label for="auto_upload_fit" class="form-label">Auto-upload FIT Files</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="auto_upload_fit" name="auto_upload_fit">
+                                    <label class="form-check-label" for="auto_upload_fit">
+                                        Automatically upload FIT files to Garmin Connect after workouts
+                                    </label>
+                                </div>
+                                <div class="form-text">Requires valid Garmin Connect credentials.</div>
+                            </div>
                             <button type="submit" class="btn btn-primary">Save Garmin Settings</button>
                         </form>
                     </div>
@@ -80,10 +149,10 @@
                 
                 <div class="card">
                     <div class="card-header">
-                        <h5>Application Settings</h5>
+                        <h5>System Configuration</h5>
                     </div>
                     <div class="card-body">
-                        <form id="app-settings-form">
+                        <form id="system-config-form">
                             <div class="mb-3 form-check">
                                 <input type="checkbox" class="form-check-input" id="use_simulator" name="use_simulator">
                                 <label class="form-check-label" for="use_simulator">Use Simulator</label>
@@ -91,7 +160,7 @@
                             </div>
                             
                             <div class="mb-3">
-                                <label class="form-label">Device Type</label>
+                                <label class="form-label">Default Device Type</label>
                                 <select class="form-select" id="device_type" name="device_type">
                                     <option value="auto">Auto-detect (default)</option>
                                     <option value="indoor_bike">Indoor Bike</option>
@@ -106,20 +175,155 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="unit_system_preference" id="metric_units" value="metric" checked>
                                     <label class="form-check-label" for="metric_units">
-                                        Metric (kg, cm)
+                                        Metric (kg, cm, km/h)
                                     </label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="unit_system_preference" id="imperial_units" value="imperial">
                                     <label class="form-check-label" for="imperial_units">
-                                        Imperial (lbs, inches)
+                                        Imperial (lbs, inches, mph)
                                     </label>
                                 </div>
-                                <div class="form-text">Choose your preferred unit system for displaying measurements. This preference is saved with your user profile.</div>
+                                <div class="form-text">Choose your preferred unit system for displaying measurements.</div>
                             </div>
                             
-                            <button type="submit" class="btn btn-primary">Save App Settings</button>
+                            <div class="mb-3">
+                                <label for="connection_timeout" class="form-label">Connection Timeout (seconds)</label>
+                                <input type="number" class="form-control" id="connection_timeout" name="connection_timeout" min="10" max="120" value="30">
+                                <div class="form-text">How long to wait when connecting to devices.</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="log_level" class="form-label">Logging Level</label>
+                                <select class="form-select" id="log_level" name="log_level">
+                                    <option value="ERROR">Error - Only errors</option>
+                                    <option value="WARNING">Warning - Errors and warnings</option>
+                                    <option value="INFO">Info - Normal operation info</option>
+                                    <option value="DEBUG">Debug - Detailed debugging info</option>
+                                </select>
+                                <div class="form-text">Set the level of detail for application logs.</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="max_log_size" class="form-label">Maximum Log File Size (MB)</label>
+                                <input type="number" class="form-control" id="max_log_size" name="max_log_size" min="1" max="100" value="10">
+                                <div class="form-text">Log files will be rotated when they exceed this size.</div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">Save System Configuration</button>
                         </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Data Management Section -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Data Management</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Backup & Restore</h6>
+                                <p class="text-muted">Create backups of your workout data, settings, and user profile.</p>
+                                
+                                <div class="mb-3">
+                                    <button id="create-backup-btn" class="btn btn-success">
+                                        <i class="fas fa-download me-2"></i>Create Backup
+                                    </button>
+                                    <div class="form-text">Downloads a complete backup of your data.</div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="restore-file" class="form-label">Restore from Backup</label>
+                                    <input type="file" class="form-control" id="restore-file" accept=".json,.zip">
+                                    <div class="form-text">Select a backup file to restore your data.</div>
+                                </div>
+                                
+                                <button id="restore-backup-btn" class="btn btn-warning" disabled>
+                                    <i class="fas fa-upload me-2"></i>Restore Backup
+                                </button>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <h6>Data Export</h6>
+                                <p class="text-muted">Export your workout data in various formats.</p>
+                                
+                                <div class="mb-3">
+                                    <label for="export-format" class="form-label">Export Format</label>
+                                    <select class="form-select" id="export-format">
+                                        <option value="json">JSON - Complete data</option>
+                                        <option value="csv">CSV - Spreadsheet format</option>
+                                        <option value="fit">FIT - Garmin format</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="export-date-range" class="form-label">Date Range</label>
+                                    <select class="form-select" id="export-date-range">
+                                        <option value="all">All workouts</option>
+                                        <option value="last-30">Last 30 days</option>
+                                        <option value="last-90">Last 90 days</option>
+                                        <option value="last-year">Last year</option>
+                                        <option value="custom">Custom range</option>
+                                    </select>
+                                </div>
+                                
+                                <div id="custom-date-range" class="mb-3 d-none">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <label for="export-start-date" class="form-label">Start Date</label>
+                                            <input type="date" class="form-control" id="export-start-date">
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="export-end-date" class="form-label">End Date</label>
+                                            <input type="date" class="form-control" id="export-end-date">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <button id="export-data-btn" class="btn btn-info">
+                                    <i class="fas fa-file-export me-2"></i>Export Data
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <hr class="my-4">
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Storage Information</h6>
+                                <div id="storage-info">
+                                    <p>Loading storage information...</p>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <h6>Data Cleanup</h6>
+                                <p class="text-muted">Remove old or unnecessary data to free up space.</p>
+                                
+                                <div class="mb-3">
+                                    <button id="cleanup-logs-btn" class="btn btn-outline-warning">
+                                        <i class="fas fa-broom me-2"></i>Clean Old Logs
+                                    </button>
+                                    <div class="form-text">Remove log files older than 30 days.</div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <button id="cleanup-temp-btn" class="btn btn-outline-warning">
+                                        <i class="fas fa-trash me-2"></i>Clean Temporary Files
+                                    </button>
+                                    <div class="form-text">Remove temporary FIT files and cache.</div>
+                                </div>
+                                
+                                <div class="alert alert-warning">
+                                    <strong>Warning:</strong> Data cleanup operations cannot be undone. Create a backup first.
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -132,8 +336,9 @@
 <script>
     // DOM elements
     const userProfileForm = document.getElementById('user-profile-form');
+    const workoutPreferencesForm = document.getElementById('workout-preferences-form');
     const garminSettingsForm = document.getElementById('garmin-settings-form');
-    const appSettingsForm = document.getElementById('app-settings-form');
+    const systemConfigForm = document.getElementById('system-config-form');
     
     // Unit conversion utilities
     const unitConversions = {
@@ -261,8 +466,25 @@
             .catch(error => console.error('Error loading user profile:', error));
     }
     
-    // Load app settings (now only for non-unit related settings like use_simulator)
-    function loadAppSettings() {
+    // Load workout preferences
+    function loadWorkoutPreferences() {
+        fetch('/api/user_profile')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.profile && data.profile.workout_preferences) {
+                    const prefs = data.profile.workout_preferences;
+                    if (prefs.default_workout_type) document.getElementById('default_workout_type').value = prefs.default_workout_type;
+                    if (prefs.auto_start_workout !== undefined) document.getElementById('auto_start_workout').checked = prefs.auto_start_workout;
+                    if (prefs.auto_pause_threshold) document.getElementById('auto_pause_threshold').value = prefs.auto_pause_threshold;
+                    if (prefs.data_recording_interval) document.getElementById('data_recording_interval').value = prefs.data_recording_interval;
+                    if (prefs.power_smoothing) document.getElementById('power_smoothing').value = prefs.power_smoothing;
+                }
+            })
+            .catch(error => console.error('Error loading workout preferences:', error));
+    }
+
+    // Load system configuration
+    function loadSystemConfig() {
         fetch('/api/settings')
             .then(response => response.json())
             .then(data => {
@@ -274,11 +496,56 @@
                     if (settings.device_type) {
                         document.getElementById('device_type').value = settings.device_type;
                     }
-                    // The unit_system from settings.json is no longer used to drive display conversions here.
-                    // User profile's unit_preference is the master for display.
+                    if (settings.connection_timeout) {
+                        document.getElementById('connection_timeout').value = settings.connection_timeout;
+                    }
+                    if (settings.log_level) {
+                        document.getElementById('log_level').value = settings.log_level;
+                    }
+                    if (settings.max_log_size) {
+                        document.getElementById('max_log_size').value = settings.max_log_size;
+                    }
                 }
             })
-            .catch(error => console.error('Error loading app settings:', error));
+            .catch(error => console.error('Error loading system config:', error));
+    }
+    
+    // Load storage information
+    function loadStorageInfo() {
+        fetch('/api/storage_info')
+            .then(response => response.json())
+            .then(data => {
+                const storageInfoElement = document.getElementById('storage-info');
+                if (data.success && data.storage) {
+                    const storage = data.storage;
+                    storageInfoElement.innerHTML = `
+                        <div class="row">
+                            <div class="col-6">
+                                <small class="text-muted">Database Size:</small><br>
+                                <strong>${storage.database_size || 'Unknown'}</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">Total Workouts:</small><br>
+                                <strong>${storage.workout_count || 0}</strong>
+                            </div>
+                            <div class="col-6 mt-2">
+                                <small class="text-muted">Log Files Size:</small><br>
+                                <strong>${storage.log_size || 'Unknown'}</strong>
+                            </div>
+                            <div class="col-6 mt-2">
+                                <small class="text-muted">FIT Files:</small><br>
+                                <strong>${storage.fit_files_count || 0} files</strong>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    storageInfoElement.innerHTML = '<p class="text-muted">Unable to load storage information.</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error loading storage info:', error);
+                document.getElementById('storage-info').innerHTML = '<p class="text-muted">Error loading storage information.</p>';
+            });
     }
     
     // Save user profile
@@ -381,22 +648,64 @@
             });
     });
     
-    // Save app settings
-    appSettingsForm.addEventListener('submit', function(event) {
+    // Save workout preferences
+    workoutPreferencesForm.addEventListener('submit', function(event) {
         event.preventDefault();
-        const formData = new FormData(appSettingsForm);
+        const formData = new FormData(workoutPreferencesForm);
+        const preferences = {};
+        
+        preferences.default_workout_type = formData.get('default_workout_type');
+        preferences.auto_start_workout = formData.has('auto_start_workout');
+        preferences.auto_pause_threshold = parseInt(formData.get('auto_pause_threshold'));
+        preferences.data_recording_interval = parseInt(formData.get('data_recording_interval'));
+        preferences.power_smoothing = formData.get('power_smoothing');
+        
+        // Get current profile and add workout preferences
+        fetch('/api/user_profile')
+            .then(response => response.json())
+            .then(profileData => {
+                let profileToSave = (profileData && profileData.success && profileData.profile) ? profileData.profile : {};
+                profileToSave.workout_preferences = preferences;
+
+                fetch('/api/user_profile', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(profileToSave)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Workout preferences saved successfully');
+                    } else {
+                        alert(`Error saving workout preferences: ${data.error || 'Unknown error'}`);
+                    }
+                })
+                .catch(error => {
+                    alert(`Error saving workout preferences: ${error.message}`);
+                    console.error('Error saving workout preferences:', error);
+                });
+            });
+    });
+
+    // Save system configuration
+    systemConfigForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const formData = new FormData(systemConfigForm);
         const settingsToSave = {};
+        
         settingsToSave.use_simulator = formData.has('use_simulator');
+        settingsToSave.device_type = formData.get('device_type');
+        settingsToSave.connection_timeout = parseInt(formData.get('connection_timeout'));
+        settingsToSave.log_level = formData.get('log_level');
+        settingsToSave.max_log_size = parseInt(formData.get('max_log_size'));
         
-        // Save the device type setting
-        const deviceType = document.getElementById('device_type').value;
-        if (deviceType) {
-            settingsToSave.device_type = deviceType;
+        // Handle unit system preference
+        const unitSystemPreference = document.querySelector('input[name="unit_system_preference"]:checked')?.value;
+        if (unitSystemPreference) {
+            settingsToSave.unit_system = unitSystemPreference;
         }
-        
-        // The unit_system_preference radio buttons are for user profile, not app settings file.
-        // So, we don't save unit_system to settings.json from here anymore to avoid confusion.
-        // If it was intended to be an app-level default, that logic would be different.
 
         fetch('/api/settings', {
             method: 'POST',
@@ -408,20 +717,219 @@
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert('Application settings saved successfully');
+                alert('System configuration saved successfully');
             } else {
-                alert(`Error saving application settings: ${data.error || 'Unknown error'}`);
+                alert(`Error saving system configuration: ${data.error || 'Unknown error'}`);
             }
         })
         .catch(error => {
-            alert(`Error saving application settings: ${error.message}`);
-            console.error('Error saving application settings:', error);
+            alert(`Error saving system configuration: ${error.message}`);
+            console.error('Error saving system configuration:', error);
         });
     });
     
+    // Data management functions
+    
+    // Export date range change handler
+    document.getElementById('export-date-range').addEventListener('change', function() {
+        const customRange = document.getElementById('custom-date-range');
+        customRange.classList.toggle('d-none', this.value !== 'custom');
+    });
+    
+    // Create backup
+    document.getElementById('create-backup-btn').addEventListener('click', function() {
+        this.disabled = true;
+        this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Creating Backup...';
+        
+        fetch('/api/backup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => response.blob())
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `rogue-garmin-backup-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+            
+            this.disabled = false;
+            this.innerHTML = '<i class="fas fa-download me-2"></i>Create Backup';
+            alert('Backup created successfully!');
+        })
+        .catch(error => {
+            console.error('Backup error:', error);
+            alert('Error creating backup: ' + error.message);
+            this.disabled = false;
+            this.innerHTML = '<i class="fas fa-download me-2"></i>Create Backup';
+        });
+    });
+    
+    // Restore file selection
+    document.getElementById('restore-file').addEventListener('change', function() {
+        const restoreBtn = document.getElementById('restore-backup-btn');
+        restoreBtn.disabled = !this.files.length;
+    });
+    
+    // Restore backup
+    document.getElementById('restore-backup-btn').addEventListener('click', function() {
+        const fileInput = document.getElementById('restore-file');
+        const file = fileInput.files[0];
+        
+        if (!file) {
+            alert('Please select a backup file first.');
+            return;
+        }
+        
+        if (!confirm('This will replace all current data with the backup. Are you sure?')) {
+            return;
+        }
+        
+        const formData = new FormData();
+        formData.append('backup_file', file);
+        
+        this.disabled = true;
+        this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Restoring...';
+        
+        fetch('/api/restore', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Backup restored successfully! Please refresh the page.');
+                location.reload();
+            } else {
+                throw new Error(data.error || 'Restore failed');
+            }
+        })
+        .catch(error => {
+            console.error('Restore error:', error);
+            alert('Error restoring backup: ' + error.message);
+        })
+        .finally(() => {
+            this.disabled = false;
+            this.innerHTML = '<i class="fas fa-upload me-2"></i>Restore Backup';
+        });
+    });
+    
+    // Export data
+    document.getElementById('export-data-btn').addEventListener('click', function() {
+        const format = document.getElementById('export-format').value;
+        const dateRange = document.getElementById('export-date-range').value;
+        let startDate = null;
+        let endDate = null;
+        
+        if (dateRange === 'custom') {
+            startDate = document.getElementById('export-start-date').value;
+            endDate = document.getElementById('export-end-date').value;
+            
+            if (!startDate || !endDate) {
+                alert('Please select both start and end dates for custom range.');
+                return;
+            }
+        }
+        
+        this.disabled = true;
+        this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Exporting...';
+        
+        const params = new URLSearchParams({
+            format: format,
+            date_range: dateRange
+        });
+        
+        if (startDate) params.append('start_date', startDate);
+        if (endDate) params.append('end_date', endDate);
+        
+        fetch(`/api/export?${params}`)
+        .then(response => {
+            if (!response.ok) throw new Error('Export failed');
+            return response.blob();
+        })
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `workout-data-${dateRange}.${format}`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+            
+            alert('Data exported successfully!');
+        })
+        .catch(error => {
+            console.error('Export error:', error);
+            alert('Error exporting data: ' + error.message);
+        })
+        .finally(() => {
+            this.disabled = false;
+            this.innerHTML = '<i class="fas fa-file-export me-2"></i>Export Data';
+        });
+    });
+    
+    // Cleanup functions
+    document.getElementById('cleanup-logs-btn').addEventListener('click', function() {
+        if (!confirm('This will delete log files older than 30 days. Continue?')) return;
+        
+        this.disabled = true;
+        this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Cleaning...';
+        
+        fetch('/api/cleanup/logs', { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(`Cleanup completed. ${data.files_removed || 0} files removed.`);
+                loadStorageInfo(); // Refresh storage info
+            } else {
+                throw new Error(data.error || 'Cleanup failed');
+            }
+        })
+        .catch(error => {
+            console.error('Cleanup error:', error);
+            alert('Error during cleanup: ' + error.message);
+        })
+        .finally(() => {
+            this.disabled = false;
+            this.innerHTML = '<i class="fas fa-broom me-2"></i>Clean Old Logs';
+        });
+    });
+    
+    document.getElementById('cleanup-temp-btn').addEventListener('click', function() {
+        if (!confirm('This will delete temporary files and cache. Continue?')) return;
+        
+        this.disabled = true;
+        this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Cleaning...';
+        
+        fetch('/api/cleanup/temp', { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(`Cleanup completed. ${data.files_removed || 0} files removed.`);
+                loadStorageInfo(); // Refresh storage info
+            } else {
+                throw new Error(data.error || 'Cleanup failed');
+            }
+        })
+        .catch(error => {
+            console.error('Cleanup error:', error);
+            alert('Error during cleanup: ' + error.message);
+        })
+        .finally(() => {
+            this.disabled = false;
+            this.innerHTML = '<i class="fas fa-trash me-2"></i>Clean Temporary Files';
+        });
+    });
+
     // Initial load
     loadUserProfile(); 
-    loadAppSettings(); 
+    loadWorkoutPreferences();
+    loadSystemConfig();
+    loadStorageInfo(); 
 
 </script>
 {% endblock %}

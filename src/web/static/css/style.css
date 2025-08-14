@@ -524,3 +524,767 @@
         padding: 0.5rem 0.75rem;
     }
 }
+/* Enhanced Device Management Styles */
+
+/* Device connection quality indicators */
+#connection-quality {
+    background: #f8f9fa;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+#connection-quality p {
+    margin-bottom: 0.5rem;
+}
+
+#connection-quality p:last-child {
+    margin-bottom: 0;
+}
+
+/* Auto-reconnect status */
+#auto-reconnect-status {
+    border-left: 4px solid #17a2b8;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+/* Device list enhancements */
+.device-actions {
+    min-width: 150px;
+    text-align: right;
+}
+
+.device-type-select {
+    margin-bottom: 0.5rem;
+}
+
+.connect-btn {
+    min-width: 80px;
+}
+
+/* Signal strength badges */
+.signal-strength {
+    font-size: 0.8rem;
+}
+
+/* Pairing wizard styles */
+#pairing-wizard {
+    background: #f8f9fa;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.wizard-step {
+    min-height: 200px;
+}
+
+.wizard-step h6 {
+    color: #495057;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.wizard-step .alert {
+    margin-bottom: 1rem;
+}
+
+.wizard-step .form-check {
+    margin-bottom: 0.75rem;
+}
+
+.wizard-step .form-check-label {
+    font-weight: 500;
+}
+
+/* Wizard navigation buttons */
+.wizard-step .btn {
+    margin-right: 0.5rem;
+}
+
+/* Troubleshooting section */
+#troubleshooting-guide {
+    background: #fff;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.accordion-button {
+    font-weight: 500;
+}
+
+.accordion-body ul {
+    margin-bottom: 0;
+}
+
+.accordion-body li {
+    margin-bottom: 0.5rem;
+}
+
+.accordion-body li:last-child {
+    margin-bottom: 0;
+}
+
+/* Diagnostic results */
+#diagnostic-results {
+    background: #f8f9fa;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+#diagnostic-output {
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+#diagnostic-output h6 {
+    font-family: inherit;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+#diagnostic-output strong {
+    color: #495057;
+}
+
+/* Connection help basic */
+#connection-help-basic {
+    background: #e7f3ff;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    border-left: 4px solid #007bff;
+}
+
+#connection-help-basic ol {
+    margin-bottom: 0;
+}
+
+#connection-help-basic li {
+    margin-bottom: 0.5rem;
+}
+
+#connection-help-basic li:last-child {
+    margin-bottom: 0;
+}
+
+/* Device status indicators */
+.status-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.status-indicator .badge {
+    font-size: 0.8rem;
+}
+
+/* Connection quality metrics */
+.connection-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.5rem;
+}
+
+.connection-metric {
+    text-align: center;
+    padding: 0.5rem;
+    background: #fff;
+    border-radius: 0.25rem;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.connection-metric strong {
+    display: block;
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-bottom: 0.25rem;
+}
+
+.connection-metric span {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* Enhanced device list styling */
+.list-group-item {
+    border: 1px solid rgba(0,0,0,0.125);
+    margin-bottom: 0.5rem;
+    border-radius: 0.5rem !important;
+    transition: all 0.2s ease-in-out;
+}
+
+.list-group-item:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.list-group-item.active {
+    border-color: #28a745;
+    background-color: #d4edda !important;
+    color: #155724 !important;
+}
+
+.list-group-item.active .connect-btn {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+/* No devices found styling */
+.no-devices-found {
+    text-align: center;
+    padding: 2rem;
+    color: #6c757d;
+}
+
+.no-devices-found i {
+    margin-bottom: 1rem;
+}
+
+.no-devices-found ul {
+    text-align: left;
+    display: inline-block;
+    margin: 1rem 0;
+}
+
+/* Button enhancements */
+.btn-group .btn {
+    margin-right: 0.5rem;
+}
+
+.btn-group .btn:last-child {
+    margin-right: 0;
+}
+
+/* Diagnostic status icons */
+.diagnostic-status-ok::before {
+    content: "✅ ";
+}
+
+.diagnostic-status-error::before {
+    content: "❌ ";
+}
+
+.diagnostic-status-warning::before {
+    content: "⚠️ ";
+}
+
+/* Responsive adjustments for device management */
+@media (max-width: 768px) {
+    .device-actions {
+        min-width: auto;
+        text-align: left;
+        margin-top: 0.5rem;
+    }
+    
+    .list-group-item .d-flex {
+        flex-direction: column;
+        align-items: stretch !important;
+    }
+    
+    .wizard-step {
+        min-height: auto;
+        padding: 1rem;
+    }
+    
+    #pairing-wizard {
+        padding: 1rem;
+    }
+    
+    .connection-metrics {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    #diagnostic-output {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .device-actions .btn {
+        width: 100%;
+        margin-bottom: 0.25rem;
+    }
+    
+    .device-actions .form-select {
+        margin-bottom: 0.5rem;
+    }
+    
+    .connection-metrics {
+        grid-template-columns: 1fr;
+    }
+    
+    .wizard-step .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+        margin-right: 0;
+    }
+    
+    #connection-help-basic {
+        padding: 0.75rem;
+    }
+    
+    .accordion-body {
+        padding: 0.75rem;
+    }
+}
+
+/* Animation for wizard steps */
+.wizard-step {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Enhanced notification styling for device management */
+.device-notification {
+    border-left: 4px solid #007bff;
+    padding-left: 1rem;
+}
+
+.device-notification.success {
+    border-left-color: #28a745;
+}
+
+.device-notification.error {
+    border-left-color: #dc3545;
+}
+
+.device-notification.warning {
+    border-left-color: #ffc107;
+}
+
+/* Loading states for device operations */
+.device-loading {
+    position: relative;
+    overflow: hidden;
+}
+
+.device-loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: loading-shimmer 1.5s infinite;
+}
+
+@keyframes loading-shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}/* Enhanced
+ Settings Management Styles */
+
+/* Settings form sections */
+.settings-section {
+    background: #f8f9fa;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.settings-section h6 {
+    color: #495057;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 0.5rem;
+}
+
+/* Form enhancements */
+.form-label {
+    font-weight: 500;
+    color: #495057;
+}
+
+.form-text {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+}
+
+.form-check-label {
+    font-weight: 400;
+    color: #495057;
+}
+
+/* Data management section */
+.data-management {
+    background: #fff;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.data-management h6 {
+    color: #495057;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    padding-bottom: 0.5rem;
+}
+
+/* Storage information display */
+#storage-info {
+    background: #f8f9fa;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+#storage-info .row > div {
+    padding: 0.25rem 0;
+}
+
+#storage-info small {
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+#storage-info strong {
+    font-size: 1rem;
+    color: #212529;
+}
+
+/* Backup and restore section */
+.backup-restore {
+    background: #e7f3ff;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    border-left: 4px solid #007bff;
+    margin-bottom: 1rem;
+}
+
+.export-section {
+    background: #f0f8f0;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    border-left: 4px solid #28a745;
+    margin-bottom: 1rem;
+}
+
+.cleanup-section {
+    background: #fff3cd;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    border-left: 4px solid #ffc107;
+}
+
+/* Button groups for data management */
+.data-management .btn {
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.data-management .btn:last-child {
+    margin-right: 0;
+}
+
+/* File input styling */
+.form-control[type="file"] {
+    padding: 0.375rem 0.75rem;
+}
+
+/* Custom date range styling */
+#custom-date-range {
+    background: #f8f9fa;
+    border-radius: 0.25rem;
+    padding: 0.75rem;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+/* Alert enhancements for settings */
+.alert {
+    border-radius: 0.5rem;
+    border: none;
+    font-size: 0.9rem;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border-left: 4px solid #ffc107;
+}
+
+/* Preference indicators */
+.preference-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.preference-indicator .badge {
+    font-size: 0.75rem;
+}
+
+/* Settings tabs enhancement */
+.settings-tabs {
+    border-bottom: 2px solid #e9ecef;
+    margin-bottom: 1.5rem;
+}
+
+.settings-tabs .nav-link {
+    border: none;
+    color: #6c757d;
+    font-weight: 500;
+    padding: 0.75rem 1rem;
+}
+
+.settings-tabs .nav-link.active {
+    background-color: transparent;
+    border-bottom: 2px solid #007bff;
+    color: #007bff;
+}
+
+/* Form validation styling */
+.is-invalid {
+    border-color: #dc3545;
+}
+
+.invalid-feedback {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: #dc3545;
+}
+
+.is-valid {
+    border-color: #28a745;
+}
+
+.valid-feedback {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: #28a745;
+}
+
+/* Loading states for settings operations */
+.settings-loading {
+    position: relative;
+    overflow: hidden;
+}
+
+.settings-loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: loading-shimmer 1.5s infinite;
+}
+
+/* Progress indicators for operations */
+.operation-progress {
+    margin-top: 1rem;
+}
+
+.operation-progress .progress {
+    height: 0.5rem;
+    background-color: rgba(0,0,0,0.1);
+}
+
+.operation-progress .progress-bar {
+    transition: width 0.3s ease;
+}
+
+/* Success/error states */
+.operation-success {
+    border-left: 4px solid #28a745;
+    background-color: #d4edda;
+    color: #155724;
+    padding: 0.75rem;
+    border-radius: 0.25rem;
+    margin-top: 0.5rem;
+}
+
+.operation-error {
+    border-left: 4px solid #dc3545;
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 0.75rem;
+    border-radius: 0.25rem;
+    margin-top: 0.5rem;
+}
+
+/* Responsive adjustments for settings */
+@media (max-width: 768px) {
+    .settings-section {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .data-management {
+        padding: 1rem;
+    }
+    
+    .data-management .btn {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+    }
+    
+    #storage-info {
+        padding: 0.75rem;
+    }
+    
+    #storage-info .row > div {
+        margin-bottom: 0.5rem;
+    }
+    
+    .backup-restore,
+    .export-section,
+    .cleanup-section {
+        padding: 0.75rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .settings-section h6 {
+        font-size: 1rem;
+    }
+    
+    .form-label {
+        font-size: 0.9rem;
+    }
+    
+    .form-text {
+        font-size: 0.8rem;
+    }
+    
+    .data-management h6 {
+        font-size: 1rem;
+    }
+    
+    #custom-date-range .col-6 {
+        margin-bottom: 0.5rem;
+    }
+    
+    .alert {
+        font-size: 0.85rem;
+        padding: 0.5rem;
+    }
+}
+
+/* Animation for settings updates */
+.settings-updated {
+    animation: settingsFlash 0.5s ease-in-out;
+}
+
+@keyframes settingsFlash {
+    0% { background-color: transparent; }
+    50% { background-color: rgba(40, 167, 69, 0.1); }
+    100% { background-color: transparent; }
+}
+
+/* Collapsible sections */
+.collapsible-section {
+    border: 1px solid rgba(0,0,0,0.125);
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.collapsible-header {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(0,0,0,0.125);
+    display: flex;
+    justify-content: between;
+    align-items: center;
+}
+
+.collapsible-header:hover {
+    background-color: #e9ecef;
+}
+
+.collapsible-content {
+    padding: 1rem;
+}
+
+.collapsible-toggle {
+    transition: transform 0.2s ease;
+}
+
+.collapsible-toggle.collapsed {
+    transform: rotate(-90deg);
+}
+
+/* Unit conversion indicators */
+.unit-indicator {
+    font-size: 0.8rem;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Settings search/filter */
+.settings-search {
+    background: #f8f9fa;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.settings-search input {
+    border: none;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Advanced settings toggle */
+.advanced-settings {
+    border-top: 2px dashed #dee2e6;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+}
+
+.advanced-toggle {
+    color: #6c757d;
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.advanced-toggle:hover {
+    color: #495057;
+    text-decoration: none;
+}
+
+.advanced-toggle i {
+    transition: transform 0.2s ease;
+}
+
+.advanced-toggle.collapsed i {
+    transform: rotate(-90deg);
+}

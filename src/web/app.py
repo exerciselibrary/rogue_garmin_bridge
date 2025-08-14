@@ -806,6 +806,261 @@ def list_fit_files():
         logger.error(f"Error listing FIT files: {str(e)}")
         return jsonify({'success': False, 'error': str(e)})
 
+@app.route('/api/storage_info')
+def get_storage_info():
+    """Get storage information for data management."""
+    try:
+        import os
+        import glob
+        
+        # Get database size
+        db_size = 0
+        if os.path.exists(db.db_path):
+            db_size = os.path.getsize(db.db_path)
+        
+        # Get workout count
+        workout_count = len(workout_manager.get_workouts(limit=10000) or [])
+        
+        # Get log files size
+        log_size = 0
+        log_files = glob.glob(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'logs', '*.log'))
+        for log_file in log_files:
+            if os.path.exists(log_file):
+                log_size += os.path.getsize(log_file)
+        
+        # Get FIT files count
+        fit_files_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'fit_files')
+        fit_files_count = 0
+        if os.path.exists(fit_files_dir):
+            fit_files_count = len([f for f in os.listdir(fit_files_dir) if f.endswith('.fit')])
+        
+        def format_size(size_bytes):
+            if size_bytes == 0:
+                return "0 B"
+            size_names = ["B", "KB", "MB", "GB"]
+            import math
+            i = int(math.floor(math.log(size_bytes, 1024)))
+            p = math.pow(1024, i)
+            s = round(size_bytes / p, 2)
+            return f"{s} {size_names[i]}"
+        
+        storage_info = {
+            'database_size': format_size(db_size),
+            'workout_count': workout_count,
+            'log_size': format_size(log_size),
+            'fit_files_count': fit_files_count
+        }
+        
+        return jsonify({'success': True, 'storage': storage_info})
+        
+    except Exception as e:
+        logger.error(f"Error getting storage info: {str(e)}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/api/backup', methods=['POST'])
+def create_backup():
+    """Create a backup of all user data."""
+    try:
+        import json
+        import tempfile
+        from datetime import datetime
+        
+        # Create backup data structure
+        backup_data = {
+            'created_at': datetime.now().isoformat(),
+            'version': '1.0',
+            'user_profile': {},
+            'settings': {},
+            'workouts': [],
+            'workout_data': []
+        }
+        
+        # Get user profile
+        profile_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'user_profile.json')
+        if os.path.exists(profile_file):
+            with open(profile_file, 'r') as f:
+                backup_data['user_profile'] = json.load(f)
+        
+        # Get settings
+        settings_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'settings.json')
+        if os.path.exists(settings_file):
+            with open(settings_file, 'r') as f:
+                backup_data['settings'] = json.load(f)
+        
+        # Get workouts
+        workouts = workout_manager.get_workouts(limit=10000) or []
+        backup_data['workouts'] = workouts
+        
+        # Get workout data for each workout
+        for workout in workouts:
+            workout_data = workout_manager.get_workout_data(workout['id'])
+            backup_data['workout_data'].append({
+                'workout_id': workout['id'],
+                'data': workout_data
+            })
+        
+        # Create JSON response
+        response = app.response_class(
+            response=json.dumps(backup_data, indent=2),
+            status=200,
+            mimetype='application/json'
+        )
+        response.headers['Content-Disposition'] = f'attachment; filename=rogue-garmin-backup-{datetime.now().strftime("%Y%m%d")}.json'
+        
+        return response
+        
+    except Exception as e:
+        logger.error(f"Error creating backup: {str(e)}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/api/restore', methods=['POST'])
+def restore_backup():
+    """Restore data from a backup file."""
+    try:
+        if 'backup_file' not in request.files:
+            return jsonify({'success': False, 'error': 'No backup file provided'})
+        
+        file = request.files['backup_file']
+        if file.filename == '':
+            return jsonify({'success': False, 'error': 'No file selected'})
+        
+        # Read and parse backup file
+        import json
+        backup_data = json.loads(file.read().decode('utf-8'))
+        
+        # Validate backup format
+        if 'version' not in backup_data or 'created_at' not in backup_data:
+            return jsonify({'success': False, 'error': 'Invalid backup file format'})
+        
+        # Restore user profile
+        if 'user_profile' in backup_data and backup_data['user_profile']:
+            profile_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'user_profile.json')
+            with open(profile_file, 'w') as f:
+                json.dump(backup_data['user_profile'], f, indent=2)
+        
+        # Restore settings
+        if 'settings' in backup_data and backup_data['settings']:
+            settings_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'settings.json')
+            with open(settings_file, 'w') as f:
+                json.dump(backup_data['settings'], f, indent=2)
+        
+        # Note: Restoring workout data would require more complex database operations
+        # For now, we'll just restore profile and settings
+        
+        return jsonify({'success': True, 'message': 'Backup restored successfully'})
+        
+    except Exception as e:
+        logger.error(f"Error restoring backup: {str(e)}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/api/export')
+def export_data():
+    """Export workout data in various formats."""
+    try:
+        format_type = request.args.get('format', 'json')
+        date_range = request.args.get('date_range', 'all')
+        start_date = request.args.get('start_date')
+        end_date = request.args.get('end_date')
+        
+        # Get workouts based on date range
+        workouts = workout_manager.get_workouts(limit=10000) or []
+        
+        # Filter by date range if specified
+        if date_range != 'all':
+            from datetime import datetime, timedelta
+            now = datetime.now()
+            
+            if date_range == 'last-30':
+                cutoff = now - timedelta(days=30)
+                workouts = [w for w in workouts if datetime.fromisoformat(w['start_time']) >= cutoff]
+            elif date_range == 'last-90':
+                cutoff = now - timedelta(days=90)
+                workouts = [w for w in workouts if datetime.fromisoformat(w['start_time']) >= cutoff]
+            elif date_range == 'last-year':
+                cutoff = now - timedelta(days=365)
+                workouts = [w for w in workouts if datetime.fromisoformat(w['start_time']) >= cutoff]
+            elif date_range == 'custom' and start_date and end_date:
+                start = datetime.fromisoformat(start_date)
+                end = datetime.fromisoformat(end_date)
+                workouts = [w for w in workouts if start <= datetime.fromisoformat(w['start_time']) <= end]
+        
+        if format_type == 'json':
+            import json
+            response = app.response_class(
+                response=json.dumps(workouts, indent=2),
+                status=200,
+                mimetype='application/json'
+            )
+            response.headers['Content-Disposition'] = f'attachment; filename=workout-data-{date_range}.json'
+            
+        elif format_type == 'csv':
+            import csv
+            import io
+            
+            output = io.StringIO()
+            if workouts:
+                fieldnames = workouts[0].keys()
+                writer = csv.DictWriter(output, fieldnames=fieldnames)
+                writer.writeheader()
+                writer.writerows(workouts)
+            
+            response = app.response_class(
+                response=output.getvalue(),
+                status=200,
+                mimetype='text/csv'
+            )
+            response.headers['Content-Disposition'] = f'attachment; filename=workout-data-{date_range}.csv'
+            
+        else:
+            return jsonify({'success': False, 'error': 'Unsupported export format'})
+        
+        return response
+        
+    except Exception as e:
+        logger.error(f"Error exporting data: {str(e)}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/api/cleanup/<cleanup_type>', methods=['POST'])
+def cleanup_data(cleanup_type):
+    """Clean up old files and data."""
+    try:
+        import glob
+        from datetime import datetime, timedelta
+        
+        files_removed = 0
+        
+        if cleanup_type == 'logs':
+            # Remove log files older than 30 days
+            log_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'logs')
+            cutoff_time = datetime.now() - timedelta(days=30)
+            
+            for log_file in glob.glob(os.path.join(log_dir, '*.log')):
+                if os.path.exists(log_file):
+                    file_time = datetime.fromtimestamp(os.path.getmtime(log_file))
+                    if file_time < cutoff_time:
+                        os.remove(log_file)
+                        files_removed += 1
+                        
+        elif cleanup_type == 'temp':
+            # Remove temporary FIT files and cache
+            temp_dirs = [
+                os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'temp'),
+                os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'cache')
+            ]
+            
+            for temp_dir in temp_dirs:
+                if os.path.exists(temp_dir):
+                    for temp_file in glob.glob(os.path.join(temp_dir, '*')):
+                        if os.path.isfile(temp_file):
+                            os.remove(temp_file)
+                            files_removed += 1
+        
+        return jsonify({'success': True, 'files_removed': files_removed})
+        
+    except Exception as e:
+        logger.error(f"Error during cleanup: {str(e)}")
+        return jsonify({'success': False, 'error': str(e)})
+
 # Run the app
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

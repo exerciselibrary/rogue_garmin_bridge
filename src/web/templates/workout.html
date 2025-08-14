@@ -14,12 +14,14 @@
                     </div>
                     <div class="card-body">
                         <div id="workout-status-card">
-                            <p>Status: <span id="status-text" class="badge bg-secondary">Disconnected</span> 
-                               <span id="connection-quality-indicator"></span></p>
+                            <p>Status: <span id="status-text" class="badge bg-secondary">Disconnected</span>
+                                <span id="connection-quality-indicator"></span>
+                            </p>
                             <p>Device: <span id="device-name">None</span></p>
                             <p>Workout: <span id="workout-status" class="badge bg-secondary">Inactive</span></p>
-                            <p>Phase: <span id="workout-phase-indicator"><span class="badge bg-secondary">⏸️ Inactive</span></span></p>
-                            <p>Duration: <span id="workout-duration">00:00:00</span></p> 
+                            <p>Phase: <span id="workout-phase-indicator"><span class="badge bg-secondary">⏸️
+                                        Inactive</span></span></p>
+                            <p>Duration: <span id="workout-duration">00:00:00</span></p>
                         </div>
                         <div class="mt-3">
                             <button id="start-workout-btn" class="btn btn-success" disabled>Start Workout</button>
@@ -28,7 +30,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="card">
                     <div class="card-header">
                         <h5>Current Metrics</h5>
@@ -87,7 +89,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
@@ -96,27 +98,36 @@
                     <div class="card-body">
                         <ul class="nav nav-tabs" id="chartTabs" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="power-tab" data-bs-toggle="tab" data-bs-target="#power-chart-tab" type="button" role="tab" aria-controls="power-chart-tab" aria-selected="true">Power</button>
+                                <button class="nav-link active" id="power-tab" data-bs-toggle="tab"
+                                    data-bs-target="#power-chart-tab" type="button" role="tab"
+                                    aria-controls="power-chart-tab" aria-selected="true">Power</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="heart-rate-tab" data-bs-toggle="tab" data-bs-target="#heart-rate-chart-tab" type="button" role="tab" aria-controls="heart-rate-chart-tab" aria-selected="false">Heart Rate</button>
+                                <button class="nav-link" id="heart-rate-tab" data-bs-toggle="tab"
+                                    data-bs-target="#heart-rate-chart-tab" type="button" role="tab"
+                                    aria-controls="heart-rate-chart-tab" aria-selected="false">Heart Rate</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="cadence-tab" data-bs-toggle="tab" data-bs-target="#cadence-chart-tab" type="button" role="tab" aria-controls="cadence-chart-tab" aria-selected="false">Cadence</button>
+                                <button class="nav-link" id="cadence-tab" data-bs-toggle="tab"
+                                    data-bs-target="#cadence-chart-tab" type="button" role="tab"
+                                    aria-controls="cadence-chart-tab" aria-selected="false">Cadence</button>
                             </li>
                         </ul>
                         <div class="tab-content" id="chartTabsContent">
-                            <div class="tab-pane fade show active" id="power-chart-tab" role="tabpanel" aria-labelledby="power-tab">
+                            <div class="tab-pane fade show active" id="power-chart-tab" role="tabpanel"
+                                aria-labelledby="power-tab">
                                 <div class="chart-container" style="position: relative; height:300px;">
                                     <canvas id="power-chart"></canvas>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="heart-rate-chart-tab" role="tabpanel" aria-labelledby="heart-rate-tab">
+                            <div class="tab-pane fade" id="heart-rate-chart-tab" role="tabpanel"
+                                aria-labelledby="heart-rate-tab">
                                 <div class="chart-container" style="position: relative; height:300px;">
                                     <canvas id="heart-rate-chart"></canvas>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="cadence-chart-tab" role="tabpanel" aria-labelledby="cadence-tab">
+                            <div class="tab-pane fade" id="cadence-chart-tab" role="tabpanel"
+                                aria-labelledby="cadence-tab">
                                 <div class="chart-container" style="position: relative; height:300px;">
                                     <canvas id="cadence-chart"></canvas>
                                 </div>
@@ -124,7 +135,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="card mt-4">
                     <div class="card-header">
                         <h5>Workout Summary</h5>
@@ -151,7 +162,7 @@
     const workoutDuration = document.getElementById('workout-duration');
     const startWorkoutBtn = document.getElementById('start-workout-btn');
     const endWorkoutBtn = document.getElementById('end-workout-btn');
-    
+
     // Metric elements
     const powerValue = document.getElementById('power-value');
     const heartRateValue = document.getElementById('heart-rate-value');
@@ -163,29 +174,29 @@
     const distanceValue = document.getElementById('distance-value');
     const distanceUnit = document.querySelector('.metric-card:has(#distance-value) .metric-unit');
     const caloriesValue = document.getElementById('calories-value');
-    
+
     // Unit conversion utilities
     const unitConversions = {
         // Weight conversions
         kgToLbs: (kg) => kg * 2.20462,
         lbsToKg: (lbs) => lbs / 2.20462,
-        
+
         // Distance conversions
         mToFt: (m) => m * 3.28084,
         ftToM: (ft) => ft / 3.28084,
         mToMi: (m) => m / 1609.34,
         miToM: (mi) => mi * 1609.34,
-        
+
         // Speed conversions
         msToKph: (ms) => ms * 3.6,
         msToMph: (ms) => ms * 2.23694,
         kphToMph: (kph) => kph * 0.621371,
         mphToKph: (mph) => mph / 0.621371
     };
-    
+
     // User's unit preference (will be loaded from settings)
     let userUnitSystem = 'metric';
-    
+
     // Load user preferences
     function loadUserPreferences() {
         // First try to get from settings
@@ -213,7 +224,7 @@
                 console.error('Error loading user preferences:', error);
             });
     }
-    
+
     // Update unit labels based on user preference
     function updateUnitLabels() {
         if (userUnitSystem === 'imperial') {
@@ -224,11 +235,11 @@
             distanceUnit.textContent = 'km';
         }
     }
-    
+
     // Charts
     let powerChart, heartRateChart, cadenceChart;
     const maxDataPoints = 60; // 1 minute of data at 1 second intervals
-    
+
     // Chart data
     const powerData = {
         labels: Array(maxDataPoints).fill(''),
@@ -241,7 +252,7 @@
             tension: 0.4
         }]
     };
-    
+
     const heartRateData = {
         labels: Array(maxDataPoints).fill(''),
         datasets: [{
@@ -253,7 +264,7 @@
             tension: 0.4
         }]
     };
-    
+
     const cadenceData = {
         labels: Array(maxDataPoints).fill(''),
         datasets: [{
@@ -265,7 +276,7 @@
             tension: 0.4
         }]
     };
-    
+
     // Chart options
     const chartOptions = {
         responsive: true,
@@ -282,7 +293,7 @@
             duration: 0
         }
     };
-    
+
     // Initialize charts
     function initCharts() {
         const powerCtx = document.getElementById('power-chart').getContext('2d');
@@ -291,14 +302,14 @@
             data: powerData,
             options: chartOptions
         });
-        
+
         const heartRateCtx = document.getElementById('heart-rate-chart').getContext('2d');
         heartRateChart = new Chart(heartRateCtx, {
             type: 'line',
             data: heartRateData,
             options: chartOptions
         });
-        
+
         const cadenceCtx = document.getElementById('cadence-chart').getContext('2d');
         cadenceChart = new Chart(cadenceCtx, {
             type: 'line',
@@ -306,7 +317,7 @@
             options: chartOptions
         });
     }
-    
+
     // Update charts with new data
     function updateCharts(data) {
         // Update power chart
@@ -316,7 +327,7 @@
             powerData.datasets[0].data.shift();
             powerChart.update();
         }
-        
+
         // Update heart rate chart
         if (data.heart_rate !== undefined) {
             heartRateData.datasets[0].data.push(data.heart_rate);
@@ -341,20 +352,20 @@
     }    // Update metrics with new data
     function updateMetrics(data) {
         if (!data) return;
-        
+
         console.log("Updating metrics with data:", data);
         console.log("Data keys available:", Object.keys(data));
-        
+
         // Update workout type specific metrics
         const workoutType = data.type || data.device_type || 'unknown';
         console.log("Detected workout type:", workoutType);
-        
+
         // Update power
         if (data.instant_power !== undefined || data.power !== undefined) {
             const power = data.instant_power || data.power || 0;
             powerValue.textContent = Math.round(power);
         }
-        
+
         // Update heart rate
         if (data.heart_rate !== undefined) {
             heartRateValue.textContent = Math.round(data.heart_rate);
@@ -362,7 +373,7 @@
         if (workoutType === 'bike') {
             cadenceLabel.textContent = 'Cadence';
             cadenceUnit.textContent = 'rpm';
-            
+
             console.log("Cadence data available:", {
                 instant_cadence: data.instant_cadence,
                 instantaneous_cadence: data.instantaneous_cadence,
@@ -370,7 +381,7 @@
                 device_type: data.device_type,
                 type: data.type
             });
-              if (data.instant_cadence !== undefined || data.cadence !== undefined || data.instantaneous_cadence !== undefined) {
+            if (data.instant_cadence !== undefined || data.cadence !== undefined || data.instantaneous_cadence !== undefined) {
                 const cadence = data.instant_cadence || data.instantaneous_cadence || data.cadence || 0;
                 cadenceValue.textContent = Math.round(cadence);
                 console.log("Set cadence display value to:", Math.round(cadence), "Element:", cadenceValue);
@@ -384,16 +395,16 @@
         } else if (workoutType === 'rower') {
             cadenceLabel.textContent = 'Stroke Rate';
             cadenceUnit.textContent = 'spm';
-            
+
             if (data.stroke_rate !== undefined) {
                 cadenceValue.textContent = Math.round(data.stroke_rate);
             }
         }
-        
+
         // Update speed - with proper unit conversion based on user preference
         if (data.instant_speed !== undefined || data.speed !== undefined) {
             let speedVal = data.instant_speed || data.speed || 0;
-            
+
             // Convert speed value based on unit preference
             // Assuming the incoming speed is always in km/h
             if (userUnitSystem === 'imperial') {
@@ -407,11 +418,11 @@
                 speedUnit.textContent = 'km/h';
             }
         }
-        
+
         // Update distance - with unit conversion based on user preference
         if (data.total_distance !== undefined || data.distance !== undefined) {
             const distanceM = data.total_distance || data.distance || 0;
-            
+
             if (userUnitSystem === 'imperial') {
                 // Always convert to miles for imperial
                 const distanceMi = unitConversions.mToMi(distanceM);
@@ -424,53 +435,53 @@
                 distanceUnit.textContent = 'km';
             }
         }
-        
+
         // Update calories
         if (data.total_energy !== undefined || data.calories !== undefined) {
             const calories = data.total_energy || data.calories || 0;
             caloriesValue.textContent = Math.round(calories);
         }
-        
+
         // Update workout duration if available
         if (data.elapsed_time !== undefined) {
             workoutDuration.textContent = formatDuration(data.elapsed_time);
         }
     }
-    
+
     // Format duration
     function formatDuration(seconds) {
         const hours = Math.floor(seconds / 3600);
         const minutes = Math.floor((seconds % 3600) / 60);
         const secs = seconds % 60;
-        
+
         return [
             hours.toString().padStart(2, '0'),
             minutes.toString().padStart(2, '0'),
             secs.toString().padStart(2, '0')
         ].join(':');
     }
-    
+
     // Update workout summary
     function updateWorkoutSummary(data) {
         const summaryElement = document.getElementById('workout-summary');
-        
+
         if (!data || Object.keys(data).length === 0) {
             summaryElement.innerHTML = '<p>Start a workout to see summary metrics.</p>';
             return;
         }
-        
+
         // Get workout type
         const workoutType = data.type || data.workout_type || 'unknown';
-        
+
         // Check if data includes workout_summary - the backend should send this
         const summary = data.workout_summary || {};
-        
+
         // Debug logging to see what's in the summary data
         console.log("Raw workout summary data received:", summary);
-        
+
         // Create summary HTML
         let html = '<div class="row">';
-        
+
         // Average power - include even if not in summary but we have instant power data
         const avgPower = summary.avg_power !== undefined ? summary.avg_power : 0;
         html += `
@@ -478,7 +489,7 @@
                 <p><strong>Avg Power:</strong> <span id="avg-power">${isNaN(avgPower) ? 0 : Math.round(avgPower)}</span> W</p>
             </div>
         `;
-        
+
         // Average heart rate - include always
         const avgHeartRate = summary.avg_heart_rate !== undefined ? summary.avg_heart_rate : 0;
         html += `
@@ -486,7 +497,7 @@
                 <p><strong>Avg Heart Rate:</strong> <span id="avg-heart-rate">${isNaN(avgHeartRate) ? 0 : Math.round(avgHeartRate)}</span> bpm</p>
             </div>
         `;
-        
+
         // Average cadence or stroke rate based on workout type
         if (workoutType === 'bike') {
             const avgCadence = summary.avg_cadence !== undefined ? summary.avg_cadence : 0;
@@ -503,11 +514,11 @@
                 </div>
             `;
         }
-        
+
         // Average speed - always include, and apply unit conversion
         let avgSpeed = summary.avg_speed !== undefined ? summary.avg_speed : 0;
         let speedUnitText;
-        
+
         // Convert speed based on unit preference
         if (userUnitSystem === 'imperial') {
             // Convert from km/h to mph
@@ -516,15 +527,15 @@
         } else {
             speedUnitText = 'km/h';
         }
-        
+
         const avgSpeedDisplay = isNaN(avgSpeed) ? "0.0" : avgSpeed.toFixed(1);
-        
+
         html += `
             <div class="col-6">
                 <p><strong>Avg Speed:</strong> <span id="avg-speed">${avgSpeedDisplay}</span> ${speedUnitText}</p>
             </div>
         `;
-        
+
         // Total distance with unit conversion
         const totalDistance = data.total_distance || summary.total_distance || 0;
         let distanceDisplay, distanceUnit;
@@ -540,13 +551,13 @@
             distanceDisplay = distanceKm.toFixed(2);
             distanceUnit = 'km';
         }
-        
+
         html += `
             <div class="col-6">
                 <p><strong>Total Distance:</strong> <span id="total-distance">${distanceDisplay}</span> ${distanceUnit}</p>
             </div>
         `;
-        
+
         // Total calories
         const totalCalories = data.total_energy || data.calories || summary.total_calories || 0;
         html += `
@@ -554,7 +565,7 @@
                 <p><strong>Total Calories:</strong> <span id="total-calories">${isNaN(totalCalories) ? 0 : Math.round(totalCalories)}</span> kcal</p>
             </div>
         `;
-        
+
         // Estimated VO2 Max - only show if a value is available
         const vo2max = summary.estimated_vo2max;
         if (vo2max !== undefined && vo2max > 0) {
@@ -570,9 +581,9 @@
                 </div>
             `;
         }
-        
+
         html += '</div>';
-        
+
         // Add note about VO2Max requirements if no valid VO2Max
         if (!vo2max || vo2max <= 0) {
             html += `
@@ -591,7 +602,7 @@
                 </div>
             `;
         }
-        
+
         // If we have a workout ID, add a link to view detailed summary
         if (data.workout_id) {
             html += `
@@ -600,36 +611,36 @@
                 </div>
             `;
         }
-        
+
         summaryElement.innerHTML = html;
-        
+
         // Initialize tooltips if they exist
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl);
         });
-        
+
         // Debug output for troubleshooting
         console.log("Workout summary data:", summary);
     }
-    
+
     // Start workout button listener
-    startWorkoutBtn.addEventListener('click', function() {
+    startWorkoutBtn.addEventListener('click', function () {
         // First fetch the current status to get the connected device address
         fetch('/api/status')
             .then(response => response.json())
             .then(data => {
                 if (data.device_status === 'connected') {
                     const deviceAddress = data.connected_device_address;
-                    
+
                     if (!deviceAddress) {
                         console.error('Cannot start workout: Connected device address not found in status response.');
                         alert('Error: Could not determine the connected device address.');
                         return;
                     }
-                    
+
                     console.log('Starting workout with device ID:', deviceAddress);
-                    
+
                     // Now call the start_workout endpoint with the device ID
                     fetch('/api/start_workout', {
                         method: 'POST',
@@ -640,24 +651,24 @@
                             device_id: deviceAddress
                         })
                     })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            console.log('Workout logging started:', data);
-                            // Start enhanced monitoring
-                            if (window.workoutMonitor) {
-                                window.workoutMonitor.start();
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                console.log('Workout logging started:', data);
+                                // Start enhanced monitoring
+                                if (window.workoutMonitor) {
+                                    window.workoutMonitor.start();
+                                }
+                                updateStatus(); // Update UI to reflect active workout
+                            } else {
+                                console.error('Error starting workout logging:', data.error);
+                                alert('Error starting workout logging: ' + (data.error || 'Unknown error'));
                             }
-                            updateStatus(); // Update UI to reflect active workout
-                        } else {
-                            console.error('Error starting workout logging:', data.error);
-                            alert('Error starting workout logging: ' + (data.error || 'Unknown error'));
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error starting workout logging:', error);
-                        alert('Error starting workout logging: ' + error.message);
-                    });
+                        })
+                        .catch(error => {
+                            console.error('Error starting workout logging:', error);
+                            alert('Error starting workout logging: ' + error.message);
+                        });
                 } else {
                     alert('Cannot start workout: No device connected.');
                 }
@@ -669,38 +680,38 @@
     });
 
     // End workout button listener
-    endWorkoutBtn.addEventListener('click', function() {
+    endWorkoutBtn.addEventListener('click', function () {
         fetch('/api/end_workout', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             }
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                console.log('Workout ended successfully');
-                // Stop enhanced monitoring
-                if (window.workoutMonitor) {
-                    window.workoutMonitor.stop();
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Workout ended successfully');
+                    // Stop enhanced monitoring
+                    if (window.workoutMonitor) {
+                        window.workoutMonitor.stop();
+                    }
+                    updateStatus(); // Update UI to reflect inactive workout
+                } else {
+                    console.error('Error ending workout:', data.error);
+                    alert('Error ending workout: ' + (data.error || 'Unknown error'));
                 }
-                updateStatus(); // Update UI to reflect inactive workout
-            } else {
-                console.error('Error ending workout:', data.error);
-                alert('Error ending workout: ' + (data.error || 'Unknown error'));
-            }
-        })
-        .catch(error => {
-            console.error('Error ending workout:', error);
-            alert('Error ending workout: ' + error.message);
-        });
+            })
+            .catch(error => {
+                console.error('Error ending workout:', error);
+                alert('Error ending workout: ' + error.message);
+            });
     });
-    
+
     // Initialize enhanced monitoring on page load
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // Load user preferences and initialize monitoring
         loadUserPreferences();
-        
+
         // Check if workout is already active and start monitoring
         fetch('/api/status')
             .then(response => response.json())
@@ -712,22 +723,22 @@
             .catch(error => {
                 console.error('Error checking initial workout status:', error);
             });
-        
+
         // Initialize charts
         initCharts();
-        
+
         // Start status updates
         updateStatus();
         setInterval(updateStatus, 2000);
     });
-    
+
     // Update status function (simplified since monitoring handles most updates)
     function updateStatus() {
         if (window.workoutMonitor && window.workoutMonitor.isActive) {
             // Enhanced monitoring is handling updates
             return;
         }
-        
+
         // Fallback status update for when monitoring is not active
         fetch('/api/status')
             .then(response => response.json())
@@ -742,13 +753,13 @@
                     statusText.className = 'badge bg-secondary';
                     startWorkoutBtn.disabled = true;
                 }
-                
+
                 if (data.device_name) {
                     deviceName.textContent = data.device_name;
                 } else {
                     deviceName.textContent = 'None';
                 }
-                
+
                 if (data.workout_active) {
                     workoutStatus.textContent = 'Active';
                     workoutStatus.className = 'badge bg-success';
@@ -763,102 +774,12 @@
             .catch(error => {
                 console.error('Error fetching status:', error);
             });
-    }json'
-            },
-            body: JSON.stringify({}) // No body needed for end
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                console.log('Workout logging ended successfully');
-                alert('Workout logging ended successfully');
-                
-                // Update UI immediately
-                workoutStatus.textContent = 'Inactive';
-                workoutStatus.className = 'badge bg-secondary';
-                startWorkoutBtn.disabled = (statusText.textContent !== 'Connected'); // Re-enable start if connected
-                endWorkoutBtn.disabled = true;
-                
-                // Optionally redirect to history page
-                // if (data.workout_id) {
-                //     window.location.href = `/history?workout_id=${data.workout_id}`;
-                // }
-                updateStatus(); // Refresh full status
-            } else {
-                console.error('Error ending workout logging:', data.error);
-                alert('Error ending workout logging: ' + (data.error || 'Unknown error'));
-            }
-        })
-        .catch(error => {
-            console.error('Error ending workout logging:', error);
-            alert('Error ending workout logging: ' + error.message);
-        });
-    });
-    
-    // Update status
-    function updateStatus() {
-        fetch('/api/status')
-            .then(response => response.json())
-            .then(data => {
-                console.log("Workout status data:", data); // Debug output
-                
-                // Connection status
-                if (data.device_status === 'connected') {
-                    statusText.textContent = 'Connected';
-                    statusText.className = 'badge bg-success';
-                    // Use the nested connected_device object for name
-                    if (data.connected_device && data.connected_device.name) {
-                        deviceName.textContent = data.connected_device.name;
-                    } else {
-                        deviceName.textContent = data.connected_device_address || 'Unknown'; // Fallback
-                    }
-                } else {
-                    statusText.textContent = 'Disconnected';
-                    statusText.className = 'badge bg-secondary';
-                    deviceName.textContent = 'None';
-                }
-                
-                // Update workout status and button states
-                if (data.workout_active) {
-                    workoutStatus.textContent = 'Active';
-                    workoutStatus.className = 'badge bg-success';
-                    startWorkoutBtn.disabled = true; // Disable start if active
-                    endWorkoutBtn.disabled = false; // Enable end if active
-                } else {
-                    workoutStatus.textContent = 'Inactive';
-                    workoutStatus.className = 'badge bg-secondary';
-                    // Enable start only if connected and workout inactive
-                    startWorkoutBtn.disabled = (data.device_status !== 'connected'); 
-                    endWorkoutBtn.disabled = true; // Disable end if inactive
-                }
-                  // Update metrics
-                if (data.latest_data) {
-                    console.log("Latest data for metrics and charts:", data.latest_data);
-                    
-                    // Small delay to ensure DOM is ready
-                    setTimeout(() => {
-                        updateMetrics(data.latest_data);
-                        updateCharts(data.latest_data);
-                        updateWorkoutSummary(data.latest_data);
-                    }, 50);
-                } else {
-                    updateMetrics({});
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching status:', error);
-                statusText.textContent = 'Error';
-                statusText.className = 'badge bg-danger';
-                // Disable buttons on error
-                startWorkoutBtn.disabled = true;
-                endWorkoutBtn.disabled = true;
-            });
     }
-    
+
     // Function to reconnect to a device without user interaction
     function reconnectToDevice(address) {
         if (!address) return;
-        
+
         fetch('/api/connect', {
             method: 'POST',
             headers: {
@@ -868,33 +789,33 @@
                 address: address
             })
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                console.log('Reconnected to device:', address);
-                
-                // Force an immediate status update
-                updateStatus();
-            } else {
-                console.error('Error reconnecting to device:', data.error);
-            }
-        })
-        .catch(error => {
-            console.error('Error reconnecting to device:', error);
-        });
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Reconnected to device:', address);
+
+                    // Force an immediate status update
+                    updateStatus();
+                } else {
+                    console.error('Error reconnecting to device:', data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error reconnecting to device:', error);
+            });
     }
-    
+
     // Initialize charts on page load
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         initCharts();
         loadUserPreferences(); // Load user preferences on startup
-        
+
         // Initial status check
         fetch('/api/status')
             .then(response => response.json())
             .then(data => {
                 console.log("Initial status check on workout page:", data);
-                
+
                 if (data.device_status === 'connected') {
                     console.log("Device is connected - immediately updating UI");
                     statusText.textContent = 'Connected';
@@ -919,27 +840,27 @@
                         workoutStatus.textContent = 'Active';
                         workoutStatus.className = 'badge bg-success';
                     }
-                    
+
                     if (data.latest_data) {
                         updateMetrics(data.latest_data);
                         updateCharts(data.latest_data);
                         // updateWorkoutSummary(data.latest_data);
                     }
                 } else {
-                     // Ensure buttons are disabled if not connected initially
-                     startWorkoutBtn.disabled = true;
-                     endWorkoutBtn.disabled = true;
+                    // Ensure buttons are disabled if not connected initially
+                    startWorkoutBtn.disabled = true;
+                    endWorkoutBtn.disabled = true;
                 }
             })
             .catch(error => {
                 console.error("Error in initial status check:", error);
-                 startWorkoutBtn.disabled = true; // Disable buttons on error
-                 endWorkoutBtn.disabled = true;
+                startWorkoutBtn.disabled = true; // Disable buttons on error
+                endWorkoutBtn.disabled = true;
             });
-        
+
         // Start regular status updates
         updateStatus();
-        setInterval(updateStatus, 1000); 
+        setInterval(updateStatus, 1000);
     });
 </script>
 {% endblock %}
