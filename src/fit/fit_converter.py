@@ -12,6 +12,8 @@ from typing import Dict, List, Any, Optional
 from datetime import datetime, timedelta, timezone
 
 from .speed_calculator import EnhancedSpeedCalculator, fix_device_reported_speeds
+from .device_identification import enhance_device_identification
+from .fit_validator import validate_fit_file, ValidationSeverity
 
 from fit_tool.fit_file_builder import FitFileBuilder
 from fit_tool.profile.messages.file_id_message import FileIdMessage
@@ -122,6 +124,9 @@ class FITConverter:
             # Apply enhanced speed calculation fixes
             processed_data = fix_device_reported_speeds(processed_data)
             
+            # Apply enhanced device identification
+            processed_data = enhance_device_identification(processed_data, user_profile)
+            
             workout_type = processed_data.get("workout_type", "bike")
             start_time_metadata_input = processed_data.get("start_time")
             
@@ -212,20 +217,22 @@ class FITConverter:
 
             builder = FitFileBuilder(auto_define=True)
 
+            # Use enhanced device identification
+            manufacturer_id = processed_data.get("device_manufacturer_id", 65534)  # Default to development ID
+            product_id = processed_data.get("device_product_id", 1001)  # Default product ID
+            
             file_id_mesg = FileIdMessage()
             file_id_mesg.type = FileType.ACTIVITY
-            try: file_id_mesg.manufacturer = Manufacturer.ZWIFT
-            except AttributeError: file_id_mesg.manufacturer = 281
-            file_id_mesg.product = 3907
+            file_id_mesg.manufacturer = manufacturer_id
+            file_id_mesg.product = product_id
             file_id_mesg.serial_number = processed_data.get("serial_number", 123456789)
             file_id_mesg.time_created = unix_ms_start_time
             builder.add(file_id_mesg)
 
             device_info_mesg = DeviceInfoMessage()
             device_info_mesg.timestamp = unix_ms_start_time
-            try: device_info_mesg.manufacturer = Manufacturer.ZWIFT
-            except AttributeError: device_info_mesg.manufacturer = 281
-            device_info_mesg.product = 3907
+            device_info_mesg.manufacturer = manufacturer_id
+            device_info_mesg.product = product_id
             device_info_mesg.serial_number = processed_data.get("serial_number", 123456789)
             device_info_mesg.software_version = processed_data.get("software_version_scaled", 100.0)
             device_info_mesg.hardware_version = processed_data.get("hardware_version", 1)
@@ -297,25 +304,18 @@ class FITConverter:
             if max_cadence is not None: lap_mesg.max_cadence = int(max_cadence)
             if avg_heart_rate is not None: lap_mesg.avg_heart_rate = int(avg_heart_rate)
             if max_heart_rate is not None: lap_mesg.max_heart_rate = int(max_heart_rate)
-            if workout_type == "bike":
-                lap_mesg.sport = Sport.CYCLING
-                try:
-                    lap_mesg.sub_sport = SubSport.INDOOR_CYCLING
-                    logger.info("Set LapMessage SubSport to INDOOR_CYCLING.")
-                except AttributeError:
-                    logger.warning("SubSport.INDOOR_CYCLING not found for LapMessage. Trying SubSport.VIRTUAL_ACTIVITY.")
-                    try:
-                        lap_mesg.sub_sport = SubSport.VIRTUAL_ACTIVITY
-                        logger.info("Set LapMessage SubSport to VIRTUAL_ACTIVITY.")
-                    except AttributeError:
-                        logger.warning("SubSport.VIRTUAL_ACTIVITY not found for LapMessage. Trying SubSport.ROAD.")
-                        try:
-                            lap_mesg.sub_sport = SubSport.ROAD # Original fallback
-                            logger.info("Set LapMessage SubSport to ROAD.")
-                        except AttributeError:
-                            logger.warning("SubSport.ROAD not found for LapMessage. Using integer value 11 (Indoor Cycling).")
-                            lap_mesg.sub_sport = 11 # Fallback to int for Indoor Cycling sub_sport
-            # else: handle other workout types if necessary
+            # Use enhanced sport type identification
+            sport_type = processed_data.get("sport_type", 2)  # Default to cycling
+            sub_sport_type = processed_data.get("sub_sport_type", 6)  # Default to indoor cycling
+            
+            try:
+                lap_mesg.sport = sport_type
+                lap_mesg.sub_sport = sub_sport_type
+                logger.info(f"Set LapMessage sport={sport_type}, sub_sport={sub_sport_type}")
+            except (AttributeError, ValueError) as e:
+                logger.warning(f"Error setting sport types: {e}, using fallback values")
+                lap_mesg.sport = Sport.CYCLING if hasattr(Sport, 'CYCLING') else 2
+                lap_mesg.sub_sport = 6  # Indoor cycling fallback
             builder.add(lap_mesg)
 
             session_mesg = SessionMessage()
@@ -345,52 +345,30 @@ class FITConverter:
             if max_cadence is not None: session_mesg.max_cadence = int(max_cadence)
             if avg_heart_rate is not None: session_mesg.avg_heart_rate = int(avg_heart_rate)
             if max_heart_rate is not None: session_mesg.max_heart_rate = int(max_heart_rate)
-            if workout_type == "bike":
-                session_mesg.sport = Sport.CYCLING
-                try:
-                    session_mesg.sub_sport = SubSport.INDOOR_CYCLING
-                    logger.info("Set SessionMessage SubSport to INDOOR_CYCLING.")
-                except AttributeError:
-                    logger.warning("SubSport.INDOOR_CYCLING not found for SessionMessage. Trying SubSport.VIRTUAL_ACTIVITY.")
-                    try:
-                        session_mesg.sub_sport = SubSport.VIRTUAL_ACTIVITY
-                        logger.info("Set SessionMessage SubSport to VIRTUAL_ACTIVITY.")
-                    except AttributeError:
-                        logger.warning("SubSport.VIRTUAL_ACTIVITY not found for SessionMessage. Trying SubSport.ROAD.")
-                        try:
-                            session_mesg.sub_sport = SubSport.ROAD # Original fallback
-                            logger.info("Set SessionMessage SubSport to ROAD.")
-                        except AttributeError:
-                            logger.warning("SubSport.ROAD not found for SessionMessage. Using integer value 11 (Indoor Cycling).")
-                            session_mesg.sub_sport = 11 # Fallback to int for Indoor Cycling sub_sport
-            # else: handle other workout types if necessary
+            # Use enhanced sport type identification
+            try:
+                session_mesg.sport = sport_type
+                session_mesg.sub_sport = sub_sport_type
+                logger.info(f"Set SessionMessage sport={sport_type}, sub_sport={sub_sport_type}")
+            except (AttributeError, ValueError) as e:
+                logger.warning(f"Error setting sport types: {e}, using fallback values")
+                session_mesg.sport = Sport.CYCLING if hasattr(Sport, 'CYCLING') else 2
+                session_mesg.sub_sport = 6  # Indoor cycling fallback
             builder.add(session_mesg)
 
             activity_mesg = ActivityMessage()
             activity_mesg.timestamp = unix_ms_start_time
             activity_mesg.total_timer_time = actual_total_duration_seconds
             activity_mesg.num_sessions = 1
-            # Set ActivityType based on workout_type
-            if workout_type == "bike":
-                try:
-                    activity_mesg.type = ActivityType.INDOOR_CYCLING
-                    logger.info("Set ActivityType to INDOOR_CYCLING for bike workout.")
-                except AttributeError:
-                    logger.warning("ActivityType.INDOOR_CYCLING not found. Trying ActivityType.CYCLING.")
-                    try:
-                        activity_mesg.type = ActivityType.CYCLING
-                        logger.info("Set ActivityType to CYCLING for bike workout.")
-                    except AttributeError:
-                        logger.warning("ActivityType.CYCLING not found. Using integer value 11 (Indoor Cycling) for bike workout.")
-                        activity_mesg.type = 11 # Standard FIT value for Indoor Cycling
-            else:
-                # For other workout types, attempt to use a specific type or fallback to GENERAL
-                try:
-                    activity_mesg.type = ActivityType.GENERAL # Default for non-bike or if specific type is not handled
-                    logger.info(f"Set ActivityType to GENERAL for workout_type '{workout_type}'.")
-                except AttributeError:
-                    logger.warning(f"ActivityType.GENERAL not found for workout_type '{workout_type}', using integer value 0.")
-                    activity_mesg.type = 0 # Fallback to generic
+            # Use enhanced activity type identification
+            activity_type = processed_data.get("activity_type", 6)  # Default to indoor cycling
+            
+            try:
+                activity_mesg.type = activity_type
+                logger.info(f"Set ActivityType to {activity_type}")
+            except (AttributeError, ValueError) as e:
+                logger.warning(f"Error setting activity type: {e}, using fallback")
+                activity_mesg.type = 6  # Indoor cycling fallback
 
             activity_mesg.event = Event.ACTIVITY
             activity_mesg.event_type = EventType.STOP
@@ -405,7 +383,20 @@ class FITConverter:
             fit_file = builder.build()
             fit_file.to_file(output_path)
 
-            logger.info(f"FIT file successfully created: {output_path}")
+            # Validate the generated FIT file
+            validation_result = validate_fit_file(output_path)
+            
+            if validation_result.is_valid:
+                logger.info(f"FIT file successfully created and validated: {output_path}")
+            else:
+                error_count = len([i for i in validation_result.issues if i.severity == ValidationSeverity.ERROR])
+                warning_count = len([i for i in validation_result.issues if i.severity == ValidationSeverity.WARNING])
+                logger.warning(f"FIT file created with validation issues: {error_count} errors, {warning_count} warnings")
+                
+                # Log first few issues for debugging
+                for issue in validation_result.issues[:3]:
+                    logger.warning(f"Validation {issue.severity.value}: {issue.message}")
+            
             return output_path
         
         except Exception as e:

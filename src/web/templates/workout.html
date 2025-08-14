@@ -14,9 +14,11 @@
                     </div>
                     <div class="card-body">
                         <div id="workout-status-card">
-                            <p>Status: <span id="status-text" class="badge bg-secondary">Disconnected</span></p>
+                            <p>Status: <span id="status-text" class="badge bg-secondary">Disconnected</span> 
+                               <span id="connection-quality-indicator"></span></p>
                             <p>Device: <span id="device-name">None</span></p>
                             <p>Workout: <span id="workout-status" class="badge bg-secondary">Inactive</span></p>
+                            <p>Phase: <span id="workout-phase-indicator"><span class="badge bg-secondary">⏸️ Inactive</span></span></p>
                             <p>Duration: <span id="workout-duration">00:00:00</span></p> 
                         </div>
                         <div class="mt-3">
@@ -140,6 +142,7 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="{{ url_for('static', filename='js/workout-monitoring.js') }}"></script>
 <script>
     // DOM elements
     const statusText = document.getElementById('status-text');
@@ -641,6 +644,10 @@
                     .then(data => {
                         if (data.success) {
                             console.log('Workout logging started:', data);
+                            // Start enhanced monitoring
+                            if (window.workoutMonitor) {
+                                window.workoutMonitor.start();
+                            }
                             updateStatus(); // Update UI to reflect active workout
                         } else {
                             console.error('Error starting workout logging:', data.error);
@@ -661,12 +668,102 @@
             });
     });
 
-    // Re-add End workout button listener
+    // End workout button listener
     endWorkoutBtn.addEventListener('click', function() {
         fetch('/api/end_workout', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log('Workout ended successfully');
+                // Stop enhanced monitoring
+                if (window.workoutMonitor) {
+                    window.workoutMonitor.stop();
+                }
+                updateStatus(); // Update UI to reflect inactive workout
+            } else {
+                console.error('Error ending workout:', data.error);
+                alert('Error ending workout: ' + (data.error || 'Unknown error'));
+            }
+        })
+        .catch(error => {
+            console.error('Error ending workout:', error);
+            alert('Error ending workout: ' + error.message);
+        });
+    });
+    
+    // Initialize enhanced monitoring on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load user preferences and initialize monitoring
+        loadUserPreferences();
+        
+        // Check if workout is already active and start monitoring
+        fetch('/api/status')
+            .then(response => response.json())
+            .then(data => {
+                if (data.workout_active && window.workoutMonitor) {
+                    window.workoutMonitor.start();
+                }
+            })
+            .catch(error => {
+                console.error('Error checking initial workout status:', error);
+            });
+        
+        // Initialize charts
+        initCharts();
+        
+        // Start status updates
+        updateStatus();
+        setInterval(updateStatus, 2000);
+    });
+    
+    // Update status function (simplified since monitoring handles most updates)
+    function updateStatus() {
+        if (window.workoutMonitor && window.workoutMonitor.isActive) {
+            // Enhanced monitoring is handling updates
+            return;
+        }
+        
+        // Fallback status update for when monitoring is not active
+        fetch('/api/status')
+            .then(response => response.json())
+            .then(data => {
+                // Update basic status elements
+                if (data.device_status === 'connected') {
+                    statusText.textContent = 'Connected';
+                    statusText.className = 'badge bg-success';
+                    startWorkoutBtn.disabled = false;
+                } else {
+                    statusText.textContent = 'Disconnected';
+                    statusText.className = 'badge bg-secondary';
+                    startWorkoutBtn.disabled = true;
+                }
+                
+                if (data.device_name) {
+                    deviceName.textContent = data.device_name;
+                } else {
+                    deviceName.textContent = 'None';
+                }
+                
+                if (data.workout_active) {
+                    workoutStatus.textContent = 'Active';
+                    workoutStatus.className = 'badge bg-success';
+                    startWorkoutBtn.disabled = true;
+                    endWorkoutBtn.disabled = false;
+                } else {
+                    workoutStatus.textContent = 'Inactive';
+                    workoutStatus.className = 'badge bg-secondary';
+                    endWorkoutBtn.disabled = true;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching status:', error);
+            });
+    }json'
             },
             body: JSON.stringify({}) // No body needed for end
         })

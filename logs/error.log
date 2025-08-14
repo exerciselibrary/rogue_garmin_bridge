@@ -345,3 +345,5 @@ Exception: FIT builder error
 2025-08-13 19:26:16,454 - fit_processor - ERROR - No data points found for workout 9
 2025-08-13 19:27:15,046 - fit_processor - ERROR - No data points found for workout 10
 2025-08-13 19:27:45,953 - fit_processor - ERROR - No data points found for workout 11
+2025-08-13 20:44:25,000 - src.fit.fit_analyzer - ERROR - Failed to parse FIT file C:\Users\dougl\AppData\Local\Temp\tmpfob7fbgp.fit: Parse error
+2025-08-13 20:45:16,153 - src.fit.fit_analyzer - ERROR - Failed to parse FIT file C:\Users\dougl\AppData\Local\Temp\tmplteenuyv.fit: Parse error
