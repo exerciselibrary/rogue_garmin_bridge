@@ -117,7 +117,12 @@
 
 
 
-- [ ] 4.2 Implement web API integration tests
+- [x] 4.2 Implement web API integration tests
+
+
+
+
+
   - Test all REST endpoints with various data scenarios
   - Test real-time data updates and WebSocket connections
   - Test file upload/download functionality
@@ -126,20 +131,41 @@
 
   - _Requirements: 3.2, 5.1, 5.2, 5.3, 5.4_
 
-- [ ] 4.3 Implement cross-component integration tests
+- [x] 4.3 Implement cross-component integration tests
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   - Test FTMS Manager to Workout Manager data flow
   - Test Workout Manager to Database integration
   - Test Database to FIT Converter pipeline
   - Test component error handling and graceful degradation
   - _Requirements: 3.2, 6.3, 6.4, 8.4_
 
-- [ ] 5. Enhance FIT file generation and validation
-- [ ] 5.1 Improve speed calculation algorithms based on workout.log analysis
+- [-] 5. Enhance FIT file generation and validation
+
+
+
+- [x] 5.1 Improve speed calculation algorithms based on workout.log analysis
+
+
   - Implement outlier filtering for instantaneous speed values
   - Create running average calculation with proper weighting
   - Add validation against distance accumulation for consistency
   - Fix device-reported average speed issues identified in logs
   - _Requirements: 4.3, 4.4, 4.5_
+
 
 - [ ] 5.2 Enhance device identification for proper training load calculation
   - Implement correct device type identification for bikes and rowers

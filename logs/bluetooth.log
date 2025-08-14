@@ -9256,3 +9256,21 @@
 2025-05-25 09:55:06,912 - ftms - INFO - Using FTMSConnector for real device with device type: bike.
 2025-05-25 10:06:46,317 - ftms - INFO - Using FTMSConnector for real device with device type: bike.
 2025-05-25 10:06:47,220 - ftms - INFO - Using FTMSConnector for real device with device type: bike.
+2025-08-13 07:04:14,228 - ftms - INFO - Using FTMSConnector for real device with device type: bike.
+2025-08-13 07:04:34,226 - ftms - INFO - Using FTMSConnector for real device with device type: bike.
+2025-08-13 07:04:48,665 - ftms - INFO - Using FTMSConnector for real device with device type: bike.
+2025-08-13 07:05:25,624 - ftms - INFO - Using FTMSConnector for real device with device type: bike.
+2025-08-13 18:46:00,686 - ftms - INFO - Using FTMSConnector for real device with device type: bike.
+2025-08-13 18:46:01,394 - ftms - INFO - Using FTMSConnector for real device with device type: bike.
+2025-08-13 18:50:46,764 - ftms - INFO - Using FTMSConnector for real device with device type: bike.
+2025-08-13 18:50:46,782 - ftms - INFO - Using FTMSConnector for real device with device type: bike.
+2025-08-13 18:50:49,924 - ftms - ERROR - Connector failed to connect to device AA:BB:CC:DD:EE:01
+2025-08-13 19:25:09,034 - ftms - INFO - Using FTMSConnector for real device with device type: bike.
+2025-08-13 19:26:16,428 - ftms - INFO - Using FTMSConnector for real device with device type: bike.
+2025-08-13 19:26:26,220 - ftms - INFO - Using FTMSConnector for real device with device type: bike.
+2025-08-13 19:26:57,205 - ftms - INFO - Using FTMSConnector for real device with device type: bike.
+2025-08-13 19:27:15,022 - ftms - INFO - Using FTMSConnector for real device with device type: bike.
+2025-08-13 19:27:24,542 - ftms - INFO - Using FTMSConnector for real device with device type: bike.
+2025-08-13 19:27:33,039 - ftms - INFO - Using FTMSConnector for real device with device type: bike.
+2025-08-13 19:27:45,929 - ftms - INFO - Using FTMSConnector for real device with device type: bike.
+2025-08-13 19:56:38,976 - ftms - INFO - Using FTMSConnector for real device with device type: bike.

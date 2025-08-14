@@ -12,6 +12,7 @@ from datetime import datetime
 
 from ..data.database import Database
 from .fit_converter import FITConverter
+from .speed_calculator import EnhancedSpeedCalculator
 
 # Configure logging
 logging.basicConfig(
@@ -165,16 +166,21 @@ class FITProcessor:
             for fit_key, db_key in bike_metrics.items():
                 structured_data[fit_key] = summary.get(db_key, 0)
                 
-            # For avg_speed, always use the calculated value from the summary
-            # This ensures we ignore the incorrect Echo bike reported value
-            structured_data['avg_speed'] = summary.get('avg_speed', 0)
-            
-            # If we don't have a valid average speed in the summary, calculate it from data points
-            if structured_data['avg_speed'] <= 0 and data_series.get('speeds'):
-                valid_speeds = [s for s in data_series['speeds'] if s > 0]
-                if valid_speeds:
-                    structured_data['avg_speed'] = sum(valid_speeds) / len(valid_speeds)
-                    logger.info(f"Calculated average speed for FIT file: {structured_data['avg_speed']} km/h")
+            # Use enhanced speed calculation results if available
+            if data_series.get('calculated_avg_speed'):
+                structured_data['avg_speed'] = data_series['calculated_avg_speed']
+                structured_data['max_speed'] = data_series.get('calculated_max_speed', 0)
+                logger.info(f"Using enhanced speed calculation for FIT file: avg={structured_data['avg_speed']:.2f} km/h")
+            else:
+                # Fallback to summary or basic calculation
+                structured_data['avg_speed'] = summary.get('avg_speed', 0)
+                
+                # If we don't have a valid average speed, calculate it from data points
+                if structured_data['avg_speed'] <= 0 and data_series.get('speeds'):
+                    valid_speeds = [s for s in data_series['speeds'] if s > 0]
+                    if valid_speeds:
+                        structured_data['avg_speed'] = sum(valid_speeds) / len(valid_speeds)
+                        logger.info(f"Fallback speed calculation for FIT file: {structured_data['avg_speed']:.2f} km/h")
                 
         elif workout_type == 'rower':
             rower_metrics = {
@@ -275,18 +281,27 @@ class FITProcessor:
             # Always add stroke rate (will be 0 for non-rowers)
             series['stroke_rates'].append(point.get('stroke_rate', 0) or 0)
         
-        # Calculate the average speed ourselves if this is a bike workout
-        if workout_type == 'bike' and series['speeds']:
-            # Calculate a proper average speed from the instantaneous speed values
-            valid_speeds = [s for s in series['speeds'] if s > 0]
-            if valid_speeds:
-                avg_calculated_speed = sum(valid_speeds) / len(valid_speeds)
-                logger.info(f"Calculated average speed from {len(valid_speeds)} data points: {avg_calculated_speed} km/h")
-                
-                # Store this calculated average in the structured data for use in FIT file
-                # We'll add it to the return value of _structure_data_for_fit in the next step
-            else:
-                logger.warning("No valid speed values found to calculate average speed")
+        # Enhanced speed calculation for all workout types
+        if series['speeds']:
+            speed_calculator = EnhancedSpeedCalculator()
+            speed_metrics = speed_calculator.calculate_speed_metrics(
+                instantaneous_speeds=series['speeds'],
+                distances=series['distances'] if series['distances'] else None,
+                timestamps=series['timestamps'] if series['timestamps'] else None
+            )
+            
+            # Store enhanced speed metrics for later use
+            series['calculated_avg_speed'] = speed_metrics.avg_speed
+            series['calculated_max_speed'] = speed_metrics.max_speed
+            series['speed_outliers_removed'] = speed_metrics.outliers_removed
+            series['distance_validated'] = speed_metrics.distance_validated
+            
+            logger.info(f"Enhanced speed calculation: avg={speed_metrics.avg_speed:.2f} km/h, "
+                       f"max={speed_metrics.max_speed:.2f} km/h, "
+                       f"outliers removed={speed_metrics.outliers_removed}, "
+                       f"distance validated={speed_metrics.distance_validated}")
+        else:
+            logger.warning("No speed data found for enhanced calculation")
         
         # Log some debug info about the data series
         logger.info(f"Extracted data series - points: {len(series['timestamps'])}, powers: {len(series['powers'])}, speeds: {len(series['speeds'])}, cadences: {len(series['cadences'])}")

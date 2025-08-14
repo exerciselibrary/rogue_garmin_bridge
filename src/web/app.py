@@ -28,17 +28,24 @@ from src.data.database import Database
 from src.ftms.ftms_manager import FTMSDeviceManager
 from src.utils.logging_config import get_component_logger
 
-# Parse command line arguments
-parser = argparse.ArgumentParser(description='Start the Rogue Garmin Bridge web application')
-parser.add_argument('--use-simulator', action='store_true', help='Use the FTMS device simulator instead of real devices')
-parser.add_argument('--device-type', default='bike', choices=['bike', 'rower'], help='Type of device to simulate (bike or rower)')
-args = parser.parse_args()
-
 # Get component logger
 logger = get_component_logger('web')
 
 # Initialize Flask app
 app = Flask(__name__)
+
+# Default configuration
+use_simulator = False
+device_type = 'bike'
+
+# Parse command line arguments only when run as main
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Start the Rogue Garmin Bridge web application')
+    parser.add_argument('--use-simulator', action='store_true', help='Use the FTMS device simulator instead of real devices')
+    parser.add_argument('--device-type', default='bike', choices=['bike', 'rower'], help='Type of device to simulate (bike or rower)')
+    args = parser.parse_args()
+    use_simulator = args.use_simulator
+    device_type = args.device_type
 
 # Create database and workout manager
 db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'src', 'data', 'rogue_garmin.db')
@@ -46,11 +53,11 @@ db = Database(db_path)
 workout_manager = WorkoutManager(db_path)  # Pass the path string, not the Database object
 
 # Start FTMS device manager
-logger.info(f"Initializing FTMSDeviceManager with use_simulator={args.use_simulator}, device_type={args.device_type}")
-ftms_manager = FTMSDeviceManager(workout_manager, use_simulator=args.use_simulator, device_type=args.device_type)
+logger.info(f"Initializing FTMSDeviceManager with use_simulator={use_simulator}, device_type={device_type}")
+ftms_manager = FTMSDeviceManager(workout_manager, use_simulator=use_simulator, device_type=device_type)
 
-if args.use_simulator:
-    logger.info(f"Using FTMS device simulator for {args.device_type}")
+if use_simulator:
+    logger.info(f"Using FTMS device simulator for {device_type}")
 else:
     logger.info("Using real FTMS devices")
 
@@ -740,6 +747,64 @@ def serve_fit_file(filename):
     fit_files_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'fit_files')
     logger.info(f"Serving FIT file: {filename} from directory: {fit_files_dir}")
     return send_from_directory(fit_files_dir, filename, as_attachment=True)
+
+@app.route('/api/download_fit/<path:filename>')
+def download_fit_file(filename):
+    """Download FIT file via API endpoint."""
+    try:
+        logger.debug(f"Download request for filename: '{filename}'")
+        
+        # Security check: prevent path traversal
+        if ('..' in filename or filename.startswith('/') or '\\' in filename or 
+            filename.startswith('C:') or ':' in filename or 
+            os.path.isabs(filename) or not filename.strip()):
+            logger.warning(f"Potential path traversal attempt: {filename}")
+            return jsonify({'success': False, 'error': 'Invalid filename'}), 400
+        
+        # Calculate the absolute path to the fit_files directory
+        fit_files_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'fit_files')
+        file_path = os.path.join(fit_files_dir, filename)
+        
+        # Check if file exists
+        if not os.path.exists(file_path):
+            logger.warning(f"FIT file not found: {filename}")
+            return jsonify({'success': False, 'error': 'File not found'}), 404
+        
+        logger.info(f"Downloading FIT file: {filename} from directory: {fit_files_dir}")
+        return send_from_directory(fit_files_dir, filename, as_attachment=True)
+        
+    except Exception as e:
+        logger.error(f"Error downloading FIT file {filename}: {str(e)}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/fit_files')
+def list_fit_files():
+    """List available FIT files."""
+    try:
+        fit_files_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'fit_files')
+        
+        if not os.path.exists(fit_files_dir):
+            return jsonify({'success': True, 'files': []})
+        
+        files = []
+        for filename in os.listdir(fit_files_dir):
+            if filename.endswith('.fit'):
+                file_path = os.path.join(fit_files_dir, filename)
+                file_stat = os.stat(file_path)
+                files.append({
+                    'filename': filename,
+                    'size': file_stat.st_size,
+                    'modified': file_stat.st_mtime
+                })
+        
+        # Sort by modification time (newest first)
+        files.sort(key=lambda x: x['modified'], reverse=True)
+        
+        return jsonify({'success': True, 'files': files})
+        
+    except Exception as e:
+        logger.error(f"Error listing FIT files: {str(e)}")
+        return jsonify({'success': False, 'error': str(e)})
 
 # Run the app
 if __name__ == '__main__':

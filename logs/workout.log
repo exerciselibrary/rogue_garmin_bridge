@@ -6699,3 +6699,15 @@
 2025-05-17 18:58:31,335 - workout_manager - INFO - Successfully created FIT file for workout 7: C:\Users\dougl\rogue_garmin_bridge\fit_files\bike_20250517_184822.fit
 2025-05-17 19:03:17,792 - workout_manager - INFO - Updating workout 7 with FIT file path: C:\Users\dougl\rogue_garmin_bridge\fit_files\bike_20250517_184822.fit
 2025-05-17 19:28:55,929 - workout_manager - INFO - Updating workout 7 with FIT file path: C:\Users\dougl\rogue_garmin_bridge\fit_files\bike_20250517_184822.fit
+2025-08-13 19:25:09,071 - workout_manager - INFO - Started workout 8 with device 1
+2025-08-13 19:25:09,090 - workout_manager - WARNING - Failed to create FIT file for workout 8
+2025-08-13 19:25:09,092 - workout_manager - INFO - Deleting workout 8
+2025-08-13 19:26:16,446 - workout_manager - INFO - Started workout 9 with device 1
+2025-08-13 19:26:16,454 - workout_manager - WARNING - Failed to create FIT file for workout 9
+2025-08-13 19:26:16,456 - workout_manager - INFO - Deleting workout 9
+2025-08-13 19:27:15,039 - workout_manager - INFO - Started workout 10 with device 1
+2025-08-13 19:27:15,047 - workout_manager - WARNING - Failed to create FIT file for workout 10
+2025-08-13 19:27:15,049 - workout_manager - INFO - Deleting workout 10
+2025-08-13 19:27:45,946 - workout_manager - INFO - Started workout 11 with device 1
+2025-08-13 19:27:45,953 - workout_manager - WARNING - Failed to create FIT file for workout 11
+2025-08-13 19:27:45,955 - workout_manager - INFO - Deleting workout 11

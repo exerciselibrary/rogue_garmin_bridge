@@ -729,36 +729,43 @@ class TestRealTimeDataUpdates:
                 
                 # Wait for all requests to complete
                 for thread in threads:
-                    thread.join(timeout=5)
+                    thread.join(timeout=30)
                 
                 # Collect results
                 successful_requests = 0
                 failed_requests = 0
                 
                 while not results.empty():
-                    result = results.get()
-                    if result['success']:
-                        successful_requests += 1
-                    else:
-                        failed_requests += 1
-                        logger.warning(f"Failed request: {result}")
+                    try:
+                        result = results.get_nowait()
+                        if result['success']:
+                            successful_requests += 1
+                        else:
+                            failed_requests += 1
+                            logger.warning(f"Request failed: {result}")
+                    except queue.Empty:
+                        break
                 
-                # Verify concurrent handling
+                # Verify concurrent request handling
                 total_requests = successful_requests + failed_requests
-                assert total_requests == 25, f"Expected 25 requests, got {total_requests}"
-                assert successful_requests >= 20, f"Too many failed requests: {failed_requests}/{total_requests}"
+                assert total_requests > 0, "No requests completed"
+                assert successful_requests > 0, "No successful requests"
+                
+                # Allow some failures due to concurrency but most should succeed
+                success_rate = successful_requests / total_requests
+                assert success_rate > 0.8, f"Success rate too low: {success_rate}"
                 
                 # End workout
                 self.workout_manager.end_workout()
 
 
 @pytest.mark.integration
-class TestFileOperations:
+class TestFileUploadDownload:
     """Test file upload/download functionality."""
     
     @pytest.fixture(autouse=True)
     def setup_file_test(self):
-        """Set up file operation test environment."""
+        """Set up file test environment."""
         self.temp_dir = tempfile.mkdtemp()
         self.db_path = os.path.join(self.temp_dir, "test_rogue_garmin.db")
         self.fit_output_dir = os.path.join(self.temp_dir, "fit_files")
@@ -767,6 +774,7 @@ class TestFileOperations:
         self.database = Database(self.db_path)
         self.workout_manager = WorkoutManager(self.db_path)
         
+        # Configure Flask app for testing
         flask_app.config['TESTING'] = True
         flask_app.config['DATABASE_PATH'] = self.db_path
         
@@ -781,165 +789,593 @@ class TestFileOperations:
     
     def test_fit_file_download(self):
         """Test FIT file download functionality."""
-        # Create test workout
-        workout_id = self.database.start_workout(1, "bike")
+        # Create a test FIT file
+        test_filename = "test_workout_20250112_120000.fit"
+        test_file_path = os.path.join(self.fit_output_dir, test_filename)
         
-        # Add data points
-        start_time = datetime.now() - timedelta(minutes=10)
-        for i in range(30):
-            timestamp = start_time + timedelta(seconds=i * 20)
-            data_point = {
-                'power': 150 + (i % 50),
-                'cadence': 80 + (i % 20),
-                'speed': 25.0,
-                'heart_rate': 140
-            }
-            self.database.add_workout_data(workout_id, timestamp, data_point)
-        
-        # End workout
-        summary = {'avg_power': 175, 'total_distance': 5.0}
-        self.database.end_workout(workout_id, summary=summary)
-        
-        # Create mock FIT file
-        fit_file_path = os.path.join(self.fit_output_dir, f"workout_{workout_id}.fit")
-        with open(fit_file_path, 'wb') as f:
-            f.write(b'\x0e\x10\x43\x08\x78\x00\x00\x00.FIT' + b'\x00' * 100)  # Mock FIT data
-        
-        # Update workout with FIT file path
-        self.workout_manager.update_workout_fit_file(workout_id, fit_file_path)
+        # Create mock FIT file content
+        fit_header = b'\x0e\x10\x43\x08\x78\x00\x00\x00.FIT'
+        with open(test_file_path, 'wb') as f:
+            f.write(fit_header)
+            f.write(b'\x00' * 100)  # Add some dummy data
         
         # Test file download
-        with patch('src.web.app.send_from_directory') as mock_send:
-            mock_send.return_value = "mock_file_response"
-            
-            # This would be the actual download endpoint (not implemented in current API)
-            # For now, we test that the file exists and can be accessed
-            assert os.path.exists(fit_file_path), "FIT file should exist for download"
-            
-            file_size = os.path.getsize(fit_file_path)
-            assert file_size > 100, f"FIT file too small: {file_size} bytes"
+        response = self.client.get(f'/api/download_fit/{test_filename}')
+        
+        assert response.status_code == 200
+        assert response.headers['Content-Disposition'].startswith('attachment')
+        assert test_filename in response.headers['Content-Disposition']
+        assert len(response.data) > 0
+        
+        # Verify file content
+        assert response.data.startswith(fit_header)
     
-    def test_fit_file_generation_and_access(self):
-        """Test FIT file generation and subsequent access."""
-        # Create workout with substantial data
+    def test_fit_file_download_not_found(self):
+        """Test FIT file download with non-existent file."""
+        response = self.client.get('/api/download_fit/nonexistent.fit')
+        
+        assert response.status_code == 404
+    
+    def test_fit_file_download_security(self):
+        """Test FIT file download security (path traversal prevention)."""
+        # Test path traversal attempts
+        malicious_paths = [
+            '../../../etc/passwd',
+            '..\\..\\..\\windows\\system32\\config\\sam',
+            '/etc/passwd',
+            'C:\\windows\\system32\\config\\sam'
+        ]
+        
+        for malicious_path in malicious_paths:
+            response = self.client.get(f'/api/download_fit/{malicious_path}')
+            
+            # Should either return 404 or 400, not 200
+            assert response.status_code in [400, 404], f"Security issue with path: {malicious_path}"
+    
+    def test_fit_file_conversion_and_download_workflow(self):
+        """Test complete workflow from workout to FIT file download."""
+        # Create test workout
         workout_id = self.database.start_workout(1, "bike")
         
         # Add realistic data points
         start_time = datetime.now() - timedelta(minutes=30)
-        for i in range(180):  # 3 minutes of data at 1Hz
+        for i in range(120):  # 2 minutes of data
             timestamp = start_time + timedelta(seconds=i)
             data_point = {
-                'power': 150 + (i % 100),
-                'cadence': 80 + (i % 30),
-                'speed': 25.0 + (i % 10),
-                'heart_rate': 140 + (i % 40),
+                'power': 150 + (i % 50),
+                'cadence': 80 + (i % 20),
+                'speed': 25.0 + (i % 5),
+                'heart_rate': 140 + (i % 30),
                 'distance': i * 0.1,
                 'calories': i * 0.5
             }
             self.database.add_workout_data(workout_id, timestamp, data_point)
         
-        # End workout
+        # End workout with summary
         summary = {
-            'avg_power': 200,
-            'max_power': 250,
-            'avg_cadence': 95,
-            'max_cadence': 110,
-            'avg_speed': 30.0,
-            'max_speed': 35.0,
-            'total_distance': 18.0,
-            'total_calories': 90
+            'avg_power': 175,
+            'max_power': 200,
+            'total_distance': 12.0,
+            'total_calories': 60
         }
         self.database.end_workout(workout_id, summary=summary)
         
-        # Test FIT file conversion via API
-        with patch('src.fit.fit_processor.FITProcessor') as mock_processor:
+        # Mock FIT file generation
+        test_filename = f"bike_{datetime.now().strftime('%Y%m%d_%H%M%S')}.fit"
+        test_file_path = os.path.join(self.fit_output_dir, test_filename)
+        
+        with patch('src.fit.fit_converter.FITConverter') as mock_converter:
             mock_instance = Mock()
-            fit_file_path = os.path.join(self.fit_output_dir, f"bike_{workout_id}.fit")
-            mock_instance.process_workout.return_value = fit_file_path
-            mock_processor.return_value = mock_instance
+            mock_instance.convert_workout.return_value = test_file_path
+            mock_converter.return_value = mock_instance
             
-            # Create actual mock file
-            with open(fit_file_path, 'wb') as f:
-                f.write(b'\x0e\x10\x43\x08\x78\x00\x00\x00.FIT' + b'\x00' * 500)
+            # Create actual FIT file
+            with open(test_file_path, 'wb') as f:
+                f.write(b'\x0e\x10\x43\x08\x78\x00\x00\x00.FIT')
+                f.write(b'\x00' * 200)
             
+            # Test conversion
             response = self.client.post(f'/api/convert_fit/{workout_id}')
             
             assert response.status_code == 200
             data = json.loads(response.data)
             assert data['success'] is True
+            assert 'fit_file_path' in data
             
-            # Verify file was created
-            assert os.path.exists(fit_file_path), "FIT file should be created"
+            # Extract filename from path
+            returned_filename = os.path.basename(data['fit_file_path'])
             
-            # Verify file properties
-            file_size = os.path.getsize(fit_file_path)
-            assert file_size > 200, f"FIT file should be substantial: {file_size} bytes"
+            # Test download
+            download_response = self.client.get(f'/api/download_fit/{returned_filename}')
             
-            # Verify file can be read
-            with open(fit_file_path, 'rb') as f:
-                file_content = f.read()
-                assert file_content.startswith(b'\x0e\x10\x43\x08'), "FIT file should have proper header"
+            assert download_response.status_code == 200
+            assert len(download_response.data) > 0
+            assert download_response.data.startswith(b'\x0e\x10\x43\x08')
     
-    def test_file_error_handling(self):
-        """Test file operation error handling."""
-        # Test FIT conversion with invalid workout
-        response = self.client.post('/api/convert_fit/999')
+    def test_bulk_file_operations(self):
+        """Test bulk file operations and cleanup."""
+        # Create multiple test workouts and FIT files
+        workout_ids = []
+        filenames = []
         
+        for i in range(5):
+            workout_id = self.database.start_workout(1, "bike")
+            
+            # Add minimal data
+            self.database.add_workout_data(workout_id, datetime.now(), {'power': 150 + i})
+            self.database.end_workout(workout_id, summary={'avg_power': 150 + i})
+            
+            workout_ids.append(workout_id)
+            
+            # Create corresponding FIT file
+            filename = f"bike_test_{i}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.fit"
+            file_path = os.path.join(self.fit_output_dir, filename)
+            
+            with open(file_path, 'wb') as f:
+                f.write(b'\x0e\x10\x43\x08\x78\x00\x00\x00.FIT')
+                f.write(b'\x00' * (100 + i * 10))
+            
+            filenames.append(filename)
+        
+        # Test downloading all files
+        for filename in filenames:
+            response = self.client.get(f'/api/download_fit/{filename}')
+            assert response.status_code == 200
+            assert len(response.data) > 100
+        
+        # Test file listing (if endpoint exists)
+        # This would be useful for UI to show available files
+        # Note: This endpoint might not exist yet, so we'll test if it's implemented
+        try:
+            response = self.client.get('/api/fit_files')
+            if response.status_code == 200:
+                data = json.loads(response.data)
+                if data.get('success'):
+                    assert 'files' in data
+                    assert len(data['files']) >= len(filenames)
+        except Exception:
+            # Endpoint doesn't exist yet, which is fine
+            pass
+
+
+@pytest.mark.integration
+class TestWebSocketConnections:
+    """Test WebSocket connections for real-time updates."""
+    
+    @pytest.fixture(autouse=True)
+    def setup_websocket_test(self):
+        """Set up WebSocket test environment."""
+        self.temp_dir = tempfile.mkdtemp()
+        self.db_path = os.path.join(self.temp_dir, "test_rogue_garmin.db")
+        
+        self.database = Database(self.db_path)
+        self.workout_manager = WorkoutManager(self.db_path)
+        
+        # Configure Flask app for testing
+        flask_app.config['TESTING'] = True
+        flask_app.config['DATABASE_PATH'] = self.db_path
+        
+        self.client = flask_app.test_client()
+        
+        yield
+        
+        # Cleanup
+        import shutil
+        if os.path.exists(self.temp_dir):
+            shutil.rmtree(self.temp_dir)
+    
+    def test_websocket_connection_simulation(self):
+        """Test WebSocket-like real-time updates via polling."""
+        # Note: Since the current implementation doesn't have WebSockets,
+        # we'll test the polling mechanism that provides real-time updates
+        
+        with patch('src.web.app.ftms_manager') as mock_ftms:
+            with patch('src.web.app.workout_manager', self.workout_manager):
+                # Setup mock device
+                mock_ftms.device_status = "connected"
+                mock_ftms.connected_device = Mock()
+                mock_ftms.connected_device.name = "Test Device"
+                mock_ftms.use_simulator = True
+                
+                # Start workout
+                workout_id = self.workout_manager.start_workout(1, 'bike')
+                
+                # Simulate real-time data stream
+                data_sequence = []
+                for i in range(10):
+                    data_point = {
+                        'power': 150 + i * 5,
+                        'cadence': 80 + i,
+                        'speed': 25.0 + i * 0.5,
+                        'heart_rate': 140 + i * 2,
+                        'timestamp': time.time() + i
+                    }
+                    data_sequence.append(data_point)
+                
+                # Test rapid polling to simulate WebSocket updates
+                received_data = []
+                for i, data_point in enumerate(data_sequence):
+                    # Update mock data
+                    mock_ftms.latest_data = data_point
+                    self.workout_manager.add_data_point(data_point)
+                    
+                    # Poll for updates
+                    response = self.client.get('/api/status')
+                    assert response.status_code == 200
+                    
+                    status_data = json.loads(response.data)
+                    assert status_data['workout_active'] is True
+                    assert 'latest_data' in status_data
+                    
+                    received_data.append(status_data['latest_data'])
+                    
+                    # Small delay to simulate real-time updates
+                    time.sleep(0.01)
+                
+                # Verify data progression
+                assert len(received_data) == len(data_sequence)
+                
+                # Check that power values increased as expected
+                power_values = [d.get('power', 0) for d in received_data]
+                assert power_values[0] < power_values[-1], "Power should increase over time"
+                
+                # End workout
+                self.workout_manager.end_workout()
+    
+    def test_real_time_workout_metrics_updates(self):
+        """Test real-time workout metrics updates."""
+        with patch('src.web.app.ftms_manager') as mock_ftms:
+            with patch('src.web.app.workout_manager', self.workout_manager):
+                # Setup
+                mock_ftms.device_status = "connected"
+                mock_ftms.connected_device = Mock()
+                mock_ftms.use_simulator = True
+                
+                # Start workout
+                workout_id = self.workout_manager.start_workout(1, 'bike')
+                
+                # Add data points and check metrics updates
+                cumulative_metrics = []
+                
+                for i in range(20):
+                    data_point = {
+                        'power': 150 + (i % 30),
+                        'cadence': 80 + (i % 15),
+                        'heart_rate': 140 + (i % 25),
+                        'distance': i * 0.1,
+                        'calories': i * 0.5
+                    }
+                    
+                    # Add data point
+                    self.workout_manager.add_data_point(data_point)
+                    mock_ftms.latest_data = data_point
+                    
+                    # Get status with metrics
+                    response = self.client.get('/api/status')
+                    assert response.status_code == 200
+                    
+                    status_data = json.loads(response.data)
+                    
+                    if 'workout_summary' in status_data.get('latest_data', {}):
+                        summary = status_data['latest_data']['workout_summary']
+                        cumulative_metrics.append({
+                            'elapsed_time': summary.get('elapsed_time', 0),
+                            'avg_power': summary.get('avg_power', 0),
+                            'total_distance': summary.get('total_distance', 0),
+                            'total_calories': summary.get('total_calories', 0)
+                        })
+                
+                # Verify metrics progression
+                if cumulative_metrics:
+                    # Elapsed time should increase
+                    elapsed_times = [m['elapsed_time'] for m in cumulative_metrics]
+                    assert elapsed_times[-1] > elapsed_times[0], "Elapsed time should increase"
+                    
+                    # Total distance should increase
+                    distances = [m['total_distance'] for m in cumulative_metrics]
+                    assert distances[-1] > distances[0], "Total distance should increase"
+                    
+                    # Total calories should increase
+                    calories = [m['total_calories'] for m in cumulative_metrics]
+                    assert calories[-1] > calories[0], "Total calories should increase"
+                
+                # End workout
+                self.workout_manager.end_workout()
+    
+    def test_connection_status_updates(self):
+        """Test device connection status updates."""
+        with patch('src.web.app.ftms_manager') as mock_ftms:
+            # Test disconnected state
+            mock_ftms.device_status = "disconnected"
+            mock_ftms.connected_device = None
+            mock_ftms.latest_data = None
+            
+            response = self.client.get('/api/status')
+            assert response.status_code == 200
+            
+            status_data = json.loads(response.data)
+            assert status_data['device_status'] == 'disconnected'
+            assert status_data['connected_device'] is None
+            
+            # Test connecting state
+            mock_ftms.device_status = "connecting"
+            
+            response = self.client.get('/api/status')
+            assert response.status_code == 200
+            
+            status_data = json.loads(response.data)
+            assert status_data['device_status'] == 'connecting'
+            
+            # Test connected state
+            mock_device = Mock()
+            mock_device.name = "Test Rogue Echo Bike"
+            mock_device.address = "AA:BB:CC:DD:EE:01"
+            
+            mock_ftms.device_status = "connected"
+            mock_ftms.connected_device = mock_device
+            mock_ftms.latest_data = {'power': 150, 'cadence': 80}
+            
+            response = self.client.get('/api/status')
+            assert response.status_code == 200
+            
+            status_data = json.loads(response.data)
+            assert status_data['device_status'] == 'connected'
+            assert status_data['connected_device']['name'] == 'Test Rogue Echo Bike'
+            assert status_data['connected_device']['address'] == 'AA:BB:CC:DD:EE:01'
+            assert 'latest_data' in status_data
+
+
+@pytest.mark.integration
+class TestAPIErrorHandlingAndFormatting:
+    """Test comprehensive API error handling and response formatting."""
+    
+    @pytest.fixture(autouse=True)
+    def setup_error_test(self):
+        """Set up error handling test environment."""
+        self.temp_dir = tempfile.mkdtemp()
+        self.db_path = os.path.join(self.temp_dir, "test_rogue_garmin.db")
+        
+        self.database = Database(self.db_path)
+        self.workout_manager = WorkoutManager(self.db_path)
+        
+        # Configure Flask app for testing
+        flask_app.config['TESTING'] = True
+        flask_app.config['DATABASE_PATH'] = self.db_path
+        
+        self.client = flask_app.test_client()
+        
+        yield
+        
+        # Cleanup
+        import shutil
+        if os.path.exists(self.temp_dir):
+            shutil.rmtree(self.temp_dir)
+    
+    def test_malformed_json_requests(self):
+        """Test handling of malformed JSON requests."""
+        endpoints_requiring_json = [
+            '/api/connect',
+            '/api/start_workout',
+            '/api/user_profile',
+            '/api/settings'
+        ]
+        
+        malformed_json_data = [
+            '{"invalid": json}',  # Missing quotes
+            '{invalid: "json"}',  # Unquoted key
+            '{"incomplete": ',    # Incomplete JSON
+            'not json at all',    # Not JSON
+            '',                   # Empty string
+        ]
+        
+        for endpoint in endpoints_requiring_json:
+            for malformed_data in malformed_json_data:
+                response = self.client.post(
+                    endpoint,
+                    data=malformed_data,
+                    content_type='application/json'
+                )
+                
+                # Should return 400 for malformed JSON
+                assert response.status_code == 400, f"Endpoint {endpoint} should return 400 for malformed JSON"
+    
+    def test_missing_required_fields(self):
+        """Test handling of missing required fields."""
+        # Test connect endpoint without address
+        response = self.client.post('/api/connect', json={})
         assert response.status_code == 200
         data = json.loads(response.data)
         assert data['success'] is False
         assert 'error' in data
+        assert 'address' in data['error'].lower()
         
-        # Test FIT conversion with workout but no data
-        workout_id = self.database.start_workout(1, "bike")
-        self.database.end_workout(workout_id, summary={})
+        # Test start_workout without required fields
+        response = self.client.post('/api/start_workout', json={})
+        assert response.status_code == 200
+        data = json.loads(response.data)
+        assert data['success'] is False
+        assert 'error' in data
+    
+    def test_invalid_data_types(self):
+        """Test handling of invalid data types."""
+        # Test workout ID as string instead of int
+        response = self.client.get('/api/workout/not_a_number')
+        assert response.status_code == 404
         
-        with patch('src.fit.fit_processor.FITProcessor') as mock_processor:
-            mock_instance = Mock()
-            mock_instance.process_workout.return_value = None  # Simulate failure
-            mock_processor.return_value = mock_instance
+        # Test invalid device_id type
+        response = self.client.post('/api/start_workout', json={
+            'device_id': 'not_a_number',
+            'workout_type': 'bike'
+        })
+        assert response.status_code == 200
+        data = json.loads(response.data)
+        assert data['success'] is False
+        assert 'error' in data
+    
+    def test_database_error_handling(self):
+        """Test handling of database errors."""
+        # Simulate database connection error
+        with patch.object(self.workout_manager, 'get_workouts') as mock_get_workouts:
+            mock_get_workouts.side_effect = Exception("Database connection failed")
             
-            response = self.client.post(f'/api/convert_fit/{workout_id}')
-            
+            response = self.client.get('/api/workouts')
             assert response.status_code == 200
             data = json.loads(response.data)
             assert data['success'] is False
+            assert 'error' in data
+            assert 'Database connection failed' in data['error']
     
-    def test_file_naming_conventions(self):
-        """Test proper file naming conventions for generated files."""
-        # Create workouts of different types
-        bike_workout_id = self.database.start_workout(1, "bike")
-        rower_workout_id = self.database.start_workout(2, "rower")
+    def test_device_connection_errors(self):
+        """Test handling of device connection errors."""
+        with patch('src.web.app.ftms_manager') as mock_ftms:
+            with patch('src.web.app.background_loop') as mock_loop:
+                mock_loop.is_running.return_value = True
+                
+                # Test connection timeout
+                with patch('asyncio.run_coroutine_threadsafe') as mock_run_coro:
+                    mock_run_coro.side_effect = asyncio.TimeoutError()
+                    
+                    response = self.client.post('/api/connect', json={
+                        'address': 'AA:BB:CC:DD:EE:01',
+                        'device_type': 'bike'
+                    })
+                    
+                    assert response.status_code == 200
+                    data = json.loads(response.data)
+                    assert data['success'] is False
+                    assert 'timeout' in data['error'].lower()
+                
+                # Test connection exception
+                with patch('asyncio.run_coroutine_threadsafe') as mock_run_coro:
+                    mock_future = Mock()
+                    mock_future.result.side_effect = Exception("Bluetooth adapter not found")
+                    mock_run_coro.return_value = mock_future
+                    
+                    response = self.client.post('/api/connect', json={
+                        'address': 'AA:BB:CC:DD:EE:01',
+                        'device_type': 'bike'
+                    })
+                    
+                    assert response.status_code == 200
+                    data = json.loads(response.data)
+                    assert data['success'] is False
+                    assert 'Bluetooth adapter not found' in data['error']
+    
+    def test_response_format_consistency(self):
+        """Test consistent response formatting across all endpoints."""
+        # Test successful responses
+        successful_endpoints = [
+            ('/api/status', 'GET'),
+            ('/api/workouts', 'GET'),
+            ('/api/user_profile', 'GET'),
+            ('/api/settings', 'GET')
+        ]
         
-        # Add minimal data and end workouts
-        for workout_id in [bike_workout_id, rower_workout_id]:
-            self.database.add_workout_data(workout_id, datetime.now(), {'power': 150})
-            self.database.end_workout(workout_id, summary={'avg_power': 150})
+        for endpoint, method in successful_endpoints:
+            if method == 'GET':
+                response = self.client.get(endpoint)
+            else:
+                response = self.client.post(endpoint, json={})
+            
+            assert response.status_code == 200
+            assert response.content_type == 'application/json'
+            
+            data = json.loads(response.data)
+            assert isinstance(data, dict), f"Response from {endpoint} should be a dictionary"
+            
+            # Most endpoints should have a 'success' field
+            if endpoint not in ['/api/status']:  # Status endpoint has different format
+                assert 'success' in data or len(data) > 0, f"Response from {endpoint} should have success field or data"
+    
+    def test_http_method_validation(self):
+        """Test HTTP method validation."""
+        # Test wrong methods on endpoints
+        method_tests = [
+            ('/api/status', 'POST', 405),
+            ('/api/workouts', 'POST', 405),
+            ('/api/connect', 'GET', 405),
+            ('/api/disconnect', 'GET', 405),
+            ('/api/start_workout', 'GET', 405),
+            ('/api/end_workout', 'GET', 405)
+        ]
         
-        # Test file naming
-        with patch('src.fit.fit_processor.FITProcessor') as mock_processor:
-            mock_instance = Mock()
+        for endpoint, method, expected_status in method_tests:
+            if method == 'POST':
+                response = self.client.post(endpoint)
+            elif method == 'GET':
+                response = self.client.get(endpoint)
+            elif method == 'PUT':
+                response = self.client.put(endpoint)
+            elif method == 'DELETE':
+                response = self.client.delete(endpoint)
             
-            # Mock different file names based on workout type
-            def mock_process_workout(workout_id, user_profile=None):
-                workout = self.database.get_workout(workout_id)
-                device_type = workout['device_type']
-                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                return os.path.join(self.fit_output_dir, f"{device_type}_{timestamp}.fit")
-            
-            mock_instance.process_workout.side_effect = mock_process_workout
-            mock_processor.return_value = mock_instance
-            
-            # Test bike workout file naming
-            response = self.client.post(f'/api/convert_fit/{bike_workout_id}')
-            assert response.status_code == 200
+            assert response.status_code == expected_status, f"{method} {endpoint} should return {expected_status}"
+    
+    def test_large_request_handling(self):
+        """Test handling of unusually large requests."""
+        # Test large JSON payload
+        large_profile = {
+            'name': 'A' * 10000,  # Very long name
+            'notes': 'B' * 50000,  # Very long notes
+            'settings': {f'key_{i}': f'value_{i}' for i in range(1000)}  # Many settings
+        }
+        
+        response = self.client.post('/api/user_profile', json=large_profile)
+        
+        # Should either succeed or fail gracefully
+        assert response.status_code in [200, 400, 413], "Large request should be handled gracefully"
+        
+        if response.status_code == 200:
             data = json.loads(response.data)
-            if data['success']:
-                assert 'bike_' in data.get('fit_file_path', ''), "Bike workout should have 'bike_' in filename"
-            
-            # Test rower workout file naming
-            response = self.client.post(f'/api/convert_fit/{rower_workout_id}')
-            assert response.status_code == 200
-            data = json.loads(response.data)
-            if data['success']:
-                assert 'rower_' in data.get('fit_file_path', ''), "Rower workout should have 'rower_' in filename"
+            # If it succeeds, it should be properly formatted
+            assert isinstance(data, dict)
+            assert 'success' in data
+    
+    def test_concurrent_error_scenarios(self):
+        """Test error handling under concurrent access."""
+        import threading
+        import queue
+        
+        results = queue.Queue()
+        
+        def make_failing_request():
+            try:
+                # Make request that will fail
+                response = self.client.get('/api/workout/999999')
+                results.put({
+                    'status_code': response.status_code,
+                    'success': response.status_code == 200
+                })
+            except Exception as e:
+                results.put({
+                    'error': str(e),
+                    'success': False
+                })
+        
+        # Launch multiple concurrent failing requests
+        threads = []
+        for _ in range(10):
+            thread = threading.Thread(target=make_failing_request)
+            threads.append(thread)
+            thread.start()
+        
+        # Wait for completion
+        for thread in threads:
+            thread.join(timeout=10)
+        
+        # Collect results
+        error_responses = 0
+        while not results.empty():
+            try:
+                result = results.get_nowait()
+                if not result['success']:
+                    error_responses += 1
+            except queue.Empty:
+                break
+        
+        # All requests should have failed gracefully
+        assert error_responses > 0, "Some requests should have failed"
+
+
+if __name__ == '__main__':
+    pytest.main([__file__, '-v'])

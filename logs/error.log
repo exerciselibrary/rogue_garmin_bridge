@@ -338,3 +338,10 @@ Exception: FIT builder error
 2025-08-12 20:21:22,201 - database - ERROR - Workout 999 not found
 2025-08-12 20:21:25,181 - database - ERROR - Error creating database connection: database is locked
 2025-08-12 20:21:25,182 - database - ERROR - Error creating tables: database is locked
+2025-08-13 18:50:49,923 - ftms_connector - ERROR - Device AA:BB:CC:DD:EE:01 not found after rediscovery
+2025-08-13 18:50:49,924 - ftms - ERROR - Connector failed to connect to device AA:BB:CC:DD:EE:01
+2025-08-13 18:50:49,936 - web - ERROR - Connection to AA:BB:CC:DD:EE:01 timed out.
+2025-08-13 19:25:09,089 - fit_processor - ERROR - No data points found for workout 8
+2025-08-13 19:26:16,454 - fit_processor - ERROR - No data points found for workout 9
+2025-08-13 19:27:15,046 - fit_processor - ERROR - No data points found for workout 10
+2025-08-13 19:27:45,953 - fit_processor - ERROR - No data points found for workout 11

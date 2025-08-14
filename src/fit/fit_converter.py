@@ -11,6 +11,8 @@ import math # For rounding
 from typing import Dict, List, Any, Optional
 from datetime import datetime, timedelta, timezone
 
+from .speed_calculator import EnhancedSpeedCalculator, fix_device_reported_speeds
+
 from fit_tool.fit_file_builder import FitFileBuilder
 from fit_tool.profile.messages.file_id_message import FileIdMessage
 from fit_tool.profile.messages.device_info_message import DeviceInfoMessage
@@ -117,6 +119,9 @@ class FITConverter:
 
     def convert_workout(self, processed_data, user_profile=None):
         try:
+            # Apply enhanced speed calculation fixes
+            processed_data = fix_device_reported_speeds(processed_data)
+            
             workout_type = processed_data.get("workout_type", "bike")
             start_time_metadata_input = processed_data.get("start_time")
             

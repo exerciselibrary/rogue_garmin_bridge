@@ -1064,3 +1064,174 @@ TypeError: float() argument must be a string or a real number, not 'datetime.dat
 2025-05-25 10:06:50,298 - web - INFO - Getting workouts with limit=100, offset=0
 2025-05-25 10:06:50,300 - web - INFO - Retrieved 4 workouts from database
 2025-05-25 10:06:52,531 - web - INFO - Sending workout 7 with 609 data points, type: bike
+2025-08-13 07:04:14,228 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-13 07:04:14,229 - web - INFO - Using real FTMS devices
+2025-08-13 07:04:14,229 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-13 07:04:14,229 - web - INFO - Starting background asyncio loop thread...
+2025-08-13 07:04:14,230 - web - INFO - Background thread started. Creating new event loop.
+2025-08-13 07:04:14,230 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-13 07:04:14,233 - web - INFO - Starting background asyncio event loop run_forever.
+2025-08-13 07:04:34,225 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-13 07:04:34,226 - web - INFO - Using real FTMS devices
+2025-08-13 07:04:34,227 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-13 07:04:34,227 - web - INFO - Starting background asyncio loop thread...
+2025-08-13 07:04:34,227 - web - INFO - Background thread started. Creating new event loop.
+2025-08-13 07:04:34,227 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-13 07:04:48,665 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-13 07:04:48,666 - web - INFO - Using real FTMS devices
+2025-08-13 07:04:48,666 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-13 07:04:48,666 - web - INFO - Starting background asyncio loop thread...
+2025-08-13 07:04:48,667 - web - INFO - Background thread started. Creating new event loop.
+2025-08-13 07:04:48,667 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-13 07:04:48,670 - web - INFO - Starting background asyncio event loop run_forever.
+2025-08-13 07:05:25,624 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-13 07:05:25,625 - web - INFO - Using real FTMS devices
+2025-08-13 07:05:25,625 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-13 07:05:25,626 - web - INFO - Starting background asyncio loop thread...
+2025-08-13 07:05:25,626 - web - INFO - Background thread started. Creating new event loop.
+2025-08-13 07:05:25,626 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-13 07:05:25,631 - web - INFO - Starting background asyncio event loop run_forever.
+2025-08-13 07:05:25,648 - web - INFO - Getting workouts with limit=100, offset=0
+2025-08-13 07:05:25,649 - web - INFO - Retrieved 4 workouts from database
+2025-08-13 07:05:25,652 - web - WARNING - FIT file not found: nonexistent.fit
+2025-08-13 07:05:25,653 - web - WARNING - Potential path traversal attempt: ../../../etc/passwd
+2025-08-13 07:05:25,655 - web - INFO - Getting workouts with limit=100, offset=0
+2025-08-13 07:05:25,656 - web - INFO - Retrieved 4 workouts from database
+2025-08-13 18:46:00,685 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-13 18:46:00,687 - web - INFO - Using real FTMS devices
+2025-08-13 18:46:00,687 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-13 18:46:00,688 - web - INFO - Starting background asyncio loop thread...
+2025-08-13 18:46:00,688 - web - INFO - Background thread started. Creating new event loop.
+2025-08-13 18:46:00,688 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-13 18:46:00,692 - web - INFO - Starting background asyncio event loop run_forever.
+2025-08-13 18:46:01,394 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-13 18:46:01,395 - web - INFO - Using real FTMS devices
+2025-08-13 18:46:01,395 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-13 18:46:01,396 - web - INFO - Starting background asyncio loop thread...
+2025-08-13 18:46:01,396 - web - INFO - Background thread started. Creating new event loop.
+2025-08-13 18:46:01,396 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-13 18:46:01,399 - web - INFO - Getting workouts with limit=100, offset=0
+2025-08-13 18:46:01,400 - web - INFO - Starting background asyncio event loop run_forever.
+2025-08-13 18:46:01,400 - web - INFO - Retrieved 4 workouts from database
+2025-08-13 18:50:46,763 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-13 18:50:46,764 - web - INFO - Using real FTMS devices
+2025-08-13 18:50:46,765 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-13 18:50:46,765 - web - INFO - Starting background asyncio loop thread...
+2025-08-13 18:50:46,766 - web - INFO - Background thread started. Creating new event loop.
+2025-08-13 18:50:46,766 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-13 18:50:46,770 - web - INFO - Starting background asyncio event loop run_forever.
+2025-08-13 18:50:46,773 - web - INFO - Getting workouts with limit=100, offset=0
+2025-08-13 18:50:46,774 - web - INFO - Retrieved 4 workouts from database
+2025-08-13 18:50:46,782 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-13 18:50:46,783 - web - INFO - Using real FTMS devices
+2025-08-13 18:50:46,783 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-13 18:50:46,783 - web - INFO - Starting background asyncio loop thread...
+2025-08-13 18:50:46,784 - web - INFO - Background thread started. Creating new event loop.
+2025-08-13 18:50:46,784 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-13 18:50:46,789 - web - INFO - Scheduling connect task for AA:BB:CC:DD:EE:01 with device_type bike on background loop.
+2025-08-13 18:50:46,789 - web - INFO - Starting background asyncio event loop run_forever.
+2025-08-13 18:50:49,924 - web - INFO - Connect task for AA:BB:CC:DD:EE:01 (device_type: bike) completed with result: False
+2025-08-13 18:50:49,927 - web - WARNING - Potential path traversal attempt: ../../../etc/passwd
+2025-08-13 18:50:49,928 - web - WARNING - Potential path traversal attempt: ..\\..\\..\\windows\\system32\\config\\sam
+2025-08-13 18:50:49,932 - web - INFO - Getting workouts with limit=100, offset=0
+2025-08-13 18:50:49,932 - web - INFO - Retrieved 4 workouts from database
+2025-08-13 18:50:49,935 - web - INFO - Scheduling connect task for AA:BB:CC:DD:EE:01 with device_type bike on background loop.
+2025-08-13 18:50:49,936 - web - ERROR - Connection to AA:BB:CC:DD:EE:01 timed out.
+2025-08-13 19:25:09,034 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-13 19:25:09,035 - web - INFO - Using real FTMS devices
+2025-08-13 19:25:09,035 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-13 19:25:09,036 - web - INFO - Starting background asyncio loop thread...
+2025-08-13 19:25:09,036 - web - INFO - Background thread started. Creating new event loop.
+2025-08-13 19:25:09,036 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-13 19:25:09,041 - web - INFO - Starting background asyncio event loop run_forever.
+2025-08-13 19:25:09,054 - web - INFO - Getting workouts with limit=100, offset=0
+2025-08-13 19:25:09,055 - web - INFO - Retrieved 4 workouts from database
+2025-08-13 19:25:09,091 - web - INFO - Sending workout 8 with 0 data points, type: bike
+2025-08-13 19:25:09,114 - web - WARNING - Potential path traversal attempt: ../../../etc/passwd
+2025-08-13 19:25:09,115 - web - WARNING - Potential path traversal attempt: ..\\..\\..\\windows\\system32\\config\\sam
+2025-08-13 19:25:09,119 - web - INFO - Getting workouts with limit=100, offset=0
+2025-08-13 19:25:09,120 - web - INFO - Retrieved 4 workouts from database
+2025-08-13 19:26:16,427 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-13 19:26:16,428 - web - INFO - Using real FTMS devices
+2025-08-13 19:26:16,429 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-13 19:26:16,429 - web - INFO - Starting background asyncio loop thread...
+2025-08-13 19:26:16,429 - web - INFO - Background thread started. Creating new event loop.
+2025-08-13 19:26:16,429 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-13 19:26:16,435 - web - INFO - Starting background asyncio event loop run_forever.
+2025-08-13 19:26:16,437 - web - INFO - Getting workouts with limit=100, offset=0
+2025-08-13 19:26:16,438 - web - INFO - Retrieved 4 workouts from database
+2025-08-13 19:26:16,456 - web - INFO - Sending workout 9 with 0 data points, type: bike
+2025-08-13 19:26:16,469 - web - WARNING - Potential path traversal attempt: ../../../etc/passwd
+2025-08-13 19:26:16,470 - web - WARNING - Potential path traversal attempt: ..\\..\\..\\windows\\system32\\config\\sam
+2025-08-13 19:26:16,474 - web - INFO - Getting workouts with limit=100, offset=0
+2025-08-13 19:26:16,474 - web - INFO - Retrieved 4 workouts from database
+2025-08-13 19:26:26,220 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-13 19:26:26,221 - web - INFO - Using real FTMS devices
+2025-08-13 19:26:26,221 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-13 19:26:26,221 - web - INFO - Starting background asyncio loop thread...
+2025-08-13 19:26:26,222 - web - INFO - Background thread started. Creating new event loop.
+2025-08-13 19:26:26,222 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-13 19:26:26,226 - web - INFO - Starting background asyncio event loop run_forever.
+2025-08-13 19:26:57,205 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-13 19:26:57,206 - web - INFO - Using real FTMS devices
+2025-08-13 19:26:57,207 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-13 19:26:57,207 - web - INFO - Starting background asyncio loop thread...
+2025-08-13 19:26:57,207 - web - INFO - Background thread started. Creating new event loop.
+2025-08-13 19:26:57,208 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-13 19:26:57,211 - web - INFO - Starting background asyncio event loop run_forever.
+2025-08-13 19:26:57,215 - web - WARNING - FIT file not found: etc/passwd
+2025-08-13 19:27:15,022 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-13 19:27:15,023 - web - INFO - Using real FTMS devices
+2025-08-13 19:27:15,023 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-13 19:27:15,024 - web - INFO - Starting background asyncio loop thread...
+2025-08-13 19:27:15,024 - web - INFO - Background thread started. Creating new event loop.
+2025-08-13 19:27:15,024 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-13 19:27:15,028 - web - INFO - Starting background asyncio event loop run_forever.
+2025-08-13 19:27:15,032 - web - INFO - Getting workouts with limit=100, offset=0
+2025-08-13 19:27:15,033 - web - INFO - Retrieved 4 workouts from database
+2025-08-13 19:27:15,048 - web - INFO - Sending workout 10 with 0 data points, type: bike
+2025-08-13 19:27:15,061 - web - WARNING - Potential path traversal attempt: ../../../etc/passwd
+2025-08-13 19:27:15,062 - web - WARNING - Potential path traversal attempt: ..\\..\\..\\windows\\system32\\config\\sam
+2025-08-13 19:27:15,062 - web - WARNING - Potential path traversal attempt: C:\\windows\\system32\\config\\sam
+2025-08-13 19:27:15,067 - web - INFO - Getting workouts with limit=100, offset=0
+2025-08-13 19:27:15,067 - web - INFO - Retrieved 4 workouts from database
+2025-08-13 19:27:24,541 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-13 19:27:24,542 - web - INFO - Using real FTMS devices
+2025-08-13 19:27:24,543 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-13 19:27:24,543 - web - INFO - Starting background asyncio loop thread...
+2025-08-13 19:27:24,543 - web - INFO - Background thread started. Creating new event loop.
+2025-08-13 19:27:24,543 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-13 19:27:24,547 - web - INFO - Starting background asyncio event loop run_forever.
+2025-08-13 19:27:33,039 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-13 19:27:33,040 - web - INFO - Using real FTMS devices
+2025-08-13 19:27:33,040 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-13 19:27:33,040 - web - INFO - Starting background asyncio loop thread...
+2025-08-13 19:27:33,042 - web - INFO - Background thread started. Creating new event loop.
+2025-08-13 19:27:33,042 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-13 19:27:33,045 - web - INFO - Starting background asyncio event loop run_forever.
+2025-08-13 19:27:33,048 - web - WARNING - FIT file not found: etc/passwd
+2025-08-13 19:27:45,928 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-13 19:27:45,929 - web - INFO - Using real FTMS devices
+2025-08-13 19:27:45,929 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-13 19:27:45,930 - web - INFO - Starting background asyncio loop thread...
+2025-08-13 19:27:45,930 - web - INFO - Background thread started. Creating new event loop.
+2025-08-13 19:27:45,930 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-13 19:27:45,935 - web - INFO - Starting background asyncio event loop run_forever.
+2025-08-13 19:27:45,938 - web - INFO - Getting workouts with limit=100, offset=0
+2025-08-13 19:27:45,939 - web - INFO - Retrieved 4 workouts from database
+2025-08-13 19:27:45,955 - web - INFO - Sending workout 11 with 0 data points, type: bike
+2025-08-13 19:27:45,971 - web - WARNING - Potential path traversal attempt: ../../../etc/passwd
+2025-08-13 19:27:45,972 - web - WARNING - Potential path traversal attempt: ..\\..\\..\\windows\\system32\\config\\sam
+2025-08-13 19:27:45,973 - web - WARNING - Potential path traversal attempt: C:\\windows\\system32\\config\\sam
+2025-08-13 19:27:45,973 - web - WARNING - FIT file not found: etc/passwd
+2025-08-13 19:27:45,974 - web - WARNING - FIT file not found: etc/passwd
+2025-08-13 19:27:45,975 - web - WARNING - FIT file not found: nonexistent.fit
+2025-08-13 19:27:45,978 - web - INFO - Getting workouts with limit=100, offset=0
+2025-08-13 19:27:45,979 - web - INFO - Retrieved 4 workouts from database
+2025-08-13 19:56:38,976 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-13 19:56:38,977 - web - INFO - Using real FTMS devices
+2025-08-13 19:56:38,977 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-13 19:56:38,977 - web - INFO - Starting background asyncio loop thread...
+2025-08-13 19:56:38,978 - web - INFO - Background thread started. Creating new event loop.
+2025-08-13 19:56:38,979 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-13 19:56:38,982 - web - INFO - Starting background asyncio event loop run_forever.
