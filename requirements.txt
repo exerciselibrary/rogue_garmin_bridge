@@ -4,4 +4,4 @@ fit-tool==0.9.13
 requests==2.31.0
 gunicorn==21.2.0
 psutil==5.9.6
-git+https://github.com/dudanov/python-pyftms.git
+pyftms
