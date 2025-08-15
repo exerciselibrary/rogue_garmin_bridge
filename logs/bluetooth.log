@@ -8,3 +8,9 @@
 2025-08-15 08:09:17,147 - ftms - INFO - Using FTMSConnector for real device with device type: bike.
 2025-08-15 08:09:17,148 - ftms_connector - INFO - Data callback _handle_data registered.
 2025-08-15 08:09:17,148 - ftms_connector - INFO - Status callback _handle_status registered.
+2025-08-15 08:14:54,471 - ftms_connector - INFO - Scanning for FTMS devices for 5 seconds...
+2025-08-15 08:14:59,585 - ftms_connector - INFO - Discovered 0 FTMS devices
+2025-08-15 08:15:24,291 - ftms_connector - INFO - Scanning for FTMS devices for 5 seconds...
+2025-08-15 08:15:29,296 - ftms_connector - INFO - Discovered 0 FTMS devices
+2025-08-15 08:15:34,039 - ftms_connector - INFO - Scanning for FTMS devices for 5 seconds...
+2025-08-15 08:15:39,041 - ftms_connector - INFO - Discovered 0 FTMS devices

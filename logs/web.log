@@ -1301,3 +1301,4 @@ TypeError: float() argument must be a string or a real number, not 'datetime.dat
 2025-08-15 08:09:37,944 - web - INFO - Getting workouts with limit=10, offset=0
 2025-08-15 08:09:37,945 - web - INFO - Retrieved 4 workouts from database
 2025-08-15 08:14:36,789 - web - INFO - Getting workouts with limit=10, offset=0
+2025-08-15 08:14:36,790 - web - INFO - Retrieved 4 workouts from database
