@@ -1284,3 +1284,20 @@ TypeError: float() argument must be a string or a real number, not 'datetime.dat
 2025-08-14 06:35:05,968 - web - INFO - Retrieved 4 workouts from database
 2025-08-14 06:35:10,102 - web - INFO - Getting workouts with limit=10, offset=0
 2025-08-14 06:35:10,110 - web - INFO - Retrieved 4 workouts from database
+2025-08-15 08:09:16,758 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-15 08:09:16,760 - web - INFO - Using real FTMS devices
+2025-08-15 08:09:16,760 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-15 08:09:16,761 - web - INFO - Starting background asyncio loop thread...
+2025-08-15 08:09:16,761 - web - INFO - Background thread started. Creating new event loop.
+2025-08-15 08:09:16,761 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-15 08:09:16,765 - web - INFO - Starting background asyncio event loop run_forever.
+2025-08-15 08:09:17,147 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-15 08:09:17,148 - web - INFO - Using real FTMS devices
+2025-08-15 08:09:17,149 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-15 08:09:17,149 - web - INFO - Starting background asyncio loop thread...
+2025-08-15 08:09:17,149 - web - INFO - Background thread started. Creating new event loop.
+2025-08-15 08:09:17,149 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-15 08:09:17,154 - web - INFO - Starting background asyncio event loop run_forever.
+2025-08-15 08:09:37,944 - web - INFO - Getting workouts with limit=10, offset=0
+2025-08-15 08:09:37,945 - web - INFO - Retrieved 4 workouts from database
+2025-08-15 08:14:36,789 - web - INFO - Getting workouts with limit=10, offset=0

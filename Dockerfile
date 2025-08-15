@@ -47,8 +47,7 @@ COPY --chown=appuser:appuser . .
 RUN mkdir -p /app/data /app/logs /app/fit_files && \
     chown -R appuser:appuser /app/data /app/logs /app/fit_files
 
-# Switch to non-root user
-USER appuser
+
 
 # Expose port
 EXPOSE 5000
@@ -56,6 +55,9 @@ EXPOSE 5000
 # Copy health check script
 COPY scripts/docker-healthcheck.sh /usr/local/bin/healthcheck.sh
 RUN chmod +x /usr/local/bin/healthcheck.sh
+
+# Switch to non-root user
+USER appuser
 
 # Add health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
