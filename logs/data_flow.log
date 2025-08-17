@@ -1625,36 +1625,103 @@
 2025-08-17 11:33:49,965 - data_validator - INFO - Data validation - Quality: acceptable, Corrections: 4, Warnings: 4
 2025-08-17 11:53:14,241 - database - INFO - Database tables created
 2025-08-17 11:55:39,513 - database - INFO - Database tables created
-2025-08-17 11:58:56,367 - database - INFO - Database tables created
-2025-08-17 11:58:56,368 - database - INFO - Database tables created
-2025-08-17 11:58:56,369 - data_validator - INFO - Data validator initialized
-2025-08-17 11:58:56,954 - database - INFO - Database tables created
-2025-08-17 11:58:56,954 - database - INFO - Database tables created
-2025-08-17 11:58:56,956 - data_validator - INFO - Data validator initialized
-2025-08-17 12:00:17,753 - database - INFO - Retrieved 10 workouts from database
-2025-08-17 12:00:39,823 - database - INFO - Retrieved 11 workouts from database
-2025-08-17 12:00:39,825 - database - INFO - Retrieved 11 workouts from database
-2025-08-17 12:00:49,253 - database - INFO - Deleted all data points for workout 14
-2025-08-17 12:00:49,253 - database - INFO - Deleted workout 14
-2025-08-17 12:00:51,892 - database - INFO - Deleted all data points for workout 14
-2025-08-17 12:00:51,892 - database - WARNING - No workout found with ID 14 to delete
-2025-08-17 12:00:54,440 - database - INFO - Deleted all data points for workout 18
-2025-08-17 12:00:54,440 - database - INFO - Deleted workout 18
-2025-08-17 12:00:55,900 - database - INFO - Deleted all data points for workout 18
-2025-08-17 12:00:55,900 - database - WARNING - No workout found with ID 18 to delete
-2025-08-17 12:00:58,084 - database - INFO - Deleted all data points for workout 18
-2025-08-17 12:00:58,084 - database - WARNING - No workout found with ID 18 to delete
-2025-08-17 12:00:58,432 - database - INFO - Deleted all data points for workout 18
-2025-08-17 12:00:58,432 - database - WARNING - No workout found with ID 18 to delete
-2025-08-17 12:01:00,555 - database - INFO - Deleted all data points for workout 17
-2025-08-17 12:01:00,556 - database - INFO - Deleted workout 17
-2025-08-17 12:01:00,817 - database - INFO - Deleted all data points for workout 17
-2025-08-17 12:01:00,817 - database - WARNING - No workout found with ID 17 to delete
-2025-08-17 12:01:03,545 - database - INFO - Retrieved 8 workouts from database
-2025-08-17 12:01:03,546 - database - INFO - Retrieved 8 workouts from database
-2025-08-17 12:01:08,777 - database - INFO - Deleted all data points for workout 16
-2025-08-17 12:01:08,778 - database - INFO - Deleted workout 16
-2025-08-17 12:01:10,379 - database - INFO - Deleted all data points for workout 16
-2025-08-17 12:01:10,380 - database - WARNING - No workout found with ID 16 to delete
-2025-08-17 12:01:14,187 - database - INFO - Retrieved 62 data points for workout 15
-2025-08-17 12:01:14,500 - database - INFO - Retrieved 62 data points for workout 15
+2025-08-17 12:06:03,847 - database - INFO - Database tables created
+2025-08-17 12:06:03,853 - database - INFO - Database tables created
+2025-08-17 12:06:03,858 - data_validator - INFO - Data validator initialized
+2025-08-17 12:06:05,170 - database - INFO - Database tables created
+2025-08-17 12:06:05,172 - database - INFO - Database tables created
+2025-08-17 12:06:05,173 - data_validator - INFO - Data validator initialized
+2025-08-17 12:06:15,688 - database - INFO - Retrieved 10 workouts from database
+2025-08-17 12:06:44,186 - database - INFO - Started workout 19 with device 1
+2025-08-17 12:06:44,243 - database - INFO - Ended workout 19, duration: 0s
+2025-08-17 12:06:44,255 - database - INFO - Database tables created
+2025-08-17 12:06:44,271 - database - INFO - Started workout 20 with device 1
+2025-08-17 12:06:44,275 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:44.275991
+2025-08-17 12:06:44,286 - database - INFO - Successfully added data point with ID 1984
+2025-08-17 12:06:44,294 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:44.292007
+2025-08-17 12:06:44,300 - database - INFO - Successfully added data point with ID 1985
+2025-08-17 12:06:45,257 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:45.257255
+2025-08-17 12:06:45,270 - database - INFO - Successfully added data point with ID 1986
+2025-08-17 12:06:45,273 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:45.273169
+2025-08-17 12:06:45,285 - database - INFO - Successfully added data point with ID 1987
+2025-08-17 12:06:46,278 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:46.276185
+2025-08-17 12:06:46,300 - database - INFO - Successfully added data point with ID 1988
+2025-08-17 12:06:46,305 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:46.302312
+2025-08-17 12:06:46,314 - database - INFO - Successfully added data point with ID 1989
+2025-08-17 12:06:47,329 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:47.323498
+2025-08-17 12:06:47,339 - database - INFO - Successfully added data point with ID 1990
+2025-08-17 12:06:47,341 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:47.341897
+2025-08-17 12:06:47,353 - database - INFO - Successfully added data point with ID 1991
+2025-08-17 12:06:48,253 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:48.253866
+2025-08-17 12:06:48,275 - database - INFO - Successfully added data point with ID 1992
+2025-08-17 12:06:48,280 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:48.280068
+2025-08-17 12:06:48,292 - database - INFO - Successfully added data point with ID 1993
+2025-08-17 12:06:49,254 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:49.250343
+2025-08-17 12:06:49,274 - database - INFO - Successfully added data point with ID 1994
+2025-08-17 12:06:49,279 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:49.276468
+2025-08-17 12:06:49,289 - database - INFO - Successfully added data point with ID 1995
+2025-08-17 12:06:50,268 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:50.268538
+2025-08-17 12:06:50,291 - database - INFO - Successfully added data point with ID 1996
+2025-08-17 12:06:50,292 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:50.292872
+2025-08-17 12:06:50,306 - database - INFO - Successfully added data point with ID 1997
+2025-08-17 12:06:51,294 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:51.292518
+2025-08-17 12:06:51,313 - database - INFO - Successfully added data point with ID 1998
+2025-08-17 12:06:51,321 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:51.317227
+2025-08-17 12:06:51,330 - database - INFO - Successfully added data point with ID 1999
+2025-08-17 12:06:52,305 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:52.305873
+2025-08-17 12:06:52,329 - database - INFO - Successfully added data point with ID 2000
+2025-08-17 12:06:52,333 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:52.329163
+2025-08-17 12:06:52,342 - database - INFO - Successfully added data point with ID 2001
+2025-08-17 12:06:53,354 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:53.347165
+2025-08-17 12:06:53,366 - database - INFO - Successfully added data point with ID 2002
+2025-08-17 12:06:53,379 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:53.377800
+2025-08-17 12:06:53,393 - database - INFO - Successfully added data point with ID 2003
+2025-08-17 12:06:54,259 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:54.257147
+2025-08-17 12:06:54,278 - database - INFO - Successfully added data point with ID 2004
+2025-08-17 12:06:54,283 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:54.282069
+2025-08-17 12:06:54,298 - database - INFO - Successfully added data point with ID 2005
+2025-08-17 12:06:55,312 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:55.309961
+2025-08-17 12:06:55,494 - database - INFO - Successfully added data point with ID 2006
+2025-08-17 12:06:55,499 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:55.499749
+2025-08-17 12:06:55,513 - database - INFO - Successfully added data point with ID 2007
+2025-08-17 12:06:56,284 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:56.281896
+2025-08-17 12:06:56,299 - database - INFO - Successfully added data point with ID 2008
+2025-08-17 12:06:56,308 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:56.306704
+2025-08-17 12:06:56,322 - database - INFO - Successfully added data point with ID 2009
+2025-08-17 12:06:57,295 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:57.290893
+2025-08-17 12:06:57,309 - database - INFO - Successfully added data point with ID 2010
+2025-08-17 12:06:57,318 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:57.309672
+2025-08-17 12:06:57,330 - database - INFO - Successfully added data point with ID 2011
+2025-08-17 12:06:58,249 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:58.249628
+2025-08-17 12:06:58,268 - database - INFO - Successfully added data point with ID 2012
+2025-08-17 12:06:58,277 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:58.273926
+2025-08-17 12:06:58,291 - database - INFO - Successfully added data point with ID 2013
+2025-08-17 12:06:59,273 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:59.269772
+2025-08-17 12:06:59,285 - database - INFO - Successfully added data point with ID 2014
+2025-08-17 12:06:59,293 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:06:59.293007
+2025-08-17 12:06:59,309 - database - INFO - Successfully added data point with ID 2015
+2025-08-17 12:07:00,325 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:07:00.322647
+2025-08-17 12:07:00,339 - database - INFO - Successfully added data point with ID 2016
+2025-08-17 12:07:00,345 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:07:00.343807
+2025-08-17 12:07:00,362 - database - INFO - Successfully added data point with ID 2017
+2025-08-17 12:07:01,256 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:07:01.253354
+2025-08-17 12:07:01,270 - database - INFO - Successfully added data point with ID 2018
+2025-08-17 12:07:01,278 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:07:01.273874
+2025-08-17 12:07:01,300 - database - INFO - Successfully added data point with ID 2019
+2025-08-17 12:07:02,303 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:07:02.298895
+2025-08-17 12:07:02,315 - database - INFO - Successfully added data point with ID 2020
+2025-08-17 12:07:02,323 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:07:02.319353
+2025-08-17 12:07:02,338 - database - INFO - Successfully added data point with ID 2021
+2025-08-17 12:07:03,297 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:07:03.292259
+2025-08-17 12:07:03,322 - database - INFO - Successfully added data point with ID 2022
+2025-08-17 12:07:03,330 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:07:03.328726
+2025-08-17 12:07:03,347 - database - INFO - Successfully added data point with ID 2023
+2025-08-17 12:07:04,320 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:07:04.315811
+2025-08-17 12:07:04,338 - database - INFO - Successfully added data point with ID 2024
+2025-08-17 12:07:04,344 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:07:04.343447
+2025-08-17 12:07:04,359 - database - INFO - Successfully added data point with ID 2025
+2025-08-17 12:07:05,266 - data_validator - INFO - Data validation - Quality: good, Corrections: 2, Warnings: 2
+2025-08-17 12:07:05,274 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:07:05.274815
+2025-08-17 12:07:05,300 - database - INFO - Successfully added data point with ID 2026
+2025-08-17 12:07:05,309 - database - INFO - Adding data point to workout 20 at timestamp 2025-08-17T12:07:05.300824
+2025-08-17 12:07:05,322 - database - INFO - Successfully added data point with ID 2027

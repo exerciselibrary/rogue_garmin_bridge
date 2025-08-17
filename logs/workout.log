@@ -3191,13 +3191,3 @@
 2025-08-17 11:33:49,012 - workout_manager - INFO - Calculated average speed from 170 filtered data points (removed 8 outliers): 12.666336224724265 km/h
 2025-08-17 11:33:49,012 - workout_manager - INFO - Device-reported average speed: 0.61 km/h (not used)
 2025-08-17 11:33:49,023 - workout_manager - INFO - Successfully saved data point to workout 18
-2025-08-17 12:00:49,251 - workout_manager - INFO - Deleting workout 14
-2025-08-17 12:00:51,888 - workout_manager - INFO - Deleting workout 14
-2025-08-17 12:00:54,438 - workout_manager - INFO - Deleting workout 18
-2025-08-17 12:00:55,897 - workout_manager - INFO - Deleting workout 18
-2025-08-17 12:00:58,083 - workout_manager - INFO - Deleting workout 18
-2025-08-17 12:00:58,430 - workout_manager - INFO - Deleting workout 18
-2025-08-17 12:01:00,553 - workout_manager - INFO - Deleting workout 17
-2025-08-17 12:01:00,815 - workout_manager - INFO - Deleting workout 17
-2025-08-17 12:01:08,775 - workout_manager - INFO - Deleting workout 16
-2025-08-17 12:01:10,377 - workout_manager - INFO - Deleting workout 16
