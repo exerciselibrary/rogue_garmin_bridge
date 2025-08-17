@@ -230,8 +230,13 @@ class FTMSDeviceManager:
                             device_type = "rower"
                     
                     try:
-                        # Start a new workout with the detected type
-                        workout_id = self.workout_manager.start_workout(device_type)
+                        # Get the device_id from the connected_device
+                        device_id = self.workout_manager.database.get_device_id_by_address(self.connected_device_address)
+                        if device_id is None:
+                            logger.error(f"Could not find device_id for address {self.connected_device_address}")
+                            return
+                        # Start a new workout with the detected type and device_id
+                        workout_id = self.workout_manager.start_workout(device_id, device_type)
                         logger.info(f"Started new workout with ID: {workout_id}")
                     except Exception as e:
                         logger.error(f"Error starting workout from device button: {str(e)}")

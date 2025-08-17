@@ -53,3 +53,14 @@
 2025-08-17 09:48:56,888 - performance - INFO - METRIC: system.memory_usage = 74.9 percent
 2025-08-17 09:48:56,896 - performance - INFO - METRIC: system.memory_available = 3.8506698608398438 GB
 2025-08-17 09:48:56,898 - performance - INFO - METRIC: system.disk_usage = 3.8074086439410753 percent
+2025-08-17 10:05:15,955 - performance - INFO - METRIC: ftms_manager.successful_connection_time = 5.293041229248047 seconds
+2025-08-17 10:05:15,955 - performance - INFO - METRIC: ftms_manager.connection_time = 5.303588390350342 seconds
+2025-08-17 10:05:28,582 - performance - INFO - METRIC: system.cpu_usage = 10.9 percent
+2025-08-17 10:05:28,600 - performance - INFO - METRIC: system.memory_usage = 74.7 percent
+2025-08-17 10:05:28,600 - performance - INFO - METRIC: system.memory_available = 3.8700790405273438 GB
+2025-08-17 10:05:28,600 - performance - INFO - METRIC: system.disk_usage = 4.074914142597952 percent
+2025-08-17 10:05:29,949 - performance - INFO - METRIC: system.cpu_usage = 7.0 percent
+2025-08-17 10:05:30,005 - performance - INFO - METRIC: system.memory_usage = 74.7 percent
+2025-08-17 10:05:30,007 - performance - INFO - METRIC: system.memory_available = 3.8717918395996094 GB
+2025-08-17 10:05:30,007 - performance - INFO - METRIC: system.disk_usage = 4.074914552317523 percent
+2025-08-17 10:05:53,526 - performance - INFO - METRIC: ftms_manager.data_corrections = 3 count

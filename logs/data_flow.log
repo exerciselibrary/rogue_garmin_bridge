@@ -22,3 +22,10 @@
 2025-08-17 09:45:54,080 - database - INFO - Database tables created
 2025-08-17 09:45:54,083 - data_validator - INFO - Data validator initialized
 2025-08-17 09:46:41,382 - database - INFO - Retrieved 4 workouts from database
+2025-08-17 10:04:27,945 - database - INFO - Database tables created
+2025-08-17 10:04:27,948 - database - INFO - Database tables created
+2025-08-17 10:04:27,952 - data_validator - INFO - Data validator initialized
+2025-08-17 10:04:29,202 - database - INFO - Database tables created
+2025-08-17 10:04:29,208 - database - INFO - Database tables created
+2025-08-17 10:04:29,210 - data_validator - INFO - Data validator initialized
+2025-08-17 10:05:53,473 - data_validator - INFO - Data validation - Quality: acceptable, Corrections: 3, Warnings: 3
