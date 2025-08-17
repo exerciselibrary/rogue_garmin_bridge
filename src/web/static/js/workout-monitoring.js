@@ -367,8 +367,29 @@ class WorkoutMonitor {
         
         // Update heart rate
         if (elements.heartRate && metrics.heart_rate !== undefined) {
-            elements.heartRate.textContent = Math.round(metrics.heart_rate);
+            const heartRate = Math.round(metrics.heart_rate);
+            elements.heartRate.textContent = heartRate;
             this.addMetricAnimation(elements.heartRate, metrics.heart_rate);
+            
+            // Add visual indicator for potential heart rate issues
+            const heartRateContainer = elements.heartRate.parentElement;
+            if (heartRate > 0 && heartRate < 80) {
+                // Add warning indicator for low heart rate
+                if (!heartRateContainer.querySelector('.hr-warning')) {
+                    const warning = document.createElement('span');
+                    warning.className = 'hr-warning';
+                    warning.innerHTML = ' ⚠️';
+                    warning.title = 'Heart rate seems low - check sensor connection';
+                    warning.style.color = '#ffc107';
+                    heartRateContainer.appendChild(warning);
+                }
+            } else {
+                // Remove warning if heart rate is normal
+                const warning = heartRateContainer.querySelector('.hr-warning');
+                if (warning) {
+                    warning.remove();
+                }
+            }
         }
         
         // Update cadence/stroke rate

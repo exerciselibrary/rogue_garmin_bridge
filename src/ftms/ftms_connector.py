@@ -818,6 +818,13 @@ class FTMSConnector:
                                 heart_rate = data[offset]
                                 parsed_data["heart_rate"] = heart_rate
                                 logger.info(f"Heart Rate: {heart_rate} BPM, byte: {data[offset:offset+1].hex()}")
+                                
+                                # Add warning if heart rate seems unusually low for exercise
+                                if heart_rate > 0 and heart_rate < 80:
+                                    logger.warning(f"Heart rate {heart_rate} BPM seems low for exercise - check heart rate sensor connection")
+                                elif heart_rate == 0:
+                                    logger.warning("Heart rate is 0 - no heart rate sensor detected or connected")
+                                
                                 offset += 1
                         
                         # Metabolic Equivalent (present if bit 10 is set)
