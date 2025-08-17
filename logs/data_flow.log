@@ -420,3 +420,73 @@
 2025-08-17 10:54:30,294 - data_validator - INFO - Data validation - Quality: good, Corrections: 1, Warnings: 1
 2025-08-17 10:54:31,313 - data_validator - INFO - Data validation - Quality: good, Corrections: 1, Warnings: 1
 2025-08-17 10:54:32,305 - data_validator - INFO - Data validation - Quality: acceptable, Corrections: 4, Warnings: 4
+2025-08-17 10:59:43,869 - database - INFO - Database tables created
+2025-08-17 10:59:43,869 - database - INFO - Database tables created
+2025-08-17 10:59:43,873 - data_validator - INFO - Data validator initialized
+2025-08-17 10:59:44,856 - database - INFO - Database tables created
+2025-08-17 10:59:44,862 - database - INFO - Database tables created
+2025-08-17 10:59:44,864 - data_validator - INFO - Data validator initialized
+2025-08-17 11:00:17,504 - database - INFO - Retrieved 7 workouts from database
+2025-08-17 11:01:23,522 - data_validator - INFO - Data validation - Quality: acceptable, Corrections: 3, Warnings: 3
+2025-08-17 11:01:24,515 - data_validator - INFO - Data validation - Quality: acceptable, Corrections: 3, Warnings: 3
+2025-08-17 11:01:25,531 - data_validator - INFO - Data validation - Quality: acceptable, Corrections: 3, Warnings: 3
+2025-08-17 11:01:26,640 - data_validator - INFO - Data validation - Quality: acceptable, Corrections: 3, Warnings: 3
+2025-08-17 11:01:27,514 - data_validator - INFO - Data validation - Quality: acceptable, Corrections: 3, Warnings: 3
+2025-08-17 11:01:28,560 - data_validator - INFO - Data validation - Quality: acceptable, Corrections: 3, Warnings: 3
+2025-08-17 11:01:29,521 - data_validator - INFO - Data validation - Quality: acceptable, Corrections: 3, Warnings: 3
+2025-08-17 11:01:30,543 - data_validator - INFO - Data validation - Quality: acceptable, Corrections: 3, Warnings: 3
+2025-08-17 11:01:31,619 - data_validator - INFO - Data validation - Quality: acceptable, Corrections: 4, Warnings: 4
+2025-08-17 11:01:32,521 - data_validator - INFO - Data validation - Quality: acceptable, Corrections: 4, Warnings: 4
+2025-08-17 11:01:33,515 - data_validator - INFO - Data validation - Quality: acceptable, Corrections: 4, Warnings: 4
+2025-08-17 11:03:17,126 - database - INFO - Database tables created
+2025-08-17 11:03:17,126 - database - INFO - Database tables created
+2025-08-17 11:03:17,147 - data_validator - INFO - Data validator initialized
+2025-08-17 11:03:18,512 - database - INFO - Database tables created
+2025-08-17 11:03:18,512 - database - INFO - Database tables created
+2025-08-17 11:03:18,520 - data_validator - INFO - Data validator initialized
+2025-08-17 11:03:48,570 - data_validator - INFO - Data validation - Quality: excellent, Corrections: 1, Warnings: 0
+2025-08-17 11:03:49,590 - data_validator - INFO - Data validation - Quality: excellent, Corrections: 1, Warnings: 0
+2025-08-17 11:03:50,577 - data_validator - INFO - Data validation - Quality: excellent, Corrections: 1, Warnings: 0
+2025-08-17 11:03:51,780 - data_validator - INFO - Data validation - Quality: excellent, Corrections: 1, Warnings: 0
+2025-08-17 11:03:52,590 - data_validator - INFO - Data validation - Quality: excellent, Corrections: 1, Warnings: 0
+2025-08-17 11:03:53,695 - data_validator - INFO - Data validation - Quality: excellent, Corrections: 1, Warnings: 0
+2025-08-17 11:03:54,569 - data_validator - INFO - Data validation - Quality: excellent, Corrections: 1, Warnings: 0
+2025-08-17 11:03:55,589 - data_validator - INFO - Data validation - Quality: excellent, Corrections: 1, Warnings: 0
+2025-08-17 11:03:56,788 - data_validator - INFO - Data validation - Quality: excellent, Corrections: 1, Warnings: 0
+2025-08-17 11:03:57,565 - data_validator - INFO - Data validation - Quality: excellent, Corrections: 1, Warnings: 0
+2025-08-17 11:03:58,555 - data_validator - INFO - Data validation - Quality: excellent, Corrections: 1, Warnings: 0
+2025-08-17 11:03:59,790 - data_validator - INFO - Data validation - Quality: excellent, Corrections: 1, Warnings: 0
+2025-08-17 11:04:00,565 - data_validator - INFO - Data validation - Quality: excellent, Corrections: 1, Warnings: 0
+2025-08-17 11:04:01,525 - data_validator - INFO - Data validation - Quality: excellent, Corrections: 1, Warnings: 0
+2025-08-17 11:04:02,666 - data_validator - INFO - Data validation - Quality: excellent, Corrections: 1, Warnings: 0
+2025-08-17 11:04:03,626 - data_validator - INFO - Data validation - Quality: excellent, Corrections: 1, Warnings: 0
+2025-08-17 11:05:16,288 - database - INFO - Database tables created
+2025-08-17 11:05:16,291 - database - INFO - Database tables created
+2025-08-17 11:05:16,305 - data_validator - INFO - Data validator initialized
+2025-08-17 11:05:17,424 - database - INFO - Database tables created
+2025-08-17 11:05:17,430 - database - INFO - Database tables created
+2025-08-17 11:05:17,430 - data_validator - INFO - Data validator initialized
+2025-08-17 11:07:56,260 - data_validator - INFO - Data validation - Quality: good, Corrections: 1, Warnings: 1
+2025-08-17 11:07:57,316 - data_validator - INFO - Data validation - Quality: good, Corrections: 1, Warnings: 1
+2025-08-17 11:07:58,275 - data_validator - INFO - Data validation - Quality: good, Corrections: 1, Warnings: 1
+2025-08-17 11:07:59,262 - data_validator - INFO - Data validation - Quality: good, Corrections: 1, Warnings: 1
+2025-08-17 11:08:00,342 - data_validator - INFO - Data validation - Quality: good, Corrections: 1, Warnings: 1
+2025-08-17 11:08:01,275 - data_validator - INFO - Data validation - Quality: good, Corrections: 1, Warnings: 1
+2025-08-17 11:08:02,267 - data_validator - INFO - Data validation - Quality: good, Corrections: 1, Warnings: 1
+2025-08-17 11:08:03,286 - data_validator - INFO - Data validation - Quality: good, Corrections: 1, Warnings: 1
+2025-08-17 11:08:04,310 - data_validator - INFO - Data validation - Quality: good, Corrections: 1, Warnings: 1
+2025-08-17 11:08:05,268 - data_validator - INFO - Data validation - Quality: good, Corrections: 1, Warnings: 1
+2025-08-17 11:08:06,378 - data_validator - INFO - Data validation - Quality: good, Corrections: 1, Warnings: 1
+2025-08-17 11:08:07,277 - data_validator - INFO - Data validation - Quality: good, Corrections: 1, Warnings: 1
+2025-08-17 11:08:11,268 - data_validator - INFO - Data validation - Quality: good, Corrections: 1, Warnings: 1
+2025-08-17 11:08:12,287 - data_validator - INFO - Data validation - Quality: good, Corrections: 1, Warnings: 1
+2025-08-17 11:08:13,337 - data_validator - INFO - Data validation - Quality: good, Corrections: 1, Warnings: 1
+2025-08-17 11:08:14,260 - data_validator - INFO - Data validation - Quality: good, Corrections: 1, Warnings: 1
+2025-08-17 11:08:15,289 - data_validator - INFO - Data validation - Quality: good, Corrections: 1, Warnings: 1
+2025-08-17 11:08:16,337 - data_validator - INFO - Data validation - Quality: good, Corrections: 1, Warnings: 1
+2025-08-17 11:08:22,548 - database - INFO - Database tables created
+2025-08-17 11:08:22,548 - database - INFO - Database tables created
+2025-08-17 11:08:22,548 - data_validator - INFO - Data validator initialized
+2025-08-17 11:08:23,492 - database - INFO - Database tables created
+2025-08-17 11:08:23,492 - database - INFO - Database tables created
+2025-08-17 11:08:23,492 - data_validator - INFO - Data validator initialized

@@ -1,0 +1,21 @@
+2025-08-17 11:04:00,171 - alerts - WARNING - ALERT [MEDIUM] bluetooth_connection: Connection failure detected
+2025-08-17 11:04:00,171 - alerts - WARNING - ALERT [MEDIUM] ftms: Connection failure detected
+2025-08-17 11:04:00,173 - alerts - WARNING - ALERT [MEDIUM] ftms_manager: Connection timed out - device may be out of range or busy
+2025-08-17 11:05:34,148 - alerts - WARNING - ALERT [MEDIUM] ftms_connector: Connection failure detected
+2025-08-17 11:05:45,220 - alerts - WARNING - ALERT [MEDIUM] bluetooth_connection: Connection failure detected
+2025-08-17 11:05:45,229 - alerts - WARNING - ALERT [MEDIUM] ftms: Connection failure detected
+2025-08-17 11:05:45,229 - alerts - WARNING - ALERT [MEDIUM] ftms_manager: Connection timed out - device may be out of range or busy
+2025-08-17 11:05:50,375 - alerts - WARNING - ALERT [MEDIUM] ftms_connector: Connection failure detected
+2025-08-17 11:05:54,040 - alerts - WARNING - ALERT [MEDIUM] ftms_connector: Connection failure detected
+2025-08-17 11:06:01,137 - alerts - WARNING - ALERT [MEDIUM] bluetooth_connection: Connection failure detected
+2025-08-17 11:06:01,140 - alerts - WARNING - ALERT [MEDIUM] ftms: Connection failure detected
+2025-08-17 11:06:01,140 - alerts - WARNING - ALERT [MEDIUM] ftms_manager: Connection timed out - device may be out of range or busy
+2025-08-17 11:06:22,703 - alerts - WARNING - ALERT [MEDIUM] bluetooth_connection: Connection failure detected
+2025-08-17 11:06:22,703 - alerts - WARNING - ALERT [MEDIUM] ftms: Connection failure detected
+2025-08-17 11:06:22,703 - alerts - WARNING - ALERT [MEDIUM] ftms_manager: Connection timed out - device may be out of range or busy
+2025-08-17 11:07:29,202 - alerts - WARNING - ALERT [MEDIUM] ftms_connector: Connection failure detected
+2025-08-17 11:07:33,035 - alerts - WARNING - ALERT [MEDIUM] bluetooth_connection: Connection failure detected
+2025-08-17 11:07:33,035 - alerts - WARNING - ALERT [MEDIUM] ftms: Connection failure detected
+2025-08-17 11:07:33,039 - alerts - WARNING - ALERT [MEDIUM] ftms_manager: Connection timed out - device may be out of range or busy
+2025-08-17 11:07:35,469 - alerts - WARNING - ALERT [MEDIUM] ftms_connector: Connection failure detected
+2025-08-17 11:07:39,950 - alerts - WARNING - ALERT [MEDIUM] ftms_connector: Connection failure detected

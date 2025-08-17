@@ -204,9 +204,23 @@ class FTMSDeviceManager:
                 
                 # Store the latest received data for use in status API
                 self.latest_data = None
-                
                 self.device_status = "connected"
                 logger.info(f"Connected to device: {self.connected_device.get('name', 'Unknown')}")
+
+                # Ensure device is registered in the database
+                if self.workout_manager:
+                    db = self.workout_manager.database
+                    address = self.connected_device.get("address")
+                    name = self.connected_device.get("name", "Unknown Device")
+                    device_type = "bike" if "bike" in name.lower() else ("rower" if "rower" in name.lower() else "unknown")
+                    metadata = self.connected_device.get("metadata", {})
+                    device_id = db.get_device_id_by_address(address)
+                    if device_id is None and address:
+                        try:
+                            db.add_device(address, name, device_type, metadata)
+                            logger.info(f"Device {name} ({address}) added to database on connect.")
+                        except Exception as e:
+                            logger.error(f"Error adding device to database on connect: {str(e)}")
             
             # For 'disconnected' status
             elif status == "disconnected":
