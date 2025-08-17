@@ -220,37 +220,30 @@ class WorkoutMonitor {
         }
     }
     
-    async fetchWorkoutData() {
-        const startTime = performance.now();
+    handleFetchError(error) {
+        // Handle fetch errors and update connection quality
+        this.connectionQuality.consecutiveFailures++;
         
-        try {
-            const response = await fetch('/api/status');
-            const data = await response.json();
-            
-            // Update connection quality
-            this.connectionQuality.consecutiveFailures = 0;
-            this.connectionQuality.lastSuccessTime = Date.now();
-            this.updateConnectionQuality('good');
-            
-            // Cache the data
-            this.cacheData(data);
-            
-            // Process the data
-            this.processWorkoutData(data);
-            
-            // Track performance
-            const updateTime = performance.now() - startTime;
-            this.trackPerformance(updateTime);
-            
-            // Adaptive polling based on data changes
-            if (this.adaptivePollRate) {
-                this.adjustPollRate(data);
-            }
-            
-        } catch (error) {
-            console.error('Error fetching workout data:', error);
-            this.handleFetchError(error);
+        if (this.connectionQuality.consecutiveFailures >= 3) {
+            this.updateConnectionQuality('poor');
+        } else if (this.connectionQuality.consecutiveFailures >= 2) {
+            this.updateConnectionQuality('fair');
         }
+        
+        // If too many consecutive failures, reduce poll rate
+        if (this.connectionQuality.consecutiveFailures >= 5 && this.pollRate < 5000) {
+            this.pollRate = Math.min(this.pollRate * 2, 5000);
+            this.stopPolling();
+            this.startPolling();
+            console.warn(`Increased poll rate to ${this.pollRate}ms due to connection issues`);
+        }
+        
+        // Log the error for debugging
+        console.error('Fetch error details:', {
+            error: error.message,
+            consecutiveFailures: this.connectionQuality.consecutiveFailures,
+            pollRate: this.pollRate
+        });
     }
     
     cacheData(data) {
@@ -453,20 +446,6 @@ class WorkoutMonitor {
         if (!this.isUpdatingCharts) {
             this.processChartUpdateQueue();
         }
-    }
-    
-    async processChartUpdateQueue() {
-        if (this.chartUpdateQueue.length === 0) return;
-        
-        this.isUpdatingCharts = true;
-        
-        // Process all queued updates
-        while (this.chartUpdateQueue.length > 0) {
-            const data = this.chartUpdateQueue.shift();
-            await this.updateCharts(data);
-        }
-        
-        this.isUpdatingCharts = false;
     }
     
     async updateCharts(data) {
@@ -772,6 +751,189 @@ class WorkoutMonitor {
         // This method can be expanded to apply user-defined chart preferences
         // e.g., changing colors, line styles, visible charts, etc.
         console.log('Applying chart preferences:', preferences);
+    }
+    
+    resizeCharts() {
+        // Resize all charts when window is resized
+        Object.values(this.charts).forEach(chart => {
+            if (chart && chart.resize) {
+                chart.resize();
+            }
+        });
+    }
+    
+    updateWorkoutSummary(summaryData) {
+        // Update the workout summary display
+        const summaryElement = document.getElementById('workout-summary');
+        if (!summaryElement) return;
+        
+        if (!summaryData || Object.keys(summaryData).length === 0) {
+            summaryElement.innerHTML = '<p>Start a workout to see summary metrics.</p>';
+            return;
+        }
+        
+        // Create summary HTML
+        let html = '<div class="row">';
+        
+        // Average power
+        const avgPower = summaryData.avg_power || 0;
+        html += `
+            <div class="col-6">
+                <p><strong>Avg Power:</strong> <span>${Math.round(avgPower)}</span> W</p>
+            </div>
+        `;
+        
+        // Average heart rate
+        const avgHeartRate = summaryData.avg_heart_rate || 0;
+        html += `
+            <div class="col-6">
+                <p><strong>Avg Heart Rate:</strong> <span>${Math.round(avgHeartRate)}</span> bpm</p>
+            </div>
+        `;
+        
+        // Average cadence or stroke rate
+        const workoutType = summaryData.workout_type || 'bike';
+        if (workoutType === 'bike') {
+            const avgCadence = summaryData.avg_cadence || 0;
+            html += `
+                <div class="col-6">
+                    <p><strong>Avg Cadence:</strong> <span>${Math.round(avgCadence)}</span> rpm</p>
+                </div>
+            `;
+        } else if (workoutType === 'rower') {
+            const avgStrokeRate = summaryData.avg_stroke_rate || 0;
+            html += `
+                <div class="col-6">
+                    <p><strong>Avg Stroke Rate:</strong> <span>${Math.round(avgStrokeRate)}</span> spm</p>
+                </div>
+            `;
+        }
+        
+        // Average speed
+        const avgSpeed = summaryData.avg_speed || 0;
+        html += `
+            <div class="col-6">
+                <p><strong>Avg Speed:</strong> <span>${avgSpeed.toFixed(1)}</span> km/h</p>
+            </div>
+        `;
+        
+        // Total distance
+        const totalDistance = summaryData.total_distance || 0;
+        const distanceKm = totalDistance / 1000;
+        html += `
+            <div class="col-6">
+                <p><strong>Total Distance:</strong> <span>${distanceKm.toFixed(2)}</span> km</p>
+            </div>
+        `;
+        
+        // Total calories
+        const totalCalories = summaryData.total_calories || 0;
+        html += `
+            <div class="col-6">
+                <p><strong>Total Calories:</strong> <span>${Math.round(totalCalories)}</span> kcal</p>
+            </div>
+        `;
+        
+        html += '</div>';
+        summaryElement.innerHTML = html;
+    }
+    
+    async loadUserPreferences() {
+        try {
+            const response = await fetch('/api/settings');
+            const data = await response.json();
+            
+            if (data.success && data.settings) {
+                this.pollRate = data.settings.poll_rate || 1000;
+                this.adaptivePollRate = data.settings.adaptive_polling !== false;
+                
+                // Update chart preferences
+                if (data.settings.chart_preferences) {
+                    this.updateChartPreferences(data.settings.chart_preferences);
+                }
+            }
+        } catch (error) {
+            console.warn('Could not load user preferences:', error);
+        }
+    }
+    
+    async fetchWorkoutData() {
+        const startTime = performance.now();
+        
+        try {
+            const response = await fetch('/api/status');
+            const data = await response.json();
+            
+            // Update connection quality
+            this.connectionQuality.consecutiveFailures = 0;
+            this.connectionQuality.lastSuccessTime = Date.now();
+            this.updateConnectionQuality('good');
+            
+            // Cache the data
+            this.cacheData(data);
+            
+            // Process the data
+            this.processWorkoutData(data);
+            
+            // Track performance
+            const updateTime = performance.now() - startTime;
+            this.trackPerformance(updateTime);
+            
+            // Adaptive polling based on data changes
+            if (this.adaptivePollRate) {
+                this.adjustPollRate(data);
+            }
+            
+        } catch (error) {
+            console.error('Error fetching workout data:', error);
+            this.handleFetchError(error);
+        }
+    }
+    
+    async processChartUpdateQueue() {
+        if (this.chartUpdateQueue.length === 0) return;
+        
+        this.isUpdatingCharts = true;
+        
+        // Process all queued updates
+        while (this.chartUpdateQueue.length > 0) {
+            const data = this.chartUpdateQueue.shift();
+            await this.updateCharts(data);
+        }
+        
+        this.isUpdatingCharts = false;
+    }
+    
+    async updateCharts(data) {
+        const maxDataPoints = 60; // 1 minute of data
+        
+        // Update power chart
+        if (this.charts.power && (data.instant_power !== undefined || data.power !== undefined)) {
+            const power = data.instant_power || data.power || 0;
+            this.updateChartData(this.charts.power, power, maxDataPoints);
+        }
+        
+        // Update heart rate chart
+        if (this.charts.heartRate && data.heart_rate !== undefined) {
+            this.updateChartData(this.charts.heartRate, data.heart_rate, maxDataPoints);
+        }
+        
+        // Update cadence chart
+        if (this.charts.cadence) {
+            const workoutType = data.type || data.device_type || 'bike';
+            let cadenceValue = 0;
+            
+            if (workoutType === 'bike') {
+                cadenceValue = data.instant_cadence || data.instantaneous_cadence || data.cadence || 0;
+            } else if (workoutType === 'rower') {
+                cadenceValue = data.stroke_rate || 0;
+            }
+            
+            this.updateChartData(this.charts.cadence, cadenceValue, maxDataPoints);
+        }
+        
+        // Batch update all charts
+        this.batchUpdateCharts();
     }
 
     // Update button states based on connection and workout status
