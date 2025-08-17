@@ -19,3 +19,4 @@
 2025-08-17 11:07:33,039 - alerts - WARNING - ALERT [MEDIUM] ftms_manager: Connection timed out - device may be out of range or busy
 2025-08-17 11:07:35,469 - alerts - WARNING - ALERT [MEDIUM] ftms_connector: Connection failure detected
 2025-08-17 11:07:39,950 - alerts - WARNING - ALERT [MEDIUM] ftms_connector: Connection failure detected
+2025-08-17 11:25:19,468 - alerts - WARNING - ALERT [MEDIUM] ftms_connector: Connection failure detected

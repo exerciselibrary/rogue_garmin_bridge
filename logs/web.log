@@ -176,3 +176,61 @@ concurrent.futures._base.CancelledError
 2025-08-17 11:08:23,513 - web - INFO - Starting background asyncio event loop run_forever.
 2025-08-17 11:08:51,983 - web - INFO - Scheduling connect task for C9:02:CB:68:17:C1 with device_type auto on background loop.
 2025-08-17 11:08:56,844 - web - INFO - Connect task for C9:02:CB:68:17:C1 (device_type: auto) completed with result: True
+2025-08-17 11:17:29,206 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-17 11:17:29,220 - web - INFO - Using real FTMS devices
+2025-08-17 11:17:29,223 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-17 11:17:29,225 - web - INFO - Starting background asyncio loop thread...
+2025-08-17 11:17:29,225 - web - INFO - Background thread started. Creating new event loop.
+2025-08-17 11:17:29,225 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-17 11:17:29,245 - web - INFO - Starting background asyncio event loop run_forever.
+2025-08-17 11:17:30,509 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-17 11:17:30,518 - web - INFO - Using real FTMS devices
+2025-08-17 11:17:30,518 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-17 11:17:30,518 - web - INFO - Starting background asyncio loop thread...
+2025-08-17 11:17:30,523 - web - INFO - Background thread started. Creating new event loop.
+2025-08-17 11:17:30,523 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-17 11:17:30,545 - web - INFO - Starting background asyncio event loop run_forever.
+2025-08-17 11:18:12,483 - web - INFO - Scheduling connect task for C9:02:CB:68:17:C1 with device_type auto on background loop.
+2025-08-17 11:18:19,730 - web - INFO - Connect task for C9:02:CB:68:17:C1 (device_type: auto) completed with result: True
+2025-08-17 11:19:32,335 - web - INFO - Scheduling disconnect task on the background loop.
+2025-08-17 11:19:34,887 - web - INFO - Scheduling disconnect task on the background loop.
+2025-08-17 11:19:35,570 - web - INFO - Disconnect task completed with result: True
+2025-08-17 11:19:35,570 - web - INFO - Disconnect task completed with result: True
+2025-08-17 11:23:22,624 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-17 11:23:22,633 - web - INFO - Using real FTMS devices
+2025-08-17 11:23:22,635 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-17 11:23:22,635 - web - INFO - Starting background asyncio loop thread...
+2025-08-17 11:23:22,635 - web - INFO - Background thread started. Creating new event loop.
+2025-08-17 11:23:22,639 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-17 11:23:22,658 - web - INFO - Starting background asyncio event loop run_forever.
+2025-08-17 11:23:23,960 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-17 11:23:23,965 - web - INFO - Using real FTMS devices
+2025-08-17 11:23:23,965 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-17 11:23:23,968 - web - INFO - Starting background asyncio loop thread...
+2025-08-17 11:23:23,968 - web - INFO - Background thread started. Creating new event loop.
+2025-08-17 11:23:23,968 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-17 11:23:23,985 - web - INFO - Starting background asyncio event loop run_forever.
+2025-08-17 11:24:10,409 - web - INFO - Scheduling connect task for C9:02:CB:68:17:C1 with device_type auto on background loop.
+2025-08-17 11:24:15,461 - web - INFO - Connect task for C9:02:CB:68:17:C1 (device_type: auto) completed with result: True
+2025-08-17 11:25:16,783 - web - INFO - Scheduling connect task for C9:02:CB:68:17:C1 with device_type auto on background loop.
+2025-08-17 11:25:31,498 - web - INFO - Connect task for C9:02:CB:68:17:C1 (device_type: auto) completed with result: True
+2025-08-17 11:30:49,900 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-17 11:30:49,909 - web - INFO - Using real FTMS devices
+2025-08-17 11:30:49,909 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-17 11:30:49,910 - web - INFO - Starting background asyncio loop thread...
+2025-08-17 11:30:49,911 - web - INFO - Background thread started. Creating new event loop.
+2025-08-17 11:30:49,911 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-17 11:30:49,920 - web - INFO - Starting background asyncio event loop run_forever.
+2025-08-17 11:30:50,759 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-17 11:30:50,762 - web - INFO - Using real FTMS devices
+2025-08-17 11:30:50,762 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-17 11:30:50,762 - web - INFO - Starting background asyncio loop thread...
+2025-08-17 11:30:50,763 - web - INFO - Background thread started. Creating new event loop.
+2025-08-17 11:30:50,763 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-17 11:30:50,773 - web - INFO - Starting background asyncio event loop run_forever.
+2025-08-17 11:32:02,405 - web - INFO - Scheduling connect task for C9:02:CB:68:17:C1 with device_type auto on background loop.
+2025-08-17 11:32:10,088 - web - INFO - Connect task for C9:02:CB:68:17:C1 (device_type: auto) completed with result: True
+2025-08-17 11:32:51,361 - web - INFO - Getting workouts with limit=100, offset=0
+2025-08-17 11:32:51,363 - web - INFO - Getting workouts with limit=1000, offset=0
+2025-08-17 11:32:51,365 - web - INFO - Retrieved 11 workouts from database
+2025-08-17 11:32:51,365 - web - INFO - Retrieved 11 workouts from database

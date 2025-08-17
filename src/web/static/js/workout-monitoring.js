@@ -115,6 +115,8 @@ class WorkoutMonitor {
                     if (data.success) {
                         console.log("Workout started successfully:", data.workout_id);
                         this.start(); // Start monitoring
+                        // Force status refresh to update button states and UI
+                        await this.fetchWorkoutData();
                     } else {
                         console.error("Failed to start workout:", data.error);
                         alert("Failed to start workout: " + data.error);
@@ -288,6 +290,15 @@ class WorkoutMonitor {
         // Update button states based on connection and workout status
         this.updateButtonStates(data.device_status, data.workout_active);
 
+        // If workout is active but end button is disabled, force UI update
+        const endWorkoutBtn = document.getElementById("end-workout-btn");
+        if (data.workout_active && endWorkoutBtn && endWorkoutBtn.disabled) {
+            endWorkoutBtn.disabled = false;
+        }
+        // If workout is active and summary is missing, force summary update
+        if (data.workout_active && (!data.latest_data || !data.latest_data.workout_summary)) {
+            this.updateWorkoutSummary({});
+        }
     }
     
     updateStatusDisplay(data) {
