@@ -82,6 +82,73 @@ class WorkoutMonitor {
         window.addEventListener('resize', this.debounce(() => {
             this.resizeCharts();
         }, 250));
+
+        // Event Listeners for Workout Buttons
+        const startWorkoutBtn = document.getElementById('start-workout-btn');
+        const endWorkoutBtn = document.getElementById('end-workout-btn');
+
+        if (startWorkoutBtn) {
+            startWorkoutBtn.addEventListener("click", async () => {
+                try {
+                    const connectedDeviceAddress = this.dataCache.status?.connected_device_address;
+                    const connectedDeviceName = this.dataCache.status?.connected_device?.name;
+
+                    if (!connectedDeviceAddress || !connectedDeviceName) {
+                        console.error("Cannot start workout: Device address or name is missing.");
+                        alert("Cannot start workout: Please ensure a device is connected.");
+                        return;
+                    }
+
+                    const workoutType = connectedDeviceName.toLowerCase().includes("rower") ? "rower" : "bike";
+
+                    const response = await fetch("/api/start_workout", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            device_id: connectedDeviceAddress, 
+                            workout_type: workoutType,
+                        }),
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        console.log("Workout started successfully:", data.workout_id);
+                        this.start(); // Start monitoring
+                    } else {
+                        console.error("Failed to start workout:", data.error);
+                        alert("Failed to start workout: " + data.error);
+                    }
+                } catch (error) {
+                    console.error("Error starting workout:", error);
+                    alert("Error starting workout: " + error.message);
+                }
+            });
+        }
+
+        if (endWorkoutBtn) {
+            endWorkoutBtn.addEventListener("click", async () => {
+                try {
+                    const response = await fetch("/api/end_workout", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        console.log("Workout ended successfully.");
+                        this.stop(); // Stop monitoring
+                    } else {
+                        console.error("Failed to end workout:", data.error);
+                        alert("Failed to end workout: " + data.error);
+                    }
+                } catch (error) {
+                    console.error("Error ending workout:", error);
+                    alert("Error ending workout: " + error.message);
+                }
+            });
+        }
     }
     
     async loadUserPreferences() {
@@ -217,6 +284,9 @@ class WorkoutMonitor {
         if (data.latest_data && data.latest_data.workout_summary) {
             this.updateWorkoutSummary(data.latest_data.workout_summary);
         }
+
+        // Update button states based on connection and workout status
+        this.updateButtonStates(data);
     }
     
     updateStatusDisplay(data) {
@@ -622,9 +692,13 @@ class WorkoutMonitor {
     }
 
     initializeCharts() {
-        // Ensure Chart.js is loaded
-        if (typeof Chart === 'undefined') {
-            console.error('Chart.js is not loaded. Cannot initialize charts.');
+        // Ensure Chart.js is loaded and DOM elements exist
+        const powerChartCtx = document.getElementById('power-chart');
+        const heartRateChartCtx = document.getElementById('heart-rate-chart');
+        const cadenceChartCtx = document.getElementById('cadence-chart');
+
+        if (!powerChartCtx || !heartRateChartCtx || !cadenceChartCtx || typeof Chart === 'undefined') {
+            console.warn('Chart elements or Chart.js not found. Charts will not be initialized.');
             return;
         }
 
@@ -650,7 +724,9 @@ class WorkoutMonitor {
         };
 
         const createChart = (ctxId, label, borderColor, backgroundColor) => {
-            const ctx = document.getElementById(ctxId).getContext('2d');
+            const ctx = document.getElementById(ctxId)?.getContext('2d');
+            if (!ctx) return null; // Return null if context is not found
+
             return new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -678,100 +754,29 @@ class WorkoutMonitor {
         // e.g., changing colors, line styles, visible charts, etc.
         console.log('Applying chart preferences:', preferences);
     }
+
+    // Update button states based on connection and workout status
+    updateButtonStates(data) {
+        const startWorkoutBtn = document.getElementById('start-workout-btn');
+        const endWorkoutBtn = document.getElementById('end-workout-btn');
+
+        if (startWorkoutBtn && endWorkoutBtn) {
+            if (data.device_status === 'connected' && !data.workout_active) {
+                startWorkoutBtn.disabled = false;
+                endWorkoutBtn.disabled = true;
+            } else if (data.device_status === 'connected' && data.workout_active) {
+                startWorkoutBtn.disabled = true;
+                endWorkoutBtn.disabled = false;
+            } else {
+                startWorkoutBtn.disabled = true;
+                endWorkoutBtn.disabled = true;
+            }
+        }
+    }
 }
 
 // Initialize the WorkoutMonitor
 const workoutMonitor = new WorkoutMonitor();
-
-// DOM elements
-const statusText = document.getElementById('status-text');
-const deviceName = document.getElementById('device-name');
-const workoutStatus = document.getElementById('workout-status');
-const workoutDuration = document.getElementById('workout-duration');
-const startWorkoutBtn = document.getElementById('start-workout-btn');
-const endWorkoutBtn = document.getElementById('end-workout-btn');
-
-// Metric elements
-const powerValue = document.getElementById('power-value');
-const heartRateValue = document.getElementById('heart-rate-value');
-const cadenceLabel = document.getElementById('cadence-label');
-const cadenceValue = document.getElementById('cadence-value');
-const cadenceUnit = document.getElementById('cadence-unit');
-const speedValue = document.getElementById('speed-value');
-const speedUnit = document.querySelector('.metric-card:has(#speed-value) .metric-unit');
-const distanceValue = document.getElementById('distance-value');
-const distanceUnit = document.querySelector('.metric-card:has(#distance-value) .metric-unit');
-const caloriesValue = document.getElementById('calories-value');
-
-// Event Listeners for Workout Buttons
-startWorkoutBtn.addEventListener("click", async () => {
-    try {
-        const response = await fetch("/api/start_workout", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                device_id: workoutMonitor.dataCache.status.connected_device_address, // Assuming device_id is the address
-                workout_type: workoutMonitor.dataCache.status.connected_device.name.toLowerCase().includes("rower") ? "rower" : "bike",
-            }),
-        });
-        const data = await response.json();
-        if (data.success) {
-            console.log("Workout started successfully:", data.workout_id);
-            workoutMonitor.start(); // Start monitoring
-        } else {
-            console.error("Failed to start workout:", data.error);
-            alert("Failed to start workout: " + data.error);
-        }
-    } catch (error) {
-        console.error("Error starting workout:", error);
-        alert("Error starting workout: " + error.message);
-    }
-});
-
-endWorkoutBtn.addEventListener("click", async () => {
-    try {
-        const response = await fetch("/api/end_workout", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
-        const data = await response.json();
-        if (data.success) {
-            console.log("Workout ended successfully.");
-            workoutMonitor.stop(); // Stop monitoring
-        } else {
-            console.error("Failed to end workout:", data.error);
-            alert("Failed to end workout: " + data.error);
-        }
-    } catch (error) {
-        console.error("Error ending workout:", error);
-        alert("Error ending workout: " + error.message);
-    }
-});
-
-// Update button states based on connection and workout status
-function updateButtonStates(data) {
-    if (data.device_status === 'connected' && !data.workout_active) {
-        startWorkoutBtn.disabled = false;
-        endWorkoutBtn.disabled = true;
-    } else if (data.device_status === 'connected' && data.workout_active) {
-        startWorkoutBtn.disabled = true;
-        endWorkoutBtn.disabled = false;
-    } else {
-        startWorkoutBtn.disabled = true;
-        endWorkoutBtn.disabled = true;
-    }
-}
-
-// Modify processWorkoutData to call updateButtonStates
-const originalProcessWorkoutData = workoutMonitor.processWorkoutData;
-workoutMonitor.processWorkoutData = function(data) {
-    originalProcessWorkoutData.call(this, data);
-    updateButtonStates(data);
-};
 
 // Initial load of user preferences and start monitoring
 workoutMonitor.loadUserPreferences().then(() => {
