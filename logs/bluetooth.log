@@ -18077,3 +18077,15 @@
 2025-08-17 11:33:49,965 - ftms_connector - INFO - Parsed bike data: {'device_type': 'bike', 'timestamp': '2025-08-17T11:33:49.961615', 'speed': 0.0, 'average_speed': 0.61, 'cadence': 0.0, 'average_cadence': 16.0, 'distance': 257, 'power': 0, 'average_power': 12, 'total_energy': 1, 'energy_per_hour': 0, 'energy_per_minute': 0, 'heart_rate': 81, 'elapsed_time': 97}
 2025-08-17 11:33:49,965 - ftms - WARNING - Data quality warnings: ['Statistical outlier detected in speed', 'Statistical outlier detected in cadence', 'Statistical outlier detected in power', 'Statistical outlier detected in heart_rate']
 2025-08-17 11:33:49,967 - ftms - INFO - Data corrections applied: ['Outlier detected in speed: 0.0 -> 12.564538574218751 (z-score: 9.67)', 'Outlier detected in cadence: 0.0 -> 21.030288696289062 (z-score: 9.70)', 'Outlier detected in power: 0 -> 18.060577392578125 (z-score: 4.81)', 'Outlier detected in heart_rate: 81 -> 74.0 (z-score: 5.73)']
+2025-08-17 11:58:56,369 - bluetooth_connection - INFO - Bluetooth Connection Manager initialized
+2025-08-17 11:58:56,369 - ftms_connector - INFO - FTMS Connector initialized with device type: bike
+2025-08-17 11:58:56,370 - ftms - INFO - Using FTMSConnector for real device with device type: bike.
+2025-08-17 11:58:56,370 - ftms_connector - INFO - Data callback _handle_data registered.
+2025-08-17 11:58:56,370 - ftms_connector - INFO - Status callback _handle_status registered.
+2025-08-17 11:58:56,955 - bluetooth_connection - INFO - Bluetooth Connection Manager initialized
+2025-08-17 11:58:56,956 - ftms_connector - INFO - FTMS Connector initialized with device type: bike
+2025-08-17 11:58:56,956 - ftms - INFO - Using FTMSConnector for real device with device type: bike.
+2025-08-17 11:58:56,956 - ftms_connector - INFO - Data callback _handle_data registered.
+2025-08-17 11:58:56,957 - ftms_connector - INFO - Status callback _handle_status registered.
+2025-08-17 12:00:25,916 - ftms_connector - INFO - Scanning for FTMS devices for 5 seconds...
+2025-08-17 12:00:31,059 - ftms_connector - INFO - Discovered 0 FTMS devices

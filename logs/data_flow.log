@@ -1625,3 +1625,36 @@
 2025-08-17 11:33:49,965 - data_validator - INFO - Data validation - Quality: acceptable, Corrections: 4, Warnings: 4
 2025-08-17 11:53:14,241 - database - INFO - Database tables created
 2025-08-17 11:55:39,513 - database - INFO - Database tables created
+2025-08-17 11:58:56,367 - database - INFO - Database tables created
+2025-08-17 11:58:56,368 - database - INFO - Database tables created
+2025-08-17 11:58:56,369 - data_validator - INFO - Data validator initialized
+2025-08-17 11:58:56,954 - database - INFO - Database tables created
+2025-08-17 11:58:56,954 - database - INFO - Database tables created
+2025-08-17 11:58:56,956 - data_validator - INFO - Data validator initialized
+2025-08-17 12:00:17,753 - database - INFO - Retrieved 10 workouts from database
+2025-08-17 12:00:39,823 - database - INFO - Retrieved 11 workouts from database
+2025-08-17 12:00:39,825 - database - INFO - Retrieved 11 workouts from database
+2025-08-17 12:00:49,253 - database - INFO - Deleted all data points for workout 14
+2025-08-17 12:00:49,253 - database - INFO - Deleted workout 14
+2025-08-17 12:00:51,892 - database - INFO - Deleted all data points for workout 14
+2025-08-17 12:00:51,892 - database - WARNING - No workout found with ID 14 to delete
+2025-08-17 12:00:54,440 - database - INFO - Deleted all data points for workout 18
+2025-08-17 12:00:54,440 - database - INFO - Deleted workout 18
+2025-08-17 12:00:55,900 - database - INFO - Deleted all data points for workout 18
+2025-08-17 12:00:55,900 - database - WARNING - No workout found with ID 18 to delete
+2025-08-17 12:00:58,084 - database - INFO - Deleted all data points for workout 18
+2025-08-17 12:00:58,084 - database - WARNING - No workout found with ID 18 to delete
+2025-08-17 12:00:58,432 - database - INFO - Deleted all data points for workout 18
+2025-08-17 12:00:58,432 - database - WARNING - No workout found with ID 18 to delete
+2025-08-17 12:01:00,555 - database - INFO - Deleted all data points for workout 17
+2025-08-17 12:01:00,556 - database - INFO - Deleted workout 17
+2025-08-17 12:01:00,817 - database - INFO - Deleted all data points for workout 17
+2025-08-17 12:01:00,817 - database - WARNING - No workout found with ID 17 to delete
+2025-08-17 12:01:03,545 - database - INFO - Retrieved 8 workouts from database
+2025-08-17 12:01:03,546 - database - INFO - Retrieved 8 workouts from database
+2025-08-17 12:01:08,777 - database - INFO - Deleted all data points for workout 16
+2025-08-17 12:01:08,778 - database - INFO - Deleted workout 16
+2025-08-17 12:01:10,379 - database - INFO - Deleted all data points for workout 16
+2025-08-17 12:01:10,380 - database - WARNING - No workout found with ID 16 to delete
+2025-08-17 12:01:14,187 - database - INFO - Retrieved 62 data points for workout 15
+2025-08-17 12:01:14,500 - database - INFO - Retrieved 62 data points for workout 15
