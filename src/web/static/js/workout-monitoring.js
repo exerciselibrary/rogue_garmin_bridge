@@ -286,7 +286,8 @@ class WorkoutMonitor {
         }
 
         // Update button states based on connection and workout status
-        this.updateButtonStates(data);
+        this.updateButtonStates(data.device_status, data.workout_active);
+
     }
     
     updateStatusDisplay(data) {
@@ -756,23 +757,24 @@ class WorkoutMonitor {
     }
 
     // Update button states based on connection and workout status
-    updateButtonStates(data) {
-        const startWorkoutBtn = document.getElementById('start-workout-btn');
-        const endWorkoutBtn = document.getElementById('end-workout-btn');
+    updateButtonStates(deviceStatus, workoutActive) {
+    const startWorkoutBtn = document.getElementById("start-workout-btn");
+    const endWorkoutBtn = document.getElementById("end-workout-btn");
 
-        if (startWorkoutBtn && endWorkoutBtn) {
-            if (data.device_status === 'connected' && !data.workout_active) {
-                startWorkoutBtn.disabled = false;
-                endWorkoutBtn.disabled = true;
-            } else if (data.device_status === 'connected' && data.workout_active) {
-                startWorkoutBtn.disabled = true;
-                endWorkoutBtn.disabled = false;
-            } else {
-                startWorkoutBtn.disabled = true;
-                endWorkoutBtn.disabled = true;
-            }
+    if (startWorkoutBtn && endWorkoutBtn) {
+        if (deviceStatus === "connected" && !workoutActive) {
+            startWorkoutBtn.disabled = false;
+            endWorkoutBtn.disabled = true;
+        } else if (deviceStatus === "connected" && workoutActive) {
+            startWorkoutBtn.disabled = true;
+            endWorkoutBtn.disabled = false;
+        } else {
+            startWorkoutBtn.disabled = true;
+            endWorkoutBtn.disabled = true;
         }
     }
+}
+
 }
 
 // Initialize the WorkoutMonitor

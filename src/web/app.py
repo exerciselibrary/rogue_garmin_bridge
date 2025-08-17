@@ -311,7 +311,8 @@ def get_status():
             'address': getattr(ftms_manager.connected_device, 'address', None)
         } if ftms_manager.connected_device else None,
         'connected_device_address': getattr(ftms_manager, 'connected_device_address', None), # Keep this for compatibility if needed
-        'device_name': getattr(ftms_manager.connected_device, 'name', None) if ftms_manager.connected_device else None, # Redundant but maybe used elsewhere
+        'device_name': ftms_manager.connected_device.get('name') if ftms_manager.connected_device else None,
+
         'workout_active': workout_manager.active_workout_id is not None,
         'is_simulated': ftms_manager.use_simulator
     }
@@ -342,13 +343,22 @@ def get_status():
 def start_workout():
     """Start a new workout."""
     try:
-        device_id = request.json.get('device_id')
-        workout_type = request.json.get('workout_type', 'bike')  # Default to 'bike' if not provided
+        device_address = request.json.get("device_id") # This is actually the device_address from frontend
+        if not device_address:
+            return jsonify({"success": False, "error": "Device address is missing."})
+
+        # Get the actual device_id from the database using the address
+        device_id = workout_manager.database.get_device_id_by_address(device_address)
+        if device_id is None:
+            return jsonify({"success": False, "error": f"Device with address {device_address} not found in database."})
+
+        workout_type = request.json.get("workout_type", "bike")  # Default to 'bike' if not provided
         workout_id = workout_manager.start_workout(device_id, workout_type)
         return jsonify({'success': True, 'workout_id': workout_id})
     except Exception as e:
         logger.error(f"Error starting workout: {str(e)}")
         return jsonify({'success': False, 'error': str(e)})
+
 
 @app.route('/api/end_workout', methods=['POST'])
 def end_workout():

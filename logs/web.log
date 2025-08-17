@@ -78,3 +78,23 @@
 2025-08-17 10:24:46,247 - web - INFO - Sending workout 13 with 110 data points, type: bike
 2025-08-17 10:24:48,211 - web - INFO - Sending workout 13 with 110 data points, type: bike
 2025-08-17 10:24:48,211 - web - INFO - Sending workout 13 with 110 data points, type: bike
+2025-08-17 10:52:27,655 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-17 10:52:27,668 - web - INFO - Using real FTMS devices
+2025-08-17 10:52:27,671 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-17 10:52:27,671 - web - INFO - Starting background asyncio loop thread...
+2025-08-17 10:52:27,671 - web - INFO - Background thread started. Creating new event loop.
+2025-08-17 10:52:27,671 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-17 10:52:27,693 - web - INFO - Starting background asyncio event loop run_forever.
+2025-08-17 10:52:28,939 - web - INFO - Initializing FTMSDeviceManager with use_simulator=False, device_type=bike
+2025-08-17 10:52:28,944 - web - INFO - Using real FTMS devices
+2025-08-17 10:52:28,949 - web - INFO - Flask application initialized. FTMS manager created.
+2025-08-17 10:52:28,949 - web - INFO - Starting background asyncio loop thread...
+2025-08-17 10:52:28,951 - web - INFO - Background thread started. Creating new event loop.
+2025-08-17 10:52:28,951 - web - INFO - Background asyncio loop thread start initiated.
+2025-08-17 10:52:28,965 - web - INFO - Starting background asyncio event loop run_forever.
+2025-08-17 10:53:45,468 - web - INFO - Scheduling connect task for C9:02:CB:68:17:C1 with device_type auto on background loop.
+2025-08-17 10:53:52,284 - web - INFO - Connect task for C9:02:CB:68:17:C1 (device_type: auto) completed with result: True
+2025-08-17 10:54:05,490 - web - ERROR - Error starting workout: 'Database' object has no attribute 'get_device_id_by_address'
+2025-08-17 10:54:22,296 - web - ERROR - Error starting workout: 'Database' object has no attribute 'get_device_id_by_address'
+2025-08-17 10:54:32,550 - web - INFO - Scheduling disconnect task on the background loop.
+2025-08-17 10:54:35,934 - web - INFO - Disconnect task completed with result: True

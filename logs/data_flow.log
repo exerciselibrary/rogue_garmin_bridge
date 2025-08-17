@@ -403,3 +403,20 @@
 2025-08-17 10:24:48,209 - database - INFO - Retrieved 110 data points for workout 13
 2025-08-17 10:24:48,211 - database - INFO - Retrieved 110 data points for workout 13
 2025-08-17 10:25:42,294 - database - INFO - Retrieved 7 workouts from database
+2025-08-17 10:52:27,651 - database - INFO - Database tables created
+2025-08-17 10:52:27,655 - database - INFO - Database tables created
+2025-08-17 10:52:27,662 - data_validator - INFO - Data validator initialized
+2025-08-17 10:52:28,932 - database - INFO - Database tables created
+2025-08-17 10:52:28,938 - database - INFO - Database tables created
+2025-08-17 10:52:28,940 - data_validator - INFO - Data validator initialized
+2025-08-17 10:54:08,333 - data_validator - INFO - Data validation - Quality: good, Corrections: 1, Warnings: 1
+2025-08-17 10:54:09,297 - data_validator - INFO - Data validation - Quality: good, Corrections: 1, Warnings: 1
+2025-08-17 10:54:10,437 - data_validator - INFO - Data validation - Quality: good, Corrections: 1, Warnings: 1
+2025-08-17 10:54:11,333 - data_validator - INFO - Data validation - Quality: good, Corrections: 1, Warnings: 1
+2025-08-17 10:54:12,293 - data_validator - INFO - Data validation - Quality: good, Corrections: 1, Warnings: 1
+2025-08-17 10:54:13,337 - data_validator - INFO - Data validation - Quality: good, Corrections: 1, Warnings: 1
+2025-08-17 10:54:28,281 - data_validator - INFO - Data validation - Quality: good, Corrections: 1, Warnings: 1
+2025-08-17 10:54:29,395 - data_validator - INFO - Data validation - Quality: good, Corrections: 1, Warnings: 1
+2025-08-17 10:54:30,294 - data_validator - INFO - Data validation - Quality: good, Corrections: 1, Warnings: 1
+2025-08-17 10:54:31,313 - data_validator - INFO - Data validation - Quality: good, Corrections: 1, Warnings: 1
+2025-08-17 10:54:32,305 - data_validator - INFO - Data validation - Quality: acceptable, Corrections: 4, Warnings: 4
