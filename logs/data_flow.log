@@ -1623,3 +1623,5 @@
 2025-08-17 11:33:49,012 - database - INFO - Adding data point to workout 18 at timestamp 2025-08-17T11:33:49.007830
 2025-08-17 11:33:49,023 - database - INFO - Successfully added data point with ID 1983
 2025-08-17 11:33:49,965 - data_validator - INFO - Data validation - Quality: acceptable, Corrections: 4, Warnings: 4
+2025-08-17 11:53:14,241 - database - INFO - Database tables created
+2025-08-17 11:55:39,513 - database - INFO - Database tables created

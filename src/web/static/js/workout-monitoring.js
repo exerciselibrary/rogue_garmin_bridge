@@ -90,8 +90,15 @@ class WorkoutMonitor {
         if (startWorkoutBtn) {
             startWorkoutBtn.addEventListener("click", async () => {
                 try {
+                    // Debug: Log the current status cache
+                    console.log("Current status cache:", this.dataCache.status);
+                    
                     const connectedDeviceAddress = this.dataCache.status?.connected_device_address;
                     const connectedDeviceName = this.dataCache.status?.connected_device?.name;
+                    
+                    console.log("Connected device address:", connectedDeviceAddress);
+                    console.log("Connected device name:", connectedDeviceName);
+                    console.log("Device status:", this.dataCache.status?.device_status);
 
                     if (!connectedDeviceAddress || !connectedDeviceName) {
                         console.error("Cannot start workout: Device address or name is missing.");

@@ -303,19 +303,42 @@ def disconnect_device():
 @app.route('/api/status')
 def get_status():
     """Get current status."""
+    # Debug logging
+    logger.debug(f"FTMS Manager device_status: {ftms_manager.device_status}")
+    logger.debug(f"FTMS Manager connected_device: {ftms_manager.connected_device}")
+    logger.debug(f"FTMS Manager connected_device_address: {getattr(ftms_manager, 'connected_device_address', None)}")
+    logger.debug(f"Workout Manager active_workout_id: {workout_manager.active_workout_id}")
+    
+    # Handle connected device info properly (could be dict or object)
+    connected_device_info = None
+    device_name = None
+    
+    if ftms_manager.connected_device:
+        if isinstance(ftms_manager.connected_device, dict):
+            # It's a dictionary
+            connected_device_info = {
+                'name': ftms_manager.connected_device.get('name'),
+                'address': ftms_manager.connected_device.get('address')
+            }
+            device_name = ftms_manager.connected_device.get('name')
+        else:
+            # It's an object
+            connected_device_info = {
+                'name': getattr(ftms_manager.connected_device, 'name', None),
+                'address': getattr(ftms_manager.connected_device, 'address', None)
+            }
+            device_name = getattr(ftms_manager.connected_device, 'name', None)
+    
     status = {
         'device_status': ftms_manager.device_status,
-        # Serialize connected device info
-        'connected_device': {
-            'name': getattr(ftms_manager.connected_device, 'name', None),
-            'address': getattr(ftms_manager.connected_device, 'address', None)
-        } if ftms_manager.connected_device else None,
-        'connected_device_address': getattr(ftms_manager, 'connected_device_address', None), # Keep this for compatibility if needed
-        'device_name': ftms_manager.connected_device.get('name') if ftms_manager.connected_device else None,
-
+        'connected_device': connected_device_info,
+        'connected_device_address': getattr(ftms_manager, 'connected_device_address', None),
+        'device_name': device_name,
         'workout_active': workout_manager.active_workout_id is not None,
         'is_simulated': ftms_manager.use_simulator
     }
+    
+    logger.debug(f"Status response: {status}")
     
     # Include latest data if available
     if hasattr(ftms_manager, 'latest_data') and ftms_manager.latest_data:
@@ -344,19 +367,72 @@ def start_workout():
     """Start a new workout."""
     try:
         device_address = request.json.get("device_id") # This is actually the device_address from frontend
+        logger.info(f"Starting workout for device address: {device_address}")
+        
         if not device_address:
             return jsonify({"success": False, "error": "Device address is missing."})
 
         # Get the actual device_id from the database using the address
-        device_id = workout_manager.database.get_device_id_by_address(device_address)
+        # First check if the method exists (for compatibility)
+        device_id = None
+        if hasattr(workout_manager.database, 'get_device_id_by_address'):
+            logger.info("Using get_device_id_by_address method")
+            device_id = workout_manager.database.get_device_id_by_address(device_address)
+        else:
+            # Fallback: query the database directly
+            logger.info("Using fallback database query for device ID")
+            try:
+                conn = workout_manager.database._get_connection()
+                cursor = conn.cursor()
+                cursor.execute("SELECT id FROM devices WHERE address = ?", (device_address,))
+                result = cursor.fetchone()
+                device_id = result["id"] if result else None
+            except Exception as db_error:
+                logger.error(f"Error querying device by address: {str(db_error)}")
+                device_id = None
+        
+        logger.info(f"Found device_id: {device_id} for address: {device_address}")
+        
+        # If device not found in database, add it first
         if device_id is None:
-            return jsonify({"success": False, "error": f"Device with address {device_address} not found in database."})
+            logger.info(f"Device {device_address} not found in database, adding it")
+            # Get device name from connected device info
+            device_name = "Unknown Device"
+            if hasattr(ftms_manager, 'connected_device') and ftms_manager.connected_device:
+                if isinstance(ftms_manager.connected_device, dict):
+                    device_name = ftms_manager.connected_device.get('name', device_name)
+                else:
+                    device_name = getattr(ftms_manager.connected_device, 'name', device_name)
+            
+            logger.info(f"Adding device with name: {device_name}")
+            
+            # Determine device type from name
+            device_type = 'bike'
+            if 'rower' in device_name.lower():
+                device_type = 'rower'
+            
+            # Add device to database
+            device_id = workout_manager.database.add_device(
+                address=device_address,
+                name=device_name,
+                device_type=device_type,
+                metadata={}
+            )
+            
+            logger.info(f"Added device to database with ID: {device_id}")
+            
+            if device_id is None:
+                return jsonify({"success": False, "error": f"Failed to add device {device_address} to database."})
 
         workout_type = request.json.get("workout_type", "bike")  # Default to 'bike' if not provided
+        logger.info(f"Starting workout with device_id: {device_id}, workout_type: {workout_type}")
+        
         workout_id = workout_manager.start_workout(device_id, workout_type)
+        logger.info(f"Workout started successfully with ID: {workout_id}")
+        
         return jsonify({'success': True, 'workout_id': workout_id})
     except Exception as e:
-        logger.error(f"Error starting workout: {str(e)}")
+        logger.error(f"Error starting workout: {str(e)}", exc_info=True)
         return jsonify({'success': False, 'error': str(e)})
 
 
