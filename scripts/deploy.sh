@@ -118,6 +118,9 @@ if [[ -z "$COMPOSE_FILE" ]]; then
         production|prod)
             COMPOSE_FILE="docker-compose.prod.yml"
             ;;
+        raspberry-pi|rpi)
+            COMPOSE_FILE="docker-compose.rpi.yml"
+            ;;
         development|dev)
             COMPOSE_FILE="docker-compose.dev.yml"
             ;;
@@ -129,7 +132,7 @@ if [[ -z "$COMPOSE_FILE" ]]; then
             ;;
         *)
             log_error "Unknown environment: $ENV"
-            log_info "Valid environments: production, development, staging, testing"
+            log_info "Valid environments: production, raspberry-pi, development, staging, testing"
             exit 1
             ;;
     esac
@@ -156,6 +159,9 @@ ENV_FILE=""
 case "$ENV" in
     production|prod)
         ENV_FILE=".env"
+        ;;
+    raspberry-pi|rpi)
+        ENV_FILE=".env.rpi"
         ;;
     development|dev)
         ENV_FILE=".env"

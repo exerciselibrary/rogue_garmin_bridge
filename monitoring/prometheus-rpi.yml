@@ -1,0 +1,32 @@
+# Prometheus configuration optimized for Raspberry Pi
+global:
+  scrape_interval: 30s      # Increased interval to reduce load
+  evaluation_interval: 30s
+
+# Lightweight alerting rules for RPi
+rule_files:
+  - "alert_rules_rpi.yml"
+
+scrape_configs:
+  # Rogue Garmin Bridge application metrics via host network
+  - job_name: 'rogue-garmin-bridge-rpi'
+    static_configs:
+      - targets: ['host.docker.internal:5000']  # Connect via host network
+    metrics_path: '/metrics'
+    scrape_interval: 60s    # Reduced frequency for RPi
+    scrape_timeout: 15s
+
+  # Health check monitoring via host network
+  - job_name: 'rogue-garmin-bridge-health-rpi'
+    static_configs:
+      - targets: ['host.docker.internal:5000']
+    metrics_path: '/health/detailed'
+    scrape_interval: 60s
+    scrape_timeout: 15s
+
+  # System metrics (if node-exporter is installed on host)
+  - job_name: 'raspberry-pi-system'
+    static_configs:
+      - targets: ['host.docker.internal:9100']
+    scrape_interval: 30s
+    scrape_timeout: 10s

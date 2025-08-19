@@ -1,4 +1,5 @@
-# Production Docker Compose configuration with enhanced security and monitoring
+# Raspberry Pi Production Docker Compose configuration
+# Optimized for ARM architecture with proper Bluetooth networking
 version: '3.8'
 
 services:
@@ -7,7 +8,7 @@ services:
       context: .
       dockerfile: Dockerfile
       target: production
-    container_name: rogue-garmin-bridge-prod
+    container_name: rogue-garmin-bridge-rpi
     restart: unless-stopped
     # NO ports declaration when using network_mode: host
     volumes:
@@ -28,8 +29,10 @@ services:
       - API_RATE_LIMIT=${API_RATE_LIMIT:-100 per minute}
       - DATA_RETENTION_DAYS=${DATA_RETENTION_DAYS:-365}
       - MAX_FIT_FILE_AGE_DAYS=${MAX_FIT_FILE_AGE_DAYS:-30}
+      # Application will bind to port specified by APP_PORT (default 5000)
+      - APP_PORT=${APP_PORT:-5000}
     privileged: true  # Required for Bluetooth access
-    network_mode: host  # Required for Bluetooth on Linux
+    network_mode: host  # Required for Bluetooth on Linux - uses host network directly
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:${APP_PORT:-5000}/health"]
       interval: 30s
@@ -44,16 +47,16 @@ services:
     deploy:
       resources:
         limits:
-          memory: 512M
-          cpus: '1.0'
+          memory: 256M  # Reduced for Raspberry Pi
+          cpus: '0.8'   # Reduced for Raspberry Pi
         reservations:
-          memory: 256M
-          cpus: '0.5'
+          memory: 128M
+          cpus: '0.4'
 
-  # Nginx reverse proxy with SSL termination
+  # Nginx reverse proxy - uses bridge network with port mapping
   nginx:
     image: nginx:alpine
-    container_name: rogue-garmin-bridge-nginx
+    container_name: rogue-garmin-bridge-nginx-rpi
     restart: unless-stopped
     ports:
       - "${HTTP_PORT:-80}:80"
@@ -62,8 +65,9 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/ssl:/etc/nginx/ssl:ro
       - nginx_logs:/var/log/nginx
-    depends_on:
-      - rogue-garmin-bridge
+    # Nginx connects to app via host network (localhost:APP_PORT)
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
       interval: 30s
@@ -72,15 +76,23 @@ services:
     logging:
       driver: "json-file"
       options:
-        max-size: "10m"
+        max-size: "5m"   # Reduced for Raspberry Pi
         max-file: "3"
+    deploy:
+      resources:
+        limits:
+          memory: 64M   # Nginx is lightweight
+          cpus: '0.2'
+        reservations:
+          memory: 32M
+          cpus: '0.1'
     profiles:
       - nginx
 
-  # Log aggregation service
+  # Log rotation service - uses bridge network
   logrotate:
     image: alpine:latest
-    container_name: rogue-garmin-bridge-logrotate
+    container_name: rogue-garmin-bridge-logrotate-rpi
     restart: unless-stopped
     volumes:
       - app_logs:/logs
@@ -94,33 +106,51 @@ services:
           sleep 86400
         done
       "
+    deploy:
+      resources:
+        limits:
+          memory: 32M   # Logrotate is very lightweight
+          cpus: '0.1'
+        reservations:
+          memory: 16M
+          cpus: '0.05'
     profiles:
       - logging
 
-  # Monitoring and metrics collection
+  # Monitoring - Prometheus (lightweight config for RPi)
   prometheus:
     image: prom/prometheus:latest
-    container_name: rogue-garmin-bridge-prometheus
+    container_name: rogue-garmin-bridge-prometheus-rpi
     restart: unless-stopped
     ports:
       - "${PROMETHEUS_PORT:-9090}:9090"
     volumes:
-      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/prometheus-rpi.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/etc/prometheus/console_libraries'
-      - '--web.console.templates=/etc/prometheus/consoles'
-      - '--storage.tsdb.retention.time=30d'
+      - '--storage.tsdb.retention.time=7d'  # Shorter retention for RPi
       - '--web.enable-lifecycle'
+      - '--storage.tsdb.retention.size=1GB'  # Limit storage size
+    # Connect to app via host network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    deploy:
+      resources:
+        limits:
+          memory: 128M  # Reduced for Raspberry Pi
+          cpus: '0.3'
+        reservations:
+          memory: 64M
+          cpus: '0.1'
     profiles:
       - monitoring
 
-  # Grafana for metrics visualization
+  # Grafana (lightweight config for RPi)
   grafana:
     image: grafana/grafana:latest
-    container_name: rogue-garmin-bridge-grafana
+    container_name: rogue-garmin-bridge-grafana-rpi
     restart: unless-stopped
     ports:
       - "${GRAFANA_PORT:-3000}:3000"
@@ -131,9 +161,20 @@ services:
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin}
       - GF_USERS_ALLOW_SIGN_UP=false
-      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+      - GF_INSTALL_PLUGINS=grafana-clock-panel
+      # Reduced memory usage for RPi
+      - GF_DATABASE_WAL=true
+      - GF_LOG_LEVEL=warn
     depends_on:
       - prometheus
+    deploy:
+      resources:
+        limits:
+          memory: 128M  # Reduced for Raspberry Pi
+          cpus: '0.3'
+        reservations:
+          memory: 64M
+          cpus: '0.1'
     profiles:
       - monitoring
 
@@ -163,9 +204,5 @@ volumes:
   grafana_data:
     driver: local
 
-networks:
-  default:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16
+# No custom networks needed - main app uses host network
+# Other services use default bridge network
