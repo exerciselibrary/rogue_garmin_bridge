@@ -468,6 +468,17 @@ class WorkoutManager:
         if 'heart_rate' in data:
             hr = data['heart_rate']
             
+            # Check for potential heart rate sensor issues (bike-specific)
+            if hr > 0 and hr < 80 and len(self.data_points) > 10:
+                # Check if heart rate has been consistently low
+                recent_hr_values = [d.get('heart_rate', 0) for d in self.data_points[-10:] if 'heart_rate' in d and d['heart_rate'] > 0]
+                if recent_hr_values and all(hr_val < 80 for hr_val in recent_hr_values):
+                    logger.warning(f"Heart rate consistently low ({hr} BPM) - this may indicate:")
+                    logger.warning("1. No heart rate sensor connected to the bike")
+                    logger.warning("2. Heart rate sensor not properly paired")
+                    logger.warning("3. Bike displaying different HR source than FTMS transmission")
+                    logger.warning("4. Check bike settings for heart rate sensor configuration")
+            
             # Update max heart rate
             if hr > self.summary_metrics.get('max_heart_rate', 0):
                 self.summary_metrics['max_heart_rate'] = hr

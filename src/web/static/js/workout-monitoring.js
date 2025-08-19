@@ -82,6 +82,82 @@ class WorkoutMonitor {
         window.addEventListener('resize', this.debounce(() => {
             this.resizeCharts();
         }, 250));
+
+        // Event Listeners for Workout Buttons
+        const startWorkoutBtn = document.getElementById('start-workout-btn');
+        const endWorkoutBtn = document.getElementById('end-workout-btn');
+
+        if (startWorkoutBtn) {
+            startWorkoutBtn.addEventListener("click", async () => {
+                try {
+                    // Debug: Log the current status cache
+                    console.log("Current status cache:", this.dataCache.status);
+                    
+                    const connectedDeviceAddress = this.dataCache.status?.connected_device_address;
+                    const connectedDeviceName = this.dataCache.status?.connected_device?.name;
+                    
+                    console.log("Connected device address:", connectedDeviceAddress);
+                    console.log("Connected device name:", connectedDeviceName);
+                    console.log("Device status:", this.dataCache.status?.device_status);
+
+                    if (!connectedDeviceAddress || !connectedDeviceName) {
+                        console.error("Cannot start workout: Device address or name is missing.");
+                        alert("Cannot start workout: Please ensure a device is connected.");
+                        return;
+                    }
+
+                    const workoutType = connectedDeviceName.toLowerCase().includes("rower") ? "rower" : "bike";
+
+                    const response = await fetch("/api/start_workout", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            device_id: connectedDeviceAddress, 
+                            workout_type: workoutType,
+                        }),
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        console.log("Workout started successfully:", data.workout_id);
+                        this.start(); // Start monitoring
+                        // Force status refresh to update button states and UI
+                        await this.fetchWorkoutData();
+                    } else {
+                        console.error("Failed to start workout:", data.error);
+                        alert("Failed to start workout: " + data.error);
+                    }
+                } catch (error) {
+                    console.error("Error starting workout:", error);
+                    alert("Error starting workout: " + error.message);
+                }
+            });
+        }
+
+        if (endWorkoutBtn) {
+            endWorkoutBtn.addEventListener("click", async () => {
+                try {
+                    const response = await fetch("/api/end_workout", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        console.log("Workout ended successfully.");
+                        this.stop(); // Stop monitoring
+                    } else {
+                        console.error("Failed to end workout:", data.error);
+                        alert("Failed to end workout: " + data.error);
+                    }
+                } catch (error) {
+                    console.error("Error ending workout:", error);
+                    alert("Error ending workout: " + error.message);
+                }
+            });
+        }
     }
     
     async loadUserPreferences() {
@@ -144,37 +220,30 @@ class WorkoutMonitor {
         }
     }
     
-    async fetchWorkoutData() {
-        const startTime = performance.now();
+    handleFetchError(error) {
+        // Handle fetch errors and update connection quality
+        this.connectionQuality.consecutiveFailures++;
         
-        try {
-            const response = await fetch('/api/status');
-            const data = await response.json();
-            
-            // Update connection quality
-            this.connectionQuality.consecutiveFailures = 0;
-            this.connectionQuality.lastSuccessTime = Date.now();
-            this.updateConnectionQuality('good');
-            
-            // Cache the data
-            this.cacheData(data);
-            
-            // Process the data
-            this.processWorkoutData(data);
-            
-            // Track performance
-            const updateTime = performance.now() - startTime;
-            this.trackPerformance(updateTime);
-            
-            // Adaptive polling based on data changes
-            if (this.adaptivePollRate) {
-                this.adjustPollRate(data);
-            }
-            
-        } catch (error) {
-            console.error('Error fetching workout data:', error);
-            this.handleFetchError(error);
+        if (this.connectionQuality.consecutiveFailures >= 3) {
+            this.updateConnectionQuality('poor');
+        } else if (this.connectionQuality.consecutiveFailures >= 2) {
+            this.updateConnectionQuality('fair');
         }
+        
+        // If too many consecutive failures, reduce poll rate
+        if (this.connectionQuality.consecutiveFailures >= 5 && this.pollRate < 5000) {
+            this.pollRate = Math.min(this.pollRate * 2, 5000);
+            this.stopPolling();
+            this.startPolling();
+            console.warn(`Increased poll rate to ${this.pollRate}ms due to connection issues`);
+        }
+        
+        // Log the error for debugging
+        console.error('Fetch error details:', {
+            error: error.message,
+            consecutiveFailures: this.connectionQuality.consecutiveFailures,
+            pollRate: this.pollRate
+        });
     }
     
     cacheData(data) {
@@ -216,6 +285,19 @@ class WorkoutMonitor {
         // Update workout summary
         if (data.latest_data && data.latest_data.workout_summary) {
             this.updateWorkoutSummary(data.latest_data.workout_summary);
+        }
+
+        // Update button states based on connection and workout status
+        this.updateButtonStates(data.device_status, data.workout_active);
+
+        // If workout is active but end button is disabled, force UI update
+        const endWorkoutBtn = document.getElementById("end-workout-btn");
+        if (data.workout_active && endWorkoutBtn && endWorkoutBtn.disabled) {
+            endWorkoutBtn.disabled = false;
+        }
+        // If workout is active and summary is missing, force summary update
+        if (data.workout_active && (!data.latest_data || !data.latest_data.workout_summary)) {
+            this.updateWorkoutSummary({});
         }
     }
     
@@ -285,8 +367,29 @@ class WorkoutMonitor {
         
         // Update heart rate
         if (elements.heartRate && metrics.heart_rate !== undefined) {
-            elements.heartRate.textContent = Math.round(metrics.heart_rate);
+            const heartRate = Math.round(metrics.heart_rate);
+            elements.heartRate.textContent = heartRate;
             this.addMetricAnimation(elements.heartRate, metrics.heart_rate);
+            
+            // Add visual indicator for potential heart rate issues
+            const heartRateContainer = elements.heartRate.parentElement;
+            if (heartRate > 0 && heartRate < 80) {
+                // Add warning indicator for low heart rate
+                if (!heartRateContainer.querySelector('.hr-warning')) {
+                    const warning = document.createElement('span');
+                    warning.className = 'hr-warning';
+                    warning.innerHTML = ' ⚠️';
+                    warning.title = 'Heart rate seems low - check sensor connection';
+                    warning.style.color = '#ffc107';
+                    heartRateContainer.appendChild(warning);
+                }
+            } else {
+                // Remove warning if heart rate is normal
+                const warning = heartRateContainer.querySelector('.hr-warning');
+                if (warning) {
+                    warning.remove();
+                }
+            }
         }
         
         // Update cadence/stroke rate
@@ -364,20 +467,6 @@ class WorkoutMonitor {
         if (!this.isUpdatingCharts) {
             this.processChartUpdateQueue();
         }
-    }
-    
-    async processChartUpdateQueue() {
-        if (this.chartUpdateQueue.length === 0) return;
-        
-        this.isUpdatingCharts = true;
-        
-        // Process all queued updates
-        while (this.chartUpdateQueue.length > 0) {
-            const data = this.chartUpdateQueue.shift();
-            await this.updateCharts(data);
-        }
-        
-        this.isUpdatingCharts = false;
     }
     
     async updateCharts(data) {
@@ -474,287 +563,219 @@ class WorkoutMonitor {
     }
     
     updateWorkoutPhaseIndicator() {
-        const indicator = document.getElementById('workout-phase-indicator');
-        if (!indicator) return;
-        
-        const phaseConfig = {
-            inactive: { text: 'Inactive', class: 'bg-secondary', icon: '⏸️' },
-            warmup: { text: 'Warm-up', class: 'bg-info', icon: '🔥' },
-            main: { text: 'Main Workout', class: 'bg-success', icon: '💪' },
-            intervals: { text: 'Intervals', class: 'bg-warning', icon: '⚡' },
-            cooldown: { text: 'Cool-down', class: 'bg-primary', icon: '❄️' }
-        };
-        
-        const config = phaseConfig[this.workoutPhases.current] || phaseConfig.inactive;
-        
-        indicator.innerHTML = `
-            <span class="badge ${config.class}">
-                ${config.icon} ${config.text}
-            </span>
-        `;
-    }
-    
-    showPhaseTransitionNotification(newPhase) {
-        const messages = {
-            warmup: 'Starting warm-up phase',
-            main: 'Entering main workout',
-            intervals: 'Beginning interval training',
-            cooldown: 'Starting cool-down'
-        };
-        
-        const message = messages[newPhase];
-        if (message && typeof showNotification === 'function') {
-            showNotification(message, 'info');
-        }
-    }
-    
-    updateWorkoutSummary(summary) {
-        const summaryElement = document.getElementById('workout-summary');
-        if (!summaryElement || !summary) return;
-        
-        // Create enhanced summary with progress indicators
-        let html = '<div class="workout-summary-enhanced">';
-        
-        // Progress bars for key metrics
-        if (summary.avg_power !== undefined) {
-            const powerPercent = Math.min((summary.avg_power / 300) * 100, 100);
-            html += this.createProgressMetric('Average Power', summary.avg_power, 'W', powerPercent, 'bg-danger');
-        }
-        
-        if (summary.avg_heart_rate !== undefined) {
-            const hrPercent = Math.min((summary.avg_heart_rate / 200) * 100, 100);
-            html += this.createProgressMetric('Average HR', summary.avg_heart_rate, 'bpm', hrPercent, 'bg-info');
-        }
-        
-        if (summary.total_distance !== undefined) {
-            const distanceKm = summary.total_distance / 1000;
-            html += this.createProgressMetric('Distance', distanceKm.toFixed(2), 'km', null, 'bg-success');
-        }
-        
-        if (summary.total_calories !== undefined) {
-            html += this.createProgressMetric('Calories', Math.round(summary.total_calories), 'kcal', null, 'bg-warning');
-        }
-        
-        html += '</div>';
-        summaryElement.innerHTML = html;
-    }
-    
-    createProgressMetric(label, value, unit, percent, colorClass) {
-        let progressBar = '';
-        if (percent !== null) {
-            progressBar = `
-                <div class="progress mt-1" style="height: 4px;">
-                    <div class="progress-bar ${colorClass}" role="progressbar" 
-                         style="width: ${percent}%" aria-valuenow="${percent}" 
-                         aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-            `;
-        }
-        
-        return `
-            <div class="metric-summary mb-2">
-                <div class="d-flex justify-content-between">
-                    <span class="metric-label">${label}:</span>
-                    <span class="metric-value">${value} ${unit}</span>
-                </div>
-                ${progressBar}
-            </div>
-        `;
-    }
-    
-    adjustPollRate(data) {
-        // Adaptive polling based on workout activity and data changes
-        if (!data.workout_active) {
-            // Slower polling when not in workout
-            this.setPollRate(2000);
-        } else if (data.latest_data) {
-            // Faster polling during active workout
-            this.setPollRate(1000);
-            
-            // Even faster during high-intensity phases
-            const power = data.latest_data.instant_power || data.latest_data.power || 0;
-            if (power > 200) {
-                this.setPollRate(500);
+        const workoutPhaseIndicator = document.getElementById('workout-phase-indicator');
+        if (workoutPhaseIndicator) {
+            let phaseText = '';
+            let badgeClass = 'bg-secondary';
+            switch (this.workoutPhases.current) {
+                case 'warmup':
+                    phaseText = '🔥 Warmup';
+                    badgeClass = 'bg-info';
+                    break;
+                case 'main':
+                    phaseText = '💪 Main';
+                    badgeClass = 'bg-success';
+                    break;
+                case 'cooldown':
+                    phaseText = '🧘 Cooldown';
+                    badgeClass = 'bg-warning';
+                    break;
+                case 'inactive':
+                default:
+                    phaseText = '⏸️ Inactive';
+                    badgeClass = 'bg-secondary';
+                    break;
             }
+            workoutPhaseIndicator.innerHTML = `<span class="badge ${badgeClass}">${phaseText}</span>`;
         }
     }
-    
-    setPollRate(newRate) {
-        if (this.pollRate === newRate) return;
-        
-        this.pollRate = newRate;
-        
-        if (this.isActive) {
-            this.startPolling(); // Restart with new rate
+
+    showPhaseTransitionNotification(newPhase) {
+        // Implement a toast or similar notification for phase transitions
+        console.log(`Workout phase transitioned to: ${newPhase}`);
+        // Example: You might use a library like Toastify.js or Bootstrap toasts here
+    }
+
+    formatDuration(seconds) {
+        const h = Math.floor(seconds / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+        const s = Math.floor(seconds % 60);
+        return [
+            h.toString().padStart(2, '0'),
+            m.toString().padStart(2, '0'),
+            s.toString().padStart(2, '0')
+        ].join(':');
+    }
+
+    updateConnectionIndicator() {
+        const indicator = document.getElementById('connection-quality-indicator');
+        if (indicator) {
+            let icon = '';
+            let color = '';
+            switch (this.connectionQuality.quality) {
+                case 'good':
+                    icon = '🟢';
+                    color = 'text-success';
+                    break;
+                case 'fair':
+                    icon = '🟡';
+                    color = 'text-warning';
+                    break;
+                case 'poor':
+                    icon = '🟠';
+                    color = 'text-danger';
+                    break;
+                case 'disconnected':
+                    icon = '🔴';
+                    color = 'text-danger';
+                    break;
+            }
+            indicator.innerHTML = `<span class="${color}">${icon}</span>`;
         }
     }
-    
-    reducePollRate() {
-        // Reduce polling when tab is not visible
-        this.setPollRate(this.pollRate * 2);
-    }
-    
-    restorePollRate() {
-        // Restore normal polling when tab becomes visible
-        this.setPollRate(Math.max(this.pollRate / 2, 1000));
-    }
-    
-    handleFetchError(error) {
-        this.connectionQuality.consecutiveFailures++;
-        
-        // Update connection quality based on failures
-        if (this.connectionQuality.consecutiveFailures >= 5) {
-            this.updateConnectionQuality('poor');
-        } else if (this.connectionQuality.consecutiveFailures >= 3) {
-            this.updateConnectionQuality('fair');
-        }
-        
-        // Exponential backoff for failed requests
-        const backoffRate = Math.min(this.pollRate * Math.pow(1.5, this.connectionQuality.consecutiveFailures), 10000);
-        this.setPollRate(backoffRate);
-        
-        this.trackPerformance(null, true);
-    }
-    
+
     updateConnectionQuality(quality) {
-        if (this.connectionQuality.quality === quality) return;
-        
         this.connectionQuality.quality = quality;
         this.updateConnectionIndicator();
     }
-    
-    updateConnectionIndicator() {
-        const indicator = document.getElementById('connection-quality-indicator');
-        if (!indicator) return;
-        
-        const qualityConfig = {
-            good: { text: 'Excellent', class: 'bg-success', icon: '📶' },
-            fair: { text: 'Fair', class: 'bg-warning', icon: '📶' },
-            poor: { text: 'Poor', class: 'bg-danger', icon: '📶' },
-            disconnected: { text: 'Disconnected', class: 'bg-secondary', icon: '📵' }
-        };
-        
-        const config = qualityConfig[this.connectionQuality.quality] || qualityConfig.disconnected;
-        
-        indicator.innerHTML = `
-            <small class="badge ${config.class}">
-                ${config.icon} ${config.text}
-            </small>
-        `;
-    }
-    
-    trackPerformance(updateTime, isError = false) {
-        if (isError) {
-            this.performance.droppedUpdates++;
-            return;
-        }
-        
+
+    trackPerformance(updateTime) {
         this.performance.updateTimes.push(updateTime);
-        this.performance.lastUpdateTime = Date.now();
-        
-        // Keep only last 100 measurements
         if (this.performance.updateTimes.length > 100) {
             this.performance.updateTimes.shift();
         }
-        
-        // Log performance warnings
-        if (updateTime > 1000) {
-            console.warn(`Slow update detected: ${updateTime.toFixed(2)}ms`);
+        const avgUpdateTime = this.performance.updateTimes.reduce((a, b) => a + b, 0) / this.performance.updateTimes.length;
+        // console.log(`Avg UI update time: ${avgUpdateTime.toFixed(2)}ms`);
+
+        // Check for dropped updates (if polling rate is faster than update time)
+        const now = performance.now();
+        if (this.performance.lastUpdateTime > 0 && (now - this.performance.lastUpdateTime) > (this.pollRate * 1.5)) { // If actual interval is 1.5x expected
+            this.performance.droppedUpdates++;
+            console.warn(`Dropped UI update. Total dropped: ${this.performance.droppedUpdates}`);
+        }
+        this.performance.lastUpdateTime = now;
+    }
+
+    adjustPollRate(data) {
+        // Example: Reduce poll rate if no new data for a while
+        const now = Date.now();
+        if (data.latest_data && data.latest_data.timestamp) {
+            const lastDataTimestamp = new Date(data.latest_data.timestamp).getTime();
+            if ((now - lastDataTimestamp) > (this.pollRate * 5) && this.pollRate < 5000) { // If no new data for 5 poll cycles
+                this.pollRate += 500; // Increase poll rate by 500ms
+                this.stopPolling();
+                this.startPolling();
+                console.log(`Adjusted poll rate to: ${this.pollRate}ms`);
+            }
+        } else if (!data.latest_data && this.pollRate < 5000) { // If no data at all, slow down polling
+             this.pollRate += 500; // Increase poll rate by 500ms
+             this.stopPolling();
+             this.startPolling();
+             console.log(`Adjusted poll rate to: ${this.pollRate}ms (no data)`);
+        }
+
+        // If workout is active and data is flowing, ensure optimal poll rate
+        if (data.workout_active && data.latest_data && this.pollRate !== 1000) {
+            this.pollRate = 1000; // Reset to default for active workout
+            this.stopPolling();
+            this.startPolling();
+            console.log(`Reset poll rate to: ${this.pollRate}ms (workout active)`);
         }
     }
-    
-    getPerformanceStats() {
-        const times = this.performance.updateTimes;
-        if (times.length === 0) return null;
-        
-        const avg = times.reduce((a, b) => a + b, 0) / times.length;
-        const max = Math.max(...times);
-        const min = Math.min(...times);
-        
-        return {
-            averageUpdateTime: avg.toFixed(2),
-            maxUpdateTime: max.toFixed(2),
-            minUpdateTime: min.toFixed(2),
-            droppedUpdates: this.performance.droppedUpdates,
-            totalUpdates: times.length
+
+    reducePollRate() {
+        if (this.adaptivePollRate && this.pollRate < 5000) { // Max 5 seconds when hidden
+            this.pollRate = 5000;
+            this.stopPolling();
+            this.startPolling();
+            console.log(`Reduced poll rate due to tab hidden: ${this.pollRate}ms`);
+        }
+    }
+
+    restorePollRate() {
+        if (this.adaptivePollRate && this.pollRate !== 1000) {
+            this.pollRate = 1000; // Restore to default
+            this.stopPolling();
+            this.startPolling();
+            console.log(`Restored poll rate due to tab visible: ${this.pollRate}ms`);
+        }
+    }
+
+    debounce(func, delay) {
+        let timeout;
+        return function(...args) {
+            const context = this;
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(context, args), delay);
         };
     }
-    
+
     initializeCharts() {
-        // Initialize charts with responsive configuration
+        // Ensure Chart.js is loaded and DOM elements exist
+        const powerChartCtx = document.getElementById('power-chart');
+        const heartRateChartCtx = document.getElementById('heart-rate-chart');
+        const cadenceChartCtx = document.getElementById('cadence-chart');
+
+        if (!powerChartCtx || !heartRateChartCtx || !cadenceChartCtx || typeof Chart === 'undefined') {
+            console.warn('Chart elements or Chart.js not found. Charts will not be initialized.');
+            return;
+        }
+
         const chartOptions = {
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-                x: { display: false },
-                y: { beginAtZero: true }
+                x: {
+                    display: false
+                },
+                y: {
+                    beginAtZero: true
+                }
             },
-            animation: { duration: 0 },
-            elements: {
-                point: { radius: 0 },
-                line: { tension: 0.4 }
+            animation: {
+                duration: 0
             },
             plugins: {
-                legend: { display: false }
+                legend: {
+                    display: false
+                }
             }
         };
-        
-        // Power chart
-        const powerCtx = document.getElementById('power-chart');
-        if (powerCtx) {
-            this.charts.power = new Chart(powerCtx, {
+
+        const createChart = (ctxId, label, borderColor, backgroundColor) => {
+            const ctx = document.getElementById(ctxId)?.getContext('2d');
+            if (!ctx) return null; // Return null if context is not found
+
+            return new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: Array(60).fill(''),
+                    labels: Array(60).fill(''), // 60 data points for 1 minute
                     datasets: [{
+                        label: label,
                         data: Array(60).fill(null),
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        fill: true
+                        borderColor: borderColor,
+                        backgroundColor: backgroundColor,
+                        fill: true,
+                        tension: 0.4
                     }]
                 },
                 options: chartOptions
             });
-        }
-        
-        // Heart rate chart
-        const heartRateCtx = document.getElementById('heart-rate-chart');
-        if (heartRateCtx) {
-            this.charts.heartRate = new Chart(heartRateCtx, {
-                type: 'line',
-                data: {
-                    labels: Array(60).fill(''),
-                    datasets: [{
-                        data: Array(60).fill(null),
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        fill: true
-                    }]
-                },
-                options: chartOptions
-            });
-        }
-        
-        // Cadence chart
-        const cadenceCtx = document.getElementById('cadence-chart');
-        if (cadenceCtx) {
-            this.charts.cadence = new Chart(cadenceCtx, {
-                type: 'line',
-                data: {
-                    labels: Array(60).fill(''),
-                    datasets: [{
-                        data: Array(60).fill(null),
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        fill: true
-                    }]
-                },
-                options: chartOptions
-            });
-        }
+        };
+
+        this.charts.power = createChart('power-chart', 'Power (watts)', 'rgba(255, 99, 132, 1)', 'rgba(255, 99, 132, 0.2)');
+        this.charts.heartRate = createChart('heart-rate-chart', 'Heart Rate (bpm)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 0.2)');
+        this.charts.cadence = createChart('cadence-chart', 'Cadence (rpm)', 'rgba(75, 192, 192, 1)', 'rgba(75, 192, 192, 0.2)');
+    }
+
+    updateChartPreferences(preferences) {
+        // This method can be expanded to apply user-defined chart preferences
+        // e.g., changing colors, line styles, visible charts, etc.
+        console.log('Applying chart preferences:', preferences);
     }
     
     resizeCharts() {
+        // Resize all charts when window is resized
         Object.values(this.charts).forEach(chart => {
             if (chart && chart.resize) {
                 chart.resize();
@@ -762,72 +783,213 @@ class WorkoutMonitor {
         });
     }
     
-    updateChartPreferences(preferences) {
-        // Update chart colors, styles, etc. based on user preferences
-        Object.keys(this.charts).forEach(chartKey => {
-            const chart = this.charts[chartKey];
-            if (chart && preferences[chartKey]) {
-                const pref = preferences[chartKey];
-                
-                if (pref.color) {
-                    chart.data.datasets[0].borderColor = pref.color;
-                    chart.data.datasets[0].backgroundColor = pref.color + '33'; // Add transparency
-                }
-                
-                if (pref.fill !== undefined) {
-                    chart.data.datasets[0].fill = pref.fill;
-                }
-                
-                chart.update();
-            }
-        });
-    }
-    
-    // Utility functions
-    formatDuration(seconds) {
-        const hours = Math.floor(seconds / 3600);
-        const minutes = Math.floor((seconds % 3600) / 60);
-        const secs = seconds % 60;
+    updateWorkoutSummary(summaryData) {
+        // Update the workout summary display
+        const summaryElement = document.getElementById('workout-summary');
+        if (!summaryElement) return;
         
-        return [
-            hours.toString().padStart(2, '0'),
-            minutes.toString().padStart(2, '0'),
-            secs.toString().padStart(2, '0')
-        ].join(':');
+        if (!summaryData || Object.keys(summaryData).length === 0) {
+            summaryElement.innerHTML = '<p>Start a workout to see summary metrics.</p>';
+            return;
+        }
+        
+        // Create summary HTML
+        let html = '<div class="row">';
+        
+        // Average power
+        const avgPower = summaryData.avg_power || 0;
+        html += `
+            <div class="col-6">
+                <p><strong>Avg Power:</strong> <span>${Math.round(avgPower)}</span> W</p>
+            </div>
+        `;
+        
+        // Average heart rate
+        const avgHeartRate = summaryData.avg_heart_rate || 0;
+        html += `
+            <div class="col-6">
+                <p><strong>Avg Heart Rate:</strong> <span>${Math.round(avgHeartRate)}</span> bpm</p>
+            </div>
+        `;
+        
+        // Average cadence or stroke rate
+        const workoutType = summaryData.workout_type || 'bike';
+        if (workoutType === 'bike') {
+            const avgCadence = summaryData.avg_cadence || 0;
+            html += `
+                <div class="col-6">
+                    <p><strong>Avg Cadence:</strong> <span>${Math.round(avgCadence)}</span> rpm</p>
+                </div>
+            `;
+        } else if (workoutType === 'rower') {
+            const avgStrokeRate = summaryData.avg_stroke_rate || 0;
+            html += `
+                <div class="col-6">
+                    <p><strong>Avg Stroke Rate:</strong> <span>${Math.round(avgStrokeRate)}</span> spm</p>
+                </div>
+            `;
+        }
+        
+        // Average speed
+        const avgSpeed = summaryData.avg_speed || 0;
+        html += `
+            <div class="col-6">
+                <p><strong>Avg Speed:</strong> <span>${avgSpeed.toFixed(1)}</span> km/h</p>
+            </div>
+        `;
+        
+        // Total distance
+        const totalDistance = summaryData.total_distance || 0;
+        const distanceKm = totalDistance / 1000;
+        html += `
+            <div class="col-6">
+                <p><strong>Total Distance:</strong> <span>${distanceKm.toFixed(2)}</span> km</p>
+            </div>
+        `;
+        
+        // Total calories
+        const totalCalories = summaryData.total_calories || 0;
+        html += `
+            <div class="col-6">
+                <p><strong>Total Calories:</strong> <span>${Math.round(totalCalories)}</span> kcal</p>
+            </div>
+        `;
+        
+        html += '</div>';
+        summaryElement.innerHTML = html;
     }
     
-    debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
+    async loadUserPreferences() {
+        try {
+            const response = await fetch('/api/settings');
+            const data = await response.json();
+            
+            if (data.success && data.settings) {
+                this.pollRate = data.settings.poll_rate || 1000;
+                this.adaptivePollRate = data.settings.adaptive_polling !== false;
+                
+                // Update chart preferences
+                if (data.settings.chart_preferences) {
+                    this.updateChartPreferences(data.settings.chart_preferences);
+                }
+            }
+        } catch (error) {
+            console.warn('Could not load user preferences:', error);
+        }
     }
     
-    // Public API
-    getStatus() {
-        return {
-            isActive: this.isActive,
-            pollRate: this.pollRate,
-            connectionQuality: this.connectionQuality.quality,
-            currentPhase: this.workoutPhases.current,
-            performance: this.getPerformanceStats(),
-            cacheSize: this.dataCache.workoutData.length
-        };
+    async fetchWorkoutData() {
+        const startTime = performance.now();
+        
+        try {
+            const response = await fetch('/api/status');
+            const data = await response.json();
+            
+            // Update connection quality
+            this.connectionQuality.consecutiveFailures = 0;
+            this.connectionQuality.lastSuccessTime = Date.now();
+            this.updateConnectionQuality('good');
+            
+            // Cache the data
+            this.cacheData(data);
+            
+            // Process the data
+            this.processWorkoutData(data);
+            
+            // Track performance
+            const updateTime = performance.now() - startTime;
+            this.trackPerformance(updateTime);
+            
+            // Adaptive polling based on data changes
+            if (this.adaptivePollRate) {
+                this.adjustPollRate(data);
+            }
+            
+        } catch (error) {
+            console.error('Error fetching workout data:', error);
+            this.handleFetchError(error);
+        }
     }
     
-    exportData() {
-        return {
-            workoutData: this.dataCache.workoutData,
-            phases: this.workoutPhases.phases,
-            performance: this.performance
-        };
+    async processChartUpdateQueue() {
+        if (this.chartUpdateQueue.length === 0) return;
+        
+        this.isUpdatingCharts = true;
+        
+        // Process all queued updates
+        while (this.chartUpdateQueue.length > 0) {
+            const data = this.chartUpdateQueue.shift();
+            await this.updateCharts(data);
+        }
+        
+        this.isUpdatingCharts = false;
+    }
+    
+    async updateCharts(data) {
+        const maxDataPoints = 60; // 1 minute of data
+        
+        // Update power chart
+        if (this.charts.power && (data.instant_power !== undefined || data.power !== undefined)) {
+            const power = data.instant_power || data.power || 0;
+            this.updateChartData(this.charts.power, power, maxDataPoints);
+        }
+        
+        // Update heart rate chart
+        if (this.charts.heartRate && data.heart_rate !== undefined) {
+            this.updateChartData(this.charts.heartRate, data.heart_rate, maxDataPoints);
+        }
+        
+        // Update cadence chart
+        if (this.charts.cadence) {
+            const workoutType = data.type || data.device_type || 'bike';
+            let cadenceValue = 0;
+            
+            if (workoutType === 'bike') {
+                cadenceValue = data.instant_cadence || data.instantaneous_cadence || data.cadence || 0;
+            } else if (workoutType === 'rower') {
+                cadenceValue = data.stroke_rate || 0;
+            }
+            
+            this.updateChartData(this.charts.cadence, cadenceValue, maxDataPoints);
+        }
+        
+        // Batch update all charts
+        this.batchUpdateCharts();
+    }
+
+    // Update button states based on connection and workout status
+    updateButtonStates(deviceStatus, workoutActive) {
+    const startWorkoutBtn = document.getElementById("start-workout-btn");
+    const endWorkoutBtn = document.getElementById("end-workout-btn");
+
+    if (startWorkoutBtn && endWorkoutBtn) {
+        if (deviceStatus === "connected" && !workoutActive) {
+            startWorkoutBtn.disabled = false;
+            endWorkoutBtn.disabled = true;
+        } else if (deviceStatus === "connected" && workoutActive) {
+            startWorkoutBtn.disabled = true;
+            endWorkoutBtn.disabled = false;
+        } else {
+            startWorkoutBtn.disabled = true;
+            endWorkoutBtn.disabled = true;
+        }
     }
 }
 
-// Global instance
-window.workoutMonitor = new WorkoutMonitor();
+}
+
+// Initialize the WorkoutMonitor
+const workoutMonitor = new WorkoutMonitor();
+
+// Initial load of user preferences and start monitoring
+workoutMonitor.loadUserPreferences().then(() => {
+    workoutMonitor.startPolling(); // Start polling for status updates
+});
+
+// Initialize charts when the DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    workoutMonitor.initializeCharts();
+});
+
+// Expose workoutMonitor globally for debugging if needed
+window.workoutMonitor = workoutMonitor;

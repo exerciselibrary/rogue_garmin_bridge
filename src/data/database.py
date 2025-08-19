@@ -259,6 +259,30 @@ class Database:
             logger.error(f"Error getting device: {str(e)}")
             return None
     
+    def get_device_id_by_address(self, address: str) -> Optional[int]:
+        """
+        Get a device ID by its BLE address.
+        
+        Args:
+            address: Device BLE address
+            
+        Returns:
+            Device ID or None if not found
+        """
+        try:
+            conn = self._get_connection()
+            cursor = conn.cursor()
+            
+            cursor.execute("SELECT id FROM devices WHERE address = ?", (address,))
+            result = cursor.fetchone()
+            
+            if result:
+                return result["id"]
+            return None
+        except sqlite3.Error as e:
+            logger.error(f"Error getting device ID by address: {str(e)}")
+            return None
+    
     def start_workout(self, device_id: int, workout_type: str) -> int:
         """
         Start a new workout session.

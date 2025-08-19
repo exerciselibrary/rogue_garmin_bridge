@@ -347,10 +347,13 @@ class AlertManager:
             self.alert_callbacks.append(callback)
     
     def check_log_record(self, record: logging.LogRecord):
-        """Check a log record against alert rules"""
-        for rule_name, rule in self.alert_rules.items():
-            try:
-                if 'condition' in rule and callable(rule['condition']):
+        """Check a log record against alert rules that expect LogRecord."""
+        # Only check rules that expect a LogRecord, not metrics
+        log_record_rules = ['database_corruption', 'connection_failures']
+        for rule_name in log_record_rules:
+            rule = self.alert_rules.get(rule_name)
+            if rule and 'condition' in rule and callable(rule['condition']):
+                try:
                     if rule['condition'](record):
                         self.create_alert(
                             severity=rule['severity'],
@@ -362,8 +365,8 @@ class AlertManager:
                                 'log_level': record.levelname
                             }
                         )
-            except Exception as e:
-                logging.error(f"Error checking alert rule {rule_name}: {e}")
+                except Exception as e:
+                    logging.error(f"Error checking alert rule {rule_name}: {e}")
     
     def _check_error_rate(self, metrics: List[PerformanceMetric]) -> bool:
         """Check if error rate is too high"""

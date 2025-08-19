@@ -150,6 +150,20 @@ class FTMSDeviceManager:
     def _notify_data_callbacks(self, data: Dict[str, Any]):
         """Notify all registered data callbacks with new FTMS data."""
         logger.debug(f"FTMS Manager notifying {len(self.data_callbacks)} data callbacks.") # Log callback notification attempt
+
+        # First, notify external callbacks to allow the workout to be started
+        for callback in self.data_callbacks:
+            try:
+                logger.debug(f"Calling data callback: {callback.__name__ if hasattr(callback, '__name__') else str(callback)}") # Log specific callback call
+                callback(data)
+            except Exception as e:
+                logger.error(f"Error in FTMS data callback: {str(e)}", exc_info=True)
+
+        # Then, process data through the _handle_ftms_data method to ensure workout data is saved
+        self._handle_ftms_data(data)
+
+        """Notify all registered data callbacks with new FTMS data."""
+        logger.debug(f"FTMS Manager notifying {len(self.data_callbacks)} data callbacks.") # Log callback notification attempt
         
         # First, process data through the _handle_ftms_data method to ensure workout data is saved
         self._handle_ftms_data(data)
@@ -190,9 +204,23 @@ class FTMSDeviceManager:
                 
                 # Store the latest received data for use in status API
                 self.latest_data = None
-                
                 self.device_status = "connected"
                 logger.info(f"Connected to device: {self.connected_device.get('name', 'Unknown')}")
+
+                # Ensure device is registered in the database
+                if self.workout_manager:
+                    db = self.workout_manager.database
+                    address = self.connected_device.get("address")
+                    name = self.connected_device.get("name", "Unknown Device")
+                    device_type = "bike" if "bike" in name.lower() else ("rower" if "rower" in name.lower() else "unknown")
+                    metadata = self.connected_device.get("metadata", {})
+                    device_id = db.get_device_id_by_address(address)
+                    if device_id is None and address:
+                        try:
+                            db.add_device(address, name, device_type, metadata)
+                            logger.info(f"Device {name} ({address}) added to database on connect.")
+                        except Exception as e:
+                            logger.error(f"Error adding device to database on connect: {str(e)}")
             
             # For 'disconnected' status
             elif status == "disconnected":
@@ -216,8 +244,13 @@ class FTMSDeviceManager:
                             device_type = "rower"
                     
                     try:
-                        # Start a new workout with the detected type
-                        workout_id = self.workout_manager.start_workout(device_type)
+                        # Get the device_id from the connected_device
+                        device_id = self.workout_manager.database.get_device_id_by_address(self.connected_device_address)
+                        if device_id is None:
+                            logger.error(f"Could not find device_id for address {self.connected_device_address}")
+                            return
+                        # Start a new workout with the detected type and device_id
+                        workout_id = self.workout_manager.start_workout(device_id, device_type)
                         logger.info(f"Started new workout with ID: {workout_id}")
                     except Exception as e:
                         logger.error(f"Error starting workout from device button: {str(e)}")
