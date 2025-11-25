@@ -357,8 +357,8 @@
     // Update charts with new data
     function updateCharts(data) {
         // Update power chart
-        if (data.instant_power !== undefined || data.power !== undefined) {
-            const power = data.instant_power || data.power || 0;
+        if (data.instant_power !== undefined || data.power !== undefined || data.instantaneous_power !== undefined) {
+            const power = data.instant_power ?? data.power ?? data.instantaneous_power ?? 0;
             powerData.datasets[0].data.push(power);
             powerData.datasets[0].data.shift();
             powerChart.update();
@@ -397,8 +397,8 @@
         console.log("Detected workout type:", workoutType);
 
         // Update power
-        if (data.instant_power !== undefined || data.power !== undefined) {
-            const power = data.instant_power || data.power || 0;
+        if (data.instant_power !== undefined || data.power !== undefined || data.instantaneous_power !== undefined) {
+            const power = data.instant_power ?? data.power ?? data.instantaneous_power ?? 0;
             powerValue.textContent = Math.round(power);
         }
 
@@ -414,11 +414,12 @@
                 instant_cadence: data.instant_cadence,
                 instantaneous_cadence: data.instantaneous_cadence,
                 cadence: data.cadence,
+                stroke_rate: data.stroke_rate,
                 device_type: data.device_type,
                 type: data.type
             });
-            if (data.instant_cadence !== undefined || data.cadence !== undefined || data.instantaneous_cadence !== undefined) {
-                const cadence = data.instant_cadence || data.instantaneous_cadence || data.cadence || 0;
+            if (data.instant_cadence !== undefined || data.cadence !== undefined || data.instantaneous_cadence !== undefined || data.stroke_rate !== undefined) {
+                const cadence = data.instant_cadence ?? data.instantaneous_cadence ?? data.cadence ?? data.stroke_rate ?? 0;
                 cadenceValue.textContent = Math.round(cadence);
                 console.log("Set cadence display value to:", Math.round(cadence), "Element:", cadenceValue);
                 // Force an explicit DOM update to ensure the value is displayed
@@ -432,8 +433,9 @@
             cadenceLabel.textContent = 'Stroke Rate';
             cadenceUnit.textContent = 'spm';
 
-            if (data.stroke_rate !== undefined) {
-                cadenceValue.textContent = Math.round(data.stroke_rate);
+            const stroke = data.stroke_rate ?? data.instant_cadence ?? data.instantaneous_cadence ?? data.cadence;
+            if (stroke !== undefined) {
+                cadenceValue.textContent = Math.round(stroke);
             }
         }
 

@@ -486,6 +486,25 @@ def get_status():
     # Include latest data if available
     if latest_data:
         latest_copy = latest_data.copy()
+
+        # Normalize common metric fields so the frontend can rely on consistent keys
+        if 'power' not in latest_copy:
+            if 'instant_power' in latest_copy:
+                latest_copy['power'] = latest_copy['instant_power']
+            elif 'instantaneous_power' in latest_copy:
+                latest_copy['power'] = latest_copy['instantaneous_power']
+        if 'instant_power' not in latest_copy and 'instantaneous_power' in latest_copy:
+            latest_copy['instant_power'] = latest_copy['instantaneous_power']
+
+        if 'cadence' not in latest_copy:
+            for cad_key in ('instant_cadence', 'instantaneous_cadence', 'stroke_rate'):
+                if cad_key in latest_copy:
+                    latest_copy['cadence'] = latest_copy[cad_key]
+                    break
+
+        # Ensure device type is present for downstream UI logic
+        if 'device_type' not in latest_copy and workout_manager.workout_type:
+            latest_copy['device_type'] = workout_manager.workout_type
         
         # Include the active workout ID
         if workout_manager.active_workout_id:

@@ -359,10 +359,11 @@ class WorkoutMonitor {
         };
         
         // Update power
-        if (elements.power && (metrics.instant_power !== undefined || metrics.power !== undefined)) {
-            const power = metrics.instant_power || metrics.power || 0;
-            elements.power.textContent = Math.round(power);
-            this.addMetricAnimation(elements.power, power);
+        const power = metrics.instant_power ?? metrics.power ?? metrics.instantaneous_power;
+        if (elements.power && power !== undefined) {
+            const roundedPower = Math.round(power);
+            elements.power.textContent = roundedPower;
+            this.addMetricAnimation(elements.power, roundedPower);
         }
         
         // Update heart rate
@@ -397,10 +398,10 @@ class WorkoutMonitor {
             const workoutType = metrics.type || metrics.device_type || 'bike';
             let cadenceValue = 0;
             
-            if (workoutType === 'bike') {
-                cadenceValue = metrics.instant_cadence || metrics.instantaneous_cadence || metrics.cadence || 0;
-            } else if (workoutType === 'rower') {
-                cadenceValue = metrics.stroke_rate || 0;
+            if (workoutType === 'rower') {
+                cadenceValue = metrics.stroke_rate ?? metrics.instant_cadence ?? metrics.instantaneous_cadence ?? metrics.cadence ?? 0;
+            } else {
+                cadenceValue = metrics.instant_cadence ?? metrics.instantaneous_cadence ?? metrics.cadence ?? metrics.stroke_rate ?? 0;
             }
             
             elements.cadence.textContent = Math.round(cadenceValue);
@@ -473,8 +474,8 @@ class WorkoutMonitor {
         const maxDataPoints = 60; // 1 minute of data
         
         // Update power chart
-        if (this.charts.power && (data.instant_power !== undefined || data.power !== undefined)) {
-            const power = data.instant_power || data.power || 0;
+        if (this.charts.power && (data.instant_power !== undefined || data.power !== undefined || data.instantaneous_power !== undefined)) {
+            const power = data.instant_power ?? data.power ?? data.instantaneous_power ?? 0;
             this.updateChartData(this.charts.power, power, maxDataPoints);
         }
         
@@ -488,10 +489,10 @@ class WorkoutMonitor {
             const workoutType = data.type || data.device_type || 'bike';
             let cadenceValue = 0;
             
-            if (workoutType === 'bike') {
-                cadenceValue = data.instant_cadence || data.instantaneous_cadence || data.cadence || 0;
-            } else if (workoutType === 'rower') {
-                cadenceValue = data.stroke_rate || 0;
+            if (workoutType === 'rower') {
+                cadenceValue = data.stroke_rate ?? data.instant_cadence ?? data.instantaneous_cadence ?? data.cadence ?? 0;
+            } else {
+                cadenceValue = data.instant_cadence ?? data.instantaneous_cadence ?? data.cadence ?? data.stroke_rate ?? 0;
             }
             
             this.updateChartData(this.charts.cadence, cadenceValue, maxDataPoints);
@@ -532,7 +533,7 @@ class WorkoutMonitor {
         if (!this.isActive || !data.latest_data) return;
         
         const elapsed = data.latest_data.elapsed_time || 0;
-        const power = data.latest_data.instant_power || data.latest_data.power || 0;
+        const power = data.latest_data.instant_power ?? data.latest_data.power ?? data.latest_data.instantaneous_power ?? 0;
         
         let newPhase = this.determineWorkoutPhase(elapsed, power);
         
@@ -929,8 +930,8 @@ class WorkoutMonitor {
         const maxDataPoints = 60; // 1 minute of data
         
         // Update power chart
-        if (this.charts.power && (data.instant_power !== undefined || data.power !== undefined)) {
-            const power = data.instant_power || data.power || 0;
+        if (this.charts.power && (data.instant_power !== undefined || data.power !== undefined || data.instantaneous_power !== undefined)) {
+            const power = data.instant_power ?? data.power ?? data.instantaneous_power ?? 0;
             this.updateChartData(this.charts.power, power, maxDataPoints);
         }
         
@@ -944,10 +945,10 @@ class WorkoutMonitor {
             const workoutType = data.type || data.device_type || 'bike';
             let cadenceValue = 0;
             
-            if (workoutType === 'bike') {
-                cadenceValue = data.instant_cadence || data.instantaneous_cadence || data.cadence || 0;
-            } else if (workoutType === 'rower') {
-                cadenceValue = data.stroke_rate || 0;
+            if (workoutType === 'rower') {
+                cadenceValue = data.stroke_rate ?? data.instant_cadence ?? data.instantaneous_cadence ?? data.cadence ?? 0;
+            } else {
+                cadenceValue = data.instant_cadence ?? data.instantaneous_cadence ?? data.cadence ?? data.stroke_rate ?? 0;
             }
             
             this.updateChartData(this.charts.cadence, cadenceValue, maxDataPoints);
