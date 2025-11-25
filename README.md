@@ -94,6 +94,15 @@ Rogue Garmin Bridge connects to Rogue Echo Bike and Rower equipment via Bluetoot
     http://localhost:5000
     ```
 
+### Web Bluetooth (mobile/Bluefy) mode
+
+If you want to connect directly from a phone browser (e.g., Bluefy on iOS) without a host machine handling BLE:
+
+1. Serve the UI over HTTPS (mobile Web Bluetooth requires a secure context). Bluefy works with self-signed certificates; desktop Chrome/Android can also be used.
+2. Open `/devices` in the browser, find the **Web Bluetooth (Mobile/Bluefy)** card, pick your device type, and tap **Connect via Web Bluetooth**.
+3. Grant the Bluetooth permission and keep the page open; the browser streams FTMS data to the backend using the new `/api/webble/*` endpoints.
+4. End the session with **Disconnect** (or by closing the page); workouts and FIT generation continue to work with the received data.
+
 ### Quick Start Guide
 
 #### 1. Device Connection

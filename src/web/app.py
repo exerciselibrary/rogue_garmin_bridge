@@ -56,6 +56,15 @@ workout_manager = WorkoutManager(db_path)  # Pass the path string, not the Datab
 logger.info(f"Initializing FTMSDeviceManager with use_simulator={use_simulator}, device_type={device_type}")
 ftms_manager = FTMSDeviceManager(workout_manager, use_simulator=use_simulator, device_type=device_type)
 
+# Web Bluetooth (browser-side) session state
+web_ble_state = {
+    'active': False,
+    'device': None,
+    'workout_id': None,
+    'last_data': None,
+    'last_seen_ts': None
+}
+
 if use_simulator:
     logger.info(f"Using FTMS device simulator for {device_type}")
 else:
@@ -66,6 +75,31 @@ logger.info("Flask application initialized. FTMS manager created.")
 # Global variable for the asyncio loop and the thread running it
 background_loop = None
 loop_thread = None
+
+def _ensure_device_in_database(address: str, name: str, device_type_hint: str = "bike") -> int:
+    """
+    Ensure the device exists in the database and return its ID.
+    
+    Args:
+        address: Device address or browser-provided identifier
+        name: Device name
+        device_type_hint: "bike" or "rower" to seed DB metadata
+    """
+    try:
+        device_id = workout_manager.database.get_device_id_by_address(address)
+        if device_id:
+            return device_id
+        
+        logger.info(f"Adding Web Bluetooth device to DB: {name} ({address})")
+        return workout_manager.database.add_device(
+            address=address,
+            name=name or "Web Bluetooth Device",
+            device_type=device_type_hint,
+            metadata={"source": "web_ble"}
+        )
+    except Exception as e:
+        logger.error(f"Error ensuring device in DB: {str(e)}")
+        return None
 
 def start_asyncio_loop():
     """Starts the asyncio event loop in a separate thread."""
@@ -300,6 +334,100 @@ def disconnect_device():
         logger.error(f"Error disconnecting from device: {str(e)}", exc_info=True)
         return jsonify({'success': False, 'error': str(e)})
 
+@app.route('/api/webble/start', methods=['POST'])
+def webble_start():
+    """Start a browser-driven Web Bluetooth session and workout."""
+    try:
+        payload = request.json or {}
+        device_info = payload.get('device', {})
+        device_name = device_info.get('name') or 'Web Bluetooth Device'
+        device_address = device_info.get('address') or device_info.get('id') or device_name
+        workout_type = payload.get('workout_type', 'bike')
+        
+        if not device_address:
+            return jsonify({'success': False, 'error': 'Device identifier is required'})
+        
+        # End any existing workout to avoid conflicts
+        if workout_manager.active_workout_id:
+            logger.info("Ending existing workout before starting Web BLE session")
+            workout_manager.end_workout()
+        
+        device_id = _ensure_device_in_database(device_address, device_name, workout_type)
+        if device_id is None:
+            return jsonify({'success': False, 'error': 'Unable to register device'})
+        
+        workout_id = workout_manager.start_workout(device_id, workout_type)
+        
+        web_ble_state.update({
+            'active': True,
+            'device': {'name': device_name, 'address': device_address},
+            'workout_id': workout_id,
+            'last_data': None,
+            'last_seen_ts': time.time()
+        })
+        
+        logger.info(f"Web BLE session started for {device_name} ({device_address}) with workout {workout_id}")
+        return jsonify({'success': True, 'workout_id': workout_id})
+    except Exception as e:
+        logger.error(f"Error starting Web BLE session: {str(e)}", exc_info=True)
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/api/webble/ingest', methods=['POST'])
+def webble_ingest():
+    """Ingest data streamed from the browser Web Bluetooth client."""
+    try:
+        if not web_ble_state.get('active'):
+            return jsonify({'success': False, 'error': 'Web BLE session not active'})
+        
+        data = request.json or {}
+        if not isinstance(data, dict):
+            return jsonify({'success': False, 'error': 'Invalid payload'})
+        
+        # Optionally refresh last seen even if data fails
+        web_ble_state['last_seen_ts'] = time.time()
+        
+        # Protect against missing workout
+        if not workout_manager.active_workout_id:
+            logger.warning("Received Web BLE data without an active workout; re-hydrating workout state")
+            device = web_ble_state.get('device') or {}
+            device_id = _ensure_device_in_database(
+                device.get('address') or device.get('id') or device.get('name'),
+                device.get('name', 'Web Bluetooth Device'),
+                data.get('workout_type', 'bike')
+            )
+            if device_id:
+                workout_id = workout_manager.start_workout(device_id, data.get('workout_type', 'bike'))
+                web_ble_state['workout_id'] = workout_id
+        
+        # Persist data
+        success = workout_manager.add_data_point(data)
+        if success:
+            web_ble_state['last_data'] = data
+        return jsonify({'success': success})
+    except Exception as e:
+        logger.error(f"Error ingesting Web BLE data: {str(e)}", exc_info=True)
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/api/webble/end', methods=['POST'])
+def webble_end():
+    """End a Web Bluetooth session and workout."""
+    try:
+        success = True
+        if workout_manager.active_workout_id:
+            success = workout_manager.end_workout()
+        
+        web_ble_state.update({
+            'active': False,
+            'device': None,
+            'workout_id': None,
+            'last_data': None,
+            'last_seen_ts': None
+        })
+        return jsonify({'success': success})
+    except Exception as e:
+        logger.error(f"Error ending Web BLE session: {str(e)}", exc_info=True)
+        return jsonify({'success': False, 'error': str(e)})
+
 @app.route('/api/status')
 def get_status():
     """Get current status."""
@@ -308,57 +436,70 @@ def get_status():
     logger.debug(f"FTMS Manager connected_device: {ftms_manager.connected_device}")
     logger.debug(f"FTMS Manager connected_device_address: {getattr(ftms_manager, 'connected_device_address', None)}")
     logger.debug(f"Workout Manager active_workout_id: {workout_manager.active_workout_id}")
+    logger.debug(f"Web BLE active: {web_ble_state.get('active')}, device: {web_ble_state.get('device')}")
     
-    # Handle connected device info properly (could be dict or object)
+    # Determine which connection source to report
+    using_web_ble = bool(web_ble_state.get('active'))
     connected_device_info = None
     device_name = None
+    device_status = ftms_manager.device_status
+    latest_data = None
     
-    if ftms_manager.connected_device:
+    if using_web_ble:
+        connected_device_info = web_ble_state.get('device')
+        device_name = connected_device_info.get('name') if connected_device_info else None
+        device_status = 'connected'
+        latest_data = web_ble_state.get('last_data')
+    elif ftms_manager.connected_device:
         if isinstance(ftms_manager.connected_device, dict):
-            # It's a dictionary
             connected_device_info = {
                 'name': ftms_manager.connected_device.get('name'),
                 'address': ftms_manager.connected_device.get('address')
             }
             device_name = ftms_manager.connected_device.get('name')
         else:
-            # It's an object
             connected_device_info = {
                 'name': getattr(ftms_manager.connected_device, 'name', None),
                 'address': getattr(ftms_manager.connected_device, 'address', None)
             }
             device_name = getattr(ftms_manager.connected_device, 'name', None)
+        device_status = ftms_manager.device_status
+        latest_data = getattr(ftms_manager, 'latest_data', None)
     
     status = {
-        'device_status': ftms_manager.device_status,
+        'device_status': device_status,
         'connected_device': connected_device_info,
         'connected_device_address': getattr(ftms_manager, 'connected_device_address', None),
         'device_name': device_name,
         'workout_active': workout_manager.active_workout_id is not None,
-        'is_simulated': ftms_manager.use_simulator
+        'is_simulated': ftms_manager.use_simulator,
+        'web_ble': {
+            'active': using_web_ble,
+            'device': web_ble_state.get('device'),
+            'workout_id': web_ble_state.get('workout_id'),
+            'last_seen_ts': web_ble_state.get('last_seen_ts')
+        }
     }
     
     logger.debug(f"Status response: {status}")
     
     # Include latest data if available
-    if hasattr(ftms_manager, 'latest_data') and ftms_manager.latest_data:
-        # Ensure latest_data is serializable (assuming it's already a dict)
-        latest_data = ftms_manager.latest_data.copy()
+    if latest_data:
+        latest_copy = latest_data.copy()
         
         # Include the active workout ID
         if workout_manager.active_workout_id:
-            latest_data['workout_id'] = workout_manager.active_workout_id
+            latest_copy['workout_id'] = workout_manager.active_workout_id
             
             # Add accumulated workout summary statistics
             try:
-                # Get real-time summary metrics from workout_manager
                 summary = workout_manager.get_workout_summary_metrics()
                 if summary:
-                    latest_data['workout_summary'] = summary
+                    latest_copy['workout_summary'] = summary
             except Exception as e:
                 logger.error(f"Error getting workout summary: {str(e)}")
                 
-        status['latest_data'] = latest_data
+        status['latest_data'] = latest_copy
         
     return jsonify(status)
 
