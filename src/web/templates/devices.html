@@ -8,38 +8,9 @@
     <div class="card-body">
         <div class="row">
             <div class="col-md-6">
-                <div class="card mb-4">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Web Bluetooth (Mobile/Bluefy)</h5>
-                        <span class="badge bg-warning text-dark">Beta</span>
-                    </div>
-                    <div class="card-body">
-                        <div id="webble-support" class="mb-2"></div>
-                        <p class="small text-muted">Connect directly from your browser (Bluefy/Safari/Chrome). Requires HTTPS and a user gesture.</p>
-                        <div class="mb-3">
-                            <label class="form-label">Device type</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="webble-device-type" id="webble-bike" value="bike" checked>
-                                <label class="form-check-label" for="webble-bike">Bike</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="webble-device-type" id="webble-rower" value="rower">
-                                <label class="form-check-label" for="webble-rower">Rower</label>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center mb-2">
-                            <span class="me-2">Status:</span>
-                            <span id="webble-status" class="badge bg-secondary">Not connected</span>
-                        </div>
-                        <p class="mb-1"><strong>Device:</strong> <span id="webble-device">None</span></p>
-                        <p class="mb-3"><strong>Workout ID:</strong> <span id="webble-workout-id">—</span></p>
-                        <div class="d-flex gap-2 mb-2">
-                            <button id="webble-connect" class="btn btn-primary">Connect via Web Bluetooth</button>
-                            <button id="webble-disconnect" class="btn btn-outline-secondary d-none">Disconnect</button>
-                        </div>
-                        <div id="webble-error"></div>
-                        <div class="mt-3 p-3 bg-light rounded" id="webble-last-data">No data yet.</div>
-                    </div>
+                <div class="alert alert-info mb-4">
+                    Web Bluetooth connections now live on the Workout tab so you can stay connected while tracking.
+                    Head there to pair via Safari/Chrome/Bluefy without losing your session.
                 </div>
 
                 <div class="card mb-4">
@@ -254,7 +225,5 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="{{ url_for('static', filename='js/web-ble-ftms.js') }}"></script>
-<script src="{{ url_for('static', filename='js/web-ble-controller.js') }}"></script>
 <script src="{{ url_for('static', filename='js/device-management.js') }}"></script>
 {% endblock %}
